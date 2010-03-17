@@ -2444,6 +2444,9 @@ namespace loaddatfsh
         {
             EndFormat_Refresh();
         }
+        /// <summary>
+        /// Clears the ImageList and ListView of loaded fsh images
+        /// </summary>
         private void ClearFshlists()
         {
             listViewmain.Items.Clear();
