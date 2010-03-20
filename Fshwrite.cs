@@ -282,11 +282,6 @@ namespace loaddatfsh
                         {
                             
                             Bitmap temp = BlendDXTBmp(bmp, alpha, true);
-                            if (bmp.Width > 64 && bmp.Height > 64)
-                            {
-                                bmp.Save(@"C:\Dev_projects\sc4\loaddatfsh\bin\Debug\bmp.png", ImageFormat.Png);
-                                temp.Save(@"C:\Dev_projects\sc4\loaddatfsh\bin\Debug\temp.png", ImageFormat.Png);
-                            }
                             byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt1;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
