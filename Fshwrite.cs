@@ -50,20 +50,25 @@ namespace loaddatfsh
         {
             byte[] pixelData = new byte[image.Width * image.Height * 4];
 
-            for (int y = 0; y < image.Height; y++)
-            {
-                for (int x = 0; x < image.Width; x++)
-                {
-                    Color pixel = image.GetPixel(x, y);
-                    int Offset = (y * image.Width * 4) + (x * 4);
+            BitmapData data = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 
-                    pixelData[Offset] = pixel.R;
-                    pixelData[Offset + 1] = pixel.G;
-                    pixelData[Offset + 2] = pixel.B;
-                    pixelData[Offset + 3] = pixel.A;
+            unsafe
+            {
+                for (int y = 0; y < image.Height; y++)
+                {
+                    for (int x = 0; x < image.Width; x++)
+                    {
+                        int offset = (y * data.Stride) + (x * 4);
+                        byte* p = (byte*)(void*)data.Scan0 + offset;
+                        
+                        pixelData[offset] = p[2]; // red 
+                        pixelData[offset + 1] = p[1]; // green
+                        pixelData[offset + 2] = p[0]; // blue 
+                        pixelData[offset + 3] = p[3]; // alpha
+                    }
                 }
             }
-
+            image.UnlockBits(data);
             // Compute size of compressed block area, and allocate 
             int blockCount = ((image.Width + 3) / 4) * ((image.Height + 3) / 4);
             int blockSize = ((flags & (int)SquishCompFlags.kDxt1) != 0) ? 8 : 16;
@@ -109,7 +114,7 @@ namespace loaddatfsh
             }
         }
         
-        private Bitmap BlendDXTBmp(Bitmap colorbmp, Bitmap bmpalpha)
+        private Bitmap BlendDXTBmp(Bitmap colorbmp, Bitmap bmpalpha, bool DXT1)
         {
             Bitmap image = null;
 
@@ -145,7 +150,7 @@ namespace loaddatfsh
                     {
                         for (int x = 0; x < image.Width; x++)
                         {
-                            destdata[3] = aldata[0];
+                            destdata[3] = DXT1 ? (byte)255  : aldata[0];
                             destdata[0] = clrdata[0];
                             destdata[1] = clrdata[1];
                             destdata[2] = clrdata[2];
@@ -275,19 +280,28 @@ namespace loaddatfsh
 
                         if (code == 0x60) //DXT1
                         {
-                            Bitmap temp = BlendDXTBmp(bmp, alpha);
+                            
+                            Bitmap temp = BlendDXTBmp(bmp, alpha, true);
+                            if (bmp.Width > 64 && bmp.Height > 64)
+                            {
+                                bmp.Save(@"C:\Dev_projects\sc4\loaddatfsh\bin\Debug\bmp.png", ImageFormat.Png);
+                                temp.Save(@"C:\Dev_projects\sc4\loaddatfsh\bin\Debug\temp.png", ImageFormat.Png);
+                            }
                             byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt1;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
+                            flags |= (int)SquishCompFlags.kColourMetricPerceptual;
+
                             data = CompressImage(temp, flags);
                             ms.Write(data, 0, data.Length);
                         }
                         else if (code == 0x61) // DXT3
                         {
-                            Bitmap temp = BlendDXTBmp(bmp, alpha);
+                            Bitmap temp = BlendDXTBmp(bmp, alpha, false);
                             byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt3;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
+                            flags |= (int)SquishCompFlags.kColourMetricPerceptual;
                             data = CompressImage(temp, flags);
                             ms.Write(data, 0, data.Length);
                         }
