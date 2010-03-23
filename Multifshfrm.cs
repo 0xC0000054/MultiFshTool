@@ -207,18 +207,33 @@ namespace loaddatfsh
             {
                 if (IsDXTFsh(image))
                 {
-                    Fshwrite fw = new Fshwrite();
-                    foreach (BitmapItem bi in image.Bitmaps)
+                    if (Fshwritecompcb.Checked)
                     {
-                        if ((bi.Bitmap != null && bi.Alpha != null) && bi.BmpType == FSHBmpType.DXT1 || bi.BmpType == FSHBmpType.DXT3)
-                        {
-                            fw.bmp.Add(bi.Bitmap);
-                            fw.alpha.Add(bi.Alpha);
-                            fw.dir.Add(bi.DirName);
-                            fw.code.Add((int)bi.BmpType);
+                        Fshwrite fw = new Fshwrite();
+                        for (int i = 0; i < image.Bitmaps.Count; i++)
+			            {
+                            BitmapItem bi = (BitmapItem)image.Bitmaps[i];
+                            if ((bi.Bitmap != null && bi.Alpha != null) && bi.BmpType == FSHBmpType.DXT1 || bi.BmpType == FSHBmpType.DXT3)
+                            {
+                                if (useorigimage && origbmplist[i].Size == bi.Bitmap.Size)
+                                {
+                                    fw.bmp.Add(origbmplist[i]);
+                                }
+                                else
+                                {
+                                    fw.bmp.Add(bi.Bitmap);
+                                }
+                                fw.alpha.Add(bi.Alpha);
+                                fw.dir.Add(bi.DirName);
+                                fw.code.Add((int)bi.BmpType);
+                            }
                         }
+                        fw.WriteFsh(fs);
                     }
-                    fw.WriteFsh(fs);
+                    else
+                    {
+                        image.Save(fs);
+                    }
                 }
                 else
                 {
@@ -553,6 +568,7 @@ namespace loaddatfsh
                 e.Effect = DragDropEffects.Copy;
             }
         }
+        private List<Bitmap> origbmplist = null;
         /// <summary>
         /// Adds a list files to an a new or existing image  
         /// </summary>
@@ -586,6 +602,11 @@ namespace loaddatfsh
                         if (fi.Exists)
                         {
                             bmp = new Bitmap(fi.FullName);
+                            if (origbmplist == null)
+                            {
+                                origbmplist = new List<Bitmap>();
+                            }
+                            origbmplist.Add(bmp);
                             addbmp.Bitmap = bmp;
                             bmploaded = true;
                         }
@@ -1722,22 +1743,8 @@ namespace loaddatfsh
                         }
                         else if (Path.GetExtension(files[0]).Equals(".png", StringComparison.OrdinalIgnoreCase) && bmp.PixelFormat == PixelFormat.Format32bppArgb)
                         {
-                            Bitmap testbmp = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppArgb);
-
-                            for (int y = 0; y < testbmp.Height; y++)
-                            {
-                                for (int x = 0; x < testbmp.Width; x++)
-                                {
-                                    Color srcpxl = bmp.GetPixel(x, y);
-                                    Color destpxl = testbmp.GetPixel(x, y);
-                                    testbmp.SetPixel(x, y, Color.FromArgb(srcpxl.A, srcpxl.A, srcpxl.A, srcpxl.A));
-                                    while (testbmp.GetPixel(x, y).A < 255)
-                                    {
-                                        testbmp.SetPixel(x, y, Color.FromArgb(srcpxl.A, srcpxl.A, srcpxl.A));
-                                    }
-                                }
-                            }
-                            bmpitem.Alpha = testbmp;
+                            
+                            bmpitem.Alpha = GetAlphafromPng(bmp);
                             bmpitem.BmpType = FSHBmpType.DXT3;
                             FshtypeBox.SelectedIndex = 3;
                         }
@@ -1793,6 +1800,17 @@ namespace loaddatfsh
                         if (bmp.Width >= 128 && bmp.Height >= 128)
                         {
                             mipsbtn_clicked = false;
+
+                            if (origbmplist == null)
+                            {
+                                origbmplist = new List<Bitmap>();
+                            }
+                            else if (origbmplist.Count > 0)
+                            {
+                                origbmplist.Clear();
+                            }
+                            origbmplist.Add(bmp); // store the original bitmap to use if switching between fshwrite and fshlib compression
+
                             curimage = new FSHImage();
                             curimage.Bitmaps.Add(bmpitem);
                             curimage.UpdateDirty();
@@ -2728,7 +2746,7 @@ namespace loaddatfsh
            DatRebuilt = false;
            Datnametxt.Text = "Dat in Memory";
         }
-
+        
         private void DatlistView1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (DatlistView1.SelectedItems.Count > 0)
@@ -2866,6 +2884,7 @@ namespace loaddatfsh
                     ReloadGroupid();
                     inststr = null;
                     tgiInstancetxt.Text = null;
+                    origbmplist.Clear();
                 }
                 hdfshRadio.Enabled = true;
                 hdBasetexrdo.Enabled = true;
@@ -3042,6 +3061,19 @@ namespace loaddatfsh
             // object.
             this.DatlistView1.ListViewItemSorter = new ListViewItemComparer(e.Column,
                                                               DatlistView1.Sorting);
+        }
+        private bool useorigimage = false;
+        private void Fshwritecompcb_CheckedChanged(object sender, EventArgs e)
+        {
+            if (curimage != null && curimage.Bitmaps.Count > 0 && !loadeddat && DatlistView1.Items.Count == 0)
+            {
+                useorigimage = true;
+
+                Temp_fsh();
+                mipbtn_Click(null, null);
+
+                useorigimage = false; // reset it to false
+            }
         }
        
     }

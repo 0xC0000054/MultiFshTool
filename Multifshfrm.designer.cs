@@ -114,6 +114,7 @@
             this.Alphabox = new System.Windows.Forms.TextBox();
             this.bmpbtn = new System.Windows.Forms.Button();
             this.bmpBox = new System.Windows.Forms.TextBox();
+            this.Fshwritecompcb = new System.Windows.Forms.CheckBox();
             this.bmpmanBox1.SuspendLayout();
             this.fshDefbox.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -155,7 +156,7 @@
             // 
             this.loadfsh.AllowDrop = true;
             this.loadfsh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadfsh.Location = new System.Drawing.Point(342, 508);
+            this.loadfsh.Location = new System.Drawing.Point(349, 529);
             this.loadfsh.Name = "loadfsh";
             this.loadfsh.Size = new System.Drawing.Size(75, 23);
             this.loadfsh.TabIndex = 1;
@@ -273,7 +274,7 @@
             // 
             // rembtn
             // 
-            this.rembtn.Location = new System.Drawing.Point(168, 20);
+            this.rembtn.Location = new System.Drawing.Point(169, 20);
             this.rembtn.Name = "rembtn";
             this.rembtn.Size = new System.Drawing.Size(75, 23);
             this.rembtn.TabIndex = 54;
@@ -285,7 +286,7 @@
             // addbtn
             // 
             this.addbtn.AllowDrop = true;
-            this.addbtn.Location = new System.Drawing.Point(6, 20);
+            this.addbtn.Location = new System.Drawing.Point(7, 20);
             this.addbtn.Name = "addbtn";
             this.addbtn.Size = new System.Drawing.Size(75, 23);
             this.addbtn.TabIndex = 53;
@@ -312,7 +313,7 @@
             // 
             // repbtn
             // 
-            this.repbtn.Location = new System.Drawing.Point(87, 20);
+            this.repbtn.Location = new System.Drawing.Point(88, 20);
             this.repbtn.Name = "repbtn";
             this.repbtn.Size = new System.Drawing.Size(75, 23);
             this.repbtn.TabIndex = 58;
@@ -324,7 +325,7 @@
             // mipbtn
             // 
             this.mipbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mipbtn.Location = new System.Drawing.Point(144, 508);
+            this.mipbtn.Location = new System.Drawing.Point(145, 529);
             this.mipbtn.Name = "mipbtn";
             this.mipbtn.Size = new System.Drawing.Size(106, 23);
             this.mipbtn.TabIndex = 61;
@@ -336,7 +337,7 @@
             // savefshbtn
             // 
             this.savefshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.savefshbtn.Location = new System.Drawing.Point(423, 508);
+            this.savefshbtn.Location = new System.Drawing.Point(430, 529);
             this.savefshbtn.Name = "savefshbtn";
             this.savefshbtn.Size = new System.Drawing.Size(75, 23);
             this.savefshbtn.TabIndex = 62;
@@ -354,7 +355,7 @@
             // 
             this.newfshbtn.AllowDrop = true;
             this.newfshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.newfshbtn.Location = new System.Drawing.Point(261, 508);
+            this.newfshbtn.Location = new System.Drawing.Point(268, 529);
             this.newfshbtn.Name = "newfshbtn";
             this.newfshbtn.Size = new System.Drawing.Size(75, 23);
             this.newfshbtn.TabIndex = 66;
@@ -756,9 +757,6 @@
             // 
             // DatlistView1
             // 
-            this.DatlistView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.DatlistView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.NameHeader1,
             this.GroupHeader,
@@ -841,7 +839,7 @@
             this.DatfuncBox1.Controls.Add(this.newDatbtn);
             this.DatfuncBox1.Controls.Add(this.loadDatbtn);
             this.DatfuncBox1.Controls.Add(this.saveDatbtn);
-            this.DatfuncBox1.Location = new System.Drawing.Point(262, 432);
+            this.DatfuncBox1.Location = new System.Drawing.Point(262, 431);
             this.DatfuncBox1.Name = "DatfuncBox1";
             this.DatfuncBox1.Size = new System.Drawing.Size(249, 64);
             this.DatfuncBox1.TabIndex = 82;
@@ -996,11 +994,24 @@
             this.bmpBox.Size = new System.Drawing.Size(223, 20);
             this.bmpBox.TabIndex = 85;
             // 
+            // Fshwritecompcb
+            // 
+            this.Fshwritecompcb.AutoSize = true;
+            this.Fshwritecompcb.Location = new System.Drawing.Point(3, 535);
+            this.Fshwritecompcb.Name = "Fshwritecompcb";
+            this.Fshwritecompcb.Size = new System.Drawing.Size(127, 17);
+            this.Fshwritecompcb.TabIndex = 91;
+            this.Fshwritecompcb.Text = "Fshwrite compression";
+            this.toolTip1.SetToolTip(this.Fshwritecompcb, "Use Fshwrite compression when saving DXT1 and DXT3 fsh images");
+            this.Fshwritecompcb.UseVisualStyleBackColor = true;
+            this.Fshwritecompcb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
+            // 
             // Multifshfrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(545, 534);
+            this.ClientSize = new System.Drawing.Size(545, 555);
+            this.Controls.Add(this.Fshwritecompcb);
             this.Controls.Add(this.alphalbl);
             this.Controls.Add(this.bmplbl);
             this.Controls.Add(this.Alphabtn);
@@ -1145,6 +1156,7 @@
         private System.Windows.Forms.TextBox Alphabox;
         private System.Windows.Forms.Button bmpbtn;
         private System.Windows.Forms.TextBox bmpBox;
+        private System.Windows.Forms.CheckBox Fshwritecompcb;
     }
 }
 
