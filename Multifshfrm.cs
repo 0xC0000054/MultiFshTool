@@ -403,16 +403,20 @@ namespace loaddatfsh
             }
             
         }
+        /// <summary>
+        /// Refreshes the list of alpha bitmaps
+        /// </summary>
+        /// <param name="image">The image to refresh the list from</param>
+        /// <param name="listview">The listview to add the images to</param>
+        /// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
         private void RefreshAlphaList(FSHImage image, ListView listview, ImageList imglist)
         {
             listview.Items.Clear();
             if (image.Bitmaps.Count > 1)
             {
 
-                int cnt = -1;
-                foreach (BitmapItem bi in image.Bitmaps)
+                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
                 {
-                    cnt++;
                     listview.LargeImageList = imglist;
                     listview.SmallImageList = imglist;
                     ListViewItem alpha = new ListViewItem("alpha # :" + cnt.ToString(), cnt);
@@ -427,18 +431,22 @@ namespace loaddatfsh
                 ListViewItem alpha = new ListViewItem("alpha # :0", 0);
                 listview.Items.Add(alpha);
             }
+            listview.Items[0].Selected = true;
         }
+        /// <summary>
+        /// Refreshes the list of blended bitmaps
+        /// </summary>
+        /// <param name="image">The image to refresh the list from</param>
+        /// <param name="listview">The listview to add the images to</param>
+        /// <param name="imglist">The ImageList containing the blended bitmaps to use</param>
         private void RefreshBlendList(FSHImage image,ListView listview,ImageList imglist)
         {
             listview.Items.Clear();
-
             if (image.Bitmaps.Count > 1)
             {
 
-                int cnt = -1;
-                foreach (BitmapItem bi in image.Bitmaps)
+                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
                 {
-                    cnt++;
                     bmpitem = (BitmapItem)image.Bitmaps[cnt];
                     listview.LargeImageList = imglist;
                     listview.SmallImageList = imglist;
@@ -456,6 +464,8 @@ namespace loaddatfsh
                 ListViewItem blend = new ListViewItem("blend # :0", 0);
                 listview.Items.Add(blend);
             }
+            listview.Items[0].Selected = true;
+
         }
         private Bitmap Alphablend(BitmapItem item)
         { 
@@ -705,28 +715,12 @@ namespace loaddatfsh
             bmplist.Images.Clear();
             alphalist.Images.Clear();
             blendlist.Images.Clear(); 
-            if (colorRadio.Checked)
-            {
-                list.LargeImageList = bmplist;
-                list.SmallImageList = bmplist;
-            }
-            else if (alphaRadio.Checked)
-            {
-                list.LargeImageList = bmplist;
-                list.SmallImageList = bmplist;
-            }
-            else if (blendRadio.Checked)
-            {
-                list.LargeImageList = blendlist;
-                list.SmallImageList = blendlist;
-            }
+            
             if (image.Bitmaps.Count > 1)
             {
 
-                int cnt = -1;
-                foreach (BitmapItem bi in image.Bitmaps)
+                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
                 {
-                    cnt++;
                     bmpitem = (BitmapItem)image.Bitmaps[cnt];
                     Reset24bitAlpha(bmpitem);
                     bmplist.Images.Add(bmpitem.Bitmap);
@@ -750,8 +744,26 @@ namespace loaddatfsh
                 ListViewItem bitmap = new ListViewItem("bitmap # :0", 0);
                 list.Items.Add(bitmap);
             }
-            
+            if (colorRadio.Checked)
+            {
+                list.LargeImageList = bmplist;
+                list.SmallImageList = bmplist;
+            }
+            else if (alphaRadio.Checked)
+            {
+                list.LargeImageList = bmplist;
+                list.SmallImageList = bmplist;
+                RefreshAlphaList(image, list, alphalist);
+            }
+            else if (blendRadio.Checked)
+            {
+                list.LargeImageList = blendlist;
+                list.SmallImageList = blendlist;               
+                RefreshBlendList(image, list, blendlist);
+
+            }
             RefreshDirectory(image);
+            list.Items[0].Selected = true;
         }
         private void Reset24bitAlpha(BitmapItem item)
         {
@@ -778,11 +790,9 @@ namespace loaddatfsh
             if (curimage.Bitmaps.Count > 1)
             {
 
-                int cnt = -1;
                 rembtn.Enabled = true;
-                foreach (BitmapItem bi in curimage.Bitmaps)
+                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
                 {
-                    cnt++;
                     bmpitem = (BitmapItem)curimage.Bitmaps[cnt];
                     Reset24bitAlpha(bmpitem);
                     BitmapList1.Images.Add(bmpitem.Bitmap);
@@ -790,8 +800,9 @@ namespace loaddatfsh
                     blendList1.Images.Add(Alphablend(bmpitem));
 
                     ListViewItem bitmap = new ListViewItem("bitmap # :" + cnt.ToString(), cnt);
-                    listViewmain.Items.Add(bitmap);
-                }  
+                    listViewmain.Items.Add(bitmap); 
+                }
+                  
             }
             else
             {
@@ -814,13 +825,16 @@ namespace loaddatfsh
             {
                 listViewmain.LargeImageList = alphaList1;
                 listViewmain.SmallImageList = alphaList1;
+                RefreshAlphaList(curimage, listViewmain, alphaList1);
             }
             else if (blendRadio.Checked)
             {
                 listViewmain.LargeImageList = blendList1;
                 listViewmain.SmallImageList = blendList1;
+                RefreshBlendList(curimage, listViewmain, blendList1);
             }
             RefreshDirectory(curimage);
+            listViewmain.Items[0].Selected = true;
         }
         /// <summary>
         /// Refresh the fsh size and dir name for the input image 

@@ -69,8 +69,6 @@
             this.mip8tab = new System.Windows.Forms.TabPage();
             this.listViewMip8 = new System.Windows.Forms.ListView();
             this.bmp8Mip = new System.Windows.Forms.ImageList(this.components);
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.listView2 = new System.Windows.Forms.ListView();
             this.bmp64Mip = new System.Windows.Forms.ImageList(this.components);
             this.alpha64Mip = new System.Windows.Forms.ImageList(this.components);
             this.blend64Mip = new System.Windows.Forms.ImageList(this.components);
@@ -123,7 +121,6 @@
             this.mip32tab.SuspendLayout();
             this.mip16tab.SuspendLayout();
             this.mip8tab.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.InstendBox1.SuspendLayout();
             this.DatfuncBox1.SuspendLayout();
             this.expbmpBox1.SuspendLayout();
@@ -576,31 +573,6 @@
             this.bmp8Mip.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.bmp8Mip.ImageSize = new System.Drawing.Size(8, 8);
             this.bmp8Mip.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.listView2);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(515, 138);
-            this.tabPage2.TabIndex = 0;
-            this.tabPage2.Text = "tabPage1";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // listView2
-            // 
-            this.listView2.BackgroundImageTiled = true;
-            this.listView2.HideSelection = false;
-            this.listView2.LargeImageList = this.BitmapList1;
-            this.listView2.Location = new System.Drawing.Point(0, -5);
-            this.listView2.MultiSelect = false;
-            this.listView2.Name = "listView2";
-            this.listView2.Size = new System.Drawing.Size(523, 143);
-            this.listView2.SmallImageList = this.BitmapList1;
-            this.listView2.TabIndex = 0;
-            this.listView2.TileSize = new System.Drawing.Size(184, 34);
-            this.listView2.UseCompatibleStateImageBehavior = false;
             // 
             // bmp64Mip
             // 
@@ -1058,7 +1030,6 @@
             this.mip32tab.ResumeLayout(false);
             this.mip16tab.ResumeLayout(false);
             this.mip8tab.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.InstendBox1.ResumeLayout(false);
             this.InstendBox1.PerformLayout();
             this.DatfuncBox1.ResumeLayout(false);
@@ -1103,8 +1074,6 @@
         private System.Windows.Forms.TabPage Maintab;
         private System.Windows.Forms.TabPage mip64tab;
         private System.Windows.Forms.ListView listViewMip64;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.ListView listView2;
         private System.Windows.Forms.TabPage mip32tab;
         private System.Windows.Forms.TabPage mip16tab;
         private System.Windows.Forms.TabPage mip8tab;
