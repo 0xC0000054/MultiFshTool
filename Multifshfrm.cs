@@ -617,6 +617,9 @@ namespace loaddatfsh
                             {
                                 Bitmap alpha = new Bitmap(alpath);
                                 addbmp.Alpha = alpha;
+                                addbmp.BmpType = FSHBmpType.DXT3;
+                                FshtypeBox.SelectedIndex = 3;
+
                             }
                             else if (fi.Extension.ToLower().Equals(".png") && bmp.PixelFormat == PixelFormat.Format32bppArgb)
                             {
