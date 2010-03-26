@@ -296,10 +296,9 @@ namespace loaddatfsh
                 RefreshBitmapList();
 
                 RefreshBmpType();
-           
-                ListViewItem item = listViewmain.Items[0];
-                item.Selected = true;
-               
+
+                listViewmain.Items[0].Selected = true;
+
             }
             catch (Exception ex)
             {
@@ -309,25 +308,8 @@ namespace loaddatfsh
         }
         private void Radio_CheckedChanged(object sender, EventArgs e)
         {
-            FSHImage image = null;
-            switch (tabControl1.SelectedIndex)
-            {
-                case 0:
-                    image = curimage;
-                    break;
-                case 1:
-                    image = mip64fsh;
-                    break;
-                case 2:
-                    image = mip32fsh; 
-                    break;
-                case 3:
-                    image = mip16fsh;
-                    break;
-                case 4:
-                    image = mip8fsh;
-                    break;
-            }
+            FSHImage image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
+            
             if (image != null)
             {
                 if (colorRadio.Checked)
@@ -431,7 +413,7 @@ namespace loaddatfsh
             if (image.Bitmaps.Count > 1)
             {
 
-                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
+                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
                 {
                     listview.LargeImageList = imglist;
                     listview.SmallImageList = imglist;
@@ -461,7 +443,7 @@ namespace loaddatfsh
             if (image.Bitmaps.Count > 1)
             {
 
-                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
+                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
                 {
                     bmpitem = (BitmapItem)image.Bitmaps[cnt];
                     listview.LargeImageList = imglist;
@@ -498,15 +480,15 @@ namespace loaddatfsh
             if (listViewmain.SelectedItems.Count > 0)
             {
                 bmpitem = (BitmapItem)curimage.Bitmaps[listViewmain.SelectedItems[0].Index];
-                Settypeindex(bmpitem);
+                Settypeindex(curimage, bmpitem);
                 RefreshBmpType();
-               
+
                 Sizelbl.Text = fshsize[listViewmain.SelectedItems[0].Index];
                 dirtxt.Text = dirname[listViewmain.SelectedItems[0].Index];
             }
         }
-        private void Settypeindex(BitmapItem item)
-        { 
+        private void Settypeindex(FSHImage image, BitmapItem item)
+        {
             switch (item.BmpType) // set the stored bmp type
             {
                 case FSHBmpType.TwentyFourBit:
@@ -709,8 +691,33 @@ namespace loaddatfsh
                                 addbmp.SetDirName("FiSH");
                             }
 
-                            if (tabControl1.SelectedTab == Maintab)
+                            if (bmp.Height < 256 && bmp.Width < 256)
                             {
+                                hdfshRadio.Enabled = false;
+                                hdBasetexrdo.Enabled = false;
+                                regFshrdo.Checked = true;
+                            }
+                            else
+                            {
+                                hdfshRadio.Enabled = true;
+                                hdBasetexrdo.Enabled = true;
+                                if (bmpitem.BmpType == FSHBmpType.ThirtyTwoBit)
+                                {
+                                    hdfshRadio.Checked = true;
+                                }
+                                else if (bmpitem.BmpType == FSHBmpType.TwentyFourBit)
+                                {
+                                    hdBasetexrdo.Checked = true;
+                                }
+                                else
+                                {
+                                    regFshrdo.Checked = true;
+                                }
+                            }
+
+                            if (tabControl1.SelectedTab == Maintab)
+                            {                           
+                                colorRadio.Checked = true;
                                 if (curimage == null)
                                 {
                                     curimage = new FSHImage();
@@ -719,16 +726,11 @@ namespace loaddatfsh
                                 curimage.UpdateDirty();
                                 if (f == files.Count - 1)
                                 {
+                                    CheckBitmapType(curimage, addbmp); 
                                     Temp_fsh();
-                                    CheckHdBitmapType(curimage, addbmp.Bitmap);
+                                    mipbtn_Click(null, null);
+                                    listViewmain.Items[0].Selected = true;
                                 }
-                            }
-
-                            colorRadio.Checked = true;
-                            if (f == files.Count - 1)
-                            {
-                                mipbtn_Click(null, null);
-                                listViewmain.Items[0].Selected = true;
                             }
 
                         }
@@ -760,7 +762,7 @@ namespace loaddatfsh
             if (image.Bitmaps.Count > 1)
             {
 
-                for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
+                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
                 {
                     bmpitem = (BitmapItem)image.Bitmaps[cnt];
                     Reset24bitAlpha(bmpitem);
@@ -821,7 +823,9 @@ namespace loaddatfsh
                 item.Alpha = alpha;
             }
         }
-        
+        /// <summary>
+        /// Refreshes the listviewMain ImageLists from the current fsh 
+        /// </summary>
         private void RefreshBitmapList()
         {
             if (listViewmain.Items.Count > 0)
@@ -835,6 +839,9 @@ namespace loaddatfsh
                 for (int cnt = 0; cnt < curimage.Bitmaps.Count; cnt++)
                 {
                     bmpitem = (BitmapItem)curimage.Bitmaps[cnt];
+
+                    CheckBitmapType(curimage, bmpitem); // reset the 32-bit images to 24-bit and DXT3 images to DXT1
+
                     Reset24bitAlpha(bmpitem);
                     BitmapList1.Images.Add(bmpitem.Bitmap);
                     alphaList1.Images.Add(bmpitem.Alpha);
@@ -905,6 +912,7 @@ namespace loaddatfsh
                 bmpitem.SetDirName("FiSH");
             }
         }
+        
         private void rembtn_Click(object sender, EventArgs e)
         {
             if (tabControl1.SelectedTab == Maintab) 
@@ -915,8 +923,9 @@ namespace loaddatfsh
                     {
                         curimage.Bitmaps.Remove(bmpitem); //remove the item and rebuild the mipmaps
                         Temp_fsh();
-                        CheckHdBitmapType(curimage, bmpitem.Bitmap); // the first item in listViewmain 
+                        CheckBitmapType(curimage, bmpitem); // the first item in listViewmain 
                         mipbtn_Click(null, null);
+                        listViewmain.Items[0].Selected = true;
                     }
                     catch (Exception ex)
                     {
@@ -1056,13 +1065,13 @@ namespace loaddatfsh
                             {
                                 repbmp.SetDirName("FiSH");
                             }
-                           
+                            
                             curimage.Bitmaps.RemoveAt(listViewmain.SelectedItems[0].Index);
                             curimage.Bitmaps.Insert(listViewmain.SelectedItems[0].Index, repbmp);
                             curimage.UpdateDirty();
-                            
+                                                        
+                            CheckBitmapType(curimage, repbmp); 
                             Temp_fsh();
-                            CheckHdBitmapType(curimage, bmpitem.Bitmap); // the first item in listViewmain 
                             mipbtn_Click(null, null);
                         }
                     }
@@ -1084,6 +1093,7 @@ namespace loaddatfsh
         }
         private void hdFshRadio_CheckedChanged(object sender, EventArgs e)
         {
+            
             if (bmpitem != null && bmpitem.Bitmap != null)
             {
                 if (/*(hdfshRadio.Checked || hdBasetexrdo.Checked) &&*/ bmpitem.Bitmap.Width < 256 && bmpitem.Bitmap.Height < 256)
@@ -1097,7 +1107,14 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    hdfshRadio.Enabled = true;
+                    if (curimage.Bitmaps.Count > 1)
+                    {
+                        hdfshRadio.Enabled = false;
+                    }
+                    else
+                    {
+                        hdfshRadio.Enabled = true;
+                    }
                     hdBasetexrdo.Enabled = true;
                     if (hdfshRadio.Checked)
                     {
@@ -1380,6 +1397,7 @@ namespace loaddatfsh
         
         private void FshtypeBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            FSHImage image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
             if (bmpitem != null && bmpitem.Bitmap != null)
             {
                 if (!Checkhdimgsize(bmpitem.Bitmap))
@@ -1387,6 +1405,13 @@ namespace loaddatfsh
                     if (FshtypeBox.SelectedIndex == 0 || FshtypeBox.SelectedIndex == 1)
                     {
                         FshtypeBox.SelectedIndex = typeindex;
+                    }
+                }
+                if (image != null && image.Bitmaps.Count > 1)
+                {
+                    if (FshtypeBox.SelectedIndex == 3)
+                    {
+                        FshtypeBox.SelectedIndex = 2;
                     }
                 }
                 if (FshtypeBox.SelectedIndex == 0)
@@ -1797,22 +1822,19 @@ namespace loaddatfsh
                     }
                     if (bitmaploaded)
                     {
-                        if (Alphabox.Text.Length > 0)
+                        if (Alphabox.Text.Length > 0 && File.Exists(Alphabox.Text))
                         {
-                            if (File.Exists(Alphabox.Text))
+                            Bitmap alpha = new Bitmap(Alphabox.Text);
+                            bmpitem.Alpha = alpha;
+                            if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                             {
-                                Bitmap alpha = new Bitmap(Alphabox.Text);
-                                bmpitem.Alpha = alpha;
-                                if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    bmpitem.BmpType = FSHBmpType.ThirtyTwoBit;
-                                    FshtypeBox.SelectedIndex = 1;
-                                }
-                                else
-                                {
-                                    bmpitem.BmpType = FSHBmpType.DXT3;
-                                    FshtypeBox.SelectedIndex = 3;
-                                }
+                                bmpitem.BmpType = FSHBmpType.ThirtyTwoBit;
+                                FshtypeBox.SelectedIndex = 1;
+                            }
+                            else
+                            {
+                                bmpitem.BmpType = FSHBmpType.DXT3;
+                                FshtypeBox.SelectedIndex = 3;
                             }
                         }
                         else if (!string.IsNullOrEmpty(alphamap) && File.Exists(alphamap))
@@ -1880,6 +1902,7 @@ namespace loaddatfsh
                         {
                             bmpitem.SetDirName("FiSH");
                         }
+
                         string fn = Path.GetFileNameWithoutExtension(files[0]);
                         if (fn.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                         {
@@ -1900,6 +1923,18 @@ namespace loaddatfsh
                         {
                             hdfshRadio.Enabled = true;
                             hdBasetexrdo.Enabled = true;
+                            if (bmpitem.BmpType == FSHBmpType.ThirtyTwoBit)
+                            {
+                                hdfshRadio.Checked = true;
+                            }
+                            else if (bmpitem.BmpType == FSHBmpType.TwentyFourBit)
+                            {
+                                hdBasetexrdo.Checked = true;
+                            }
+                            else
+                            {
+                                regFshrdo.Checked = true;
+                            }
                         }
 
                         if (bmp.Width >= 128 && bmp.Height >= 128)
@@ -2333,7 +2368,7 @@ namespace loaddatfsh
                     item.Selected = true;
                     tgiInstancetxt.Text = string.Concat(inststr, endreg);
                     RefreshBmpType();
-                    CheckHdBitmapType(curimage, bmpitem.Bitmap); 
+                    CheckBitmapType(curimage, bmpitem); 
                 }
                 
             }
@@ -2344,7 +2379,7 @@ namespace loaddatfsh
             if (listViewMip64.SelectedItems.Count > 0)
             {
                 bmpitem = (BitmapItem)mip64fsh.Bitmaps[listViewMip64.SelectedItems[0].Index];
-                Settypeindex(bmpitem);
+                Settypeindex(mip64fsh, bmpitem);
                 RefreshBmpType();
                 Sizelbl.Text = fshsize[listViewMip64.SelectedItems[0].Index];
                 dirtxt.Text = dirname[listViewMip64.SelectedItems[0].Index];
@@ -2356,7 +2391,7 @@ namespace loaddatfsh
             if (listViewMip32.SelectedItems.Count > 0)
             {
                 bmpitem = (BitmapItem)mip32fsh.Bitmaps[listViewMip32.SelectedItems[0].Index];
-                Settypeindex(bmpitem);
+                Settypeindex(mip32fsh, bmpitem);
                 RefreshBmpType();
                 Sizelbl.Text = fshsize[listViewMip32.SelectedItems[0].Index];
                 dirtxt.Text = dirname[listViewMip32.SelectedItems[0].Index];
@@ -2368,7 +2403,7 @@ namespace loaddatfsh
             if (listViewMip16.SelectedItems.Count > 0)
             {
                 bmpitem = (BitmapItem)mip16fsh.Bitmaps[listViewMip16.SelectedItems[0].Index];
-                Settypeindex(bmpitem);
+                Settypeindex(mip16fsh, bmpitem);
                 RefreshBmpType();
                 Sizelbl.Text = fshsize[listViewMip16.SelectedItems[0].Index];
                 dirtxt.Text = dirname[listViewMip16.SelectedItems[0].Index];
@@ -2380,7 +2415,7 @@ namespace loaddatfsh
             if (listViewMip8.SelectedItems.Count > 0)
             {
                 bmpitem = (BitmapItem)mip8fsh.Bitmaps[listViewMip8.SelectedItems[0].Index];
-                Settypeindex(bmpitem);
+                Settypeindex(mip8fsh, bmpitem);
                 RefreshBmpType();
                 Sizelbl.Text = fshsize[listViewMip8.SelectedItems[0].Index];
                 dirtxt.Text = dirname[listViewMip8.SelectedItems[0].Index];
@@ -3107,20 +3142,47 @@ namespace loaddatfsh
             }
         }
         /// <summary>
-        /// Checks if the image can use the 32-bit hd fsh
+        /// Checks if the image can use the DXT# fsh
         /// </summary>
         /// <param name="image">The image to check</param>
-        /// <param name="bmp">The Bitmap to check</param>
-        private void CheckHdBitmapType(FSHImage image, Bitmap bmp)
+        /// <param name="index">The FshtypeBox selected index</param>
+        /// <returns>True on success otherwise false</returns>
+        private bool CheckDXTBitmapType(FSHImage image, int index)
+        {
+            if (image.Bitmaps.Count > 1 && index == 3)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        /// <summary>
+        /// Checks if the image can use the 32-bit or DXT3 fsh
+        /// </summary>
+        /// <param name="image">The image to check</param>
+        /// <param name="item">The BitmapItem to check</param>
+        private void CheckBitmapType(FSHImage image, BitmapItem item)
         {
             if (image.Bitmaps.Count > 1)
             {
-                if (Checkhdimgsize(bmp))
+                if (Checkhdimgsize(item.Bitmap))
                 {
                     hdfshRadio.Enabled = false;
-                    if (hdfshRadio.Checked)
+                    if (item.BmpType == FSHBmpType.ThirtyTwoBit || hdfshRadio.Checked)
                     {
                         hdBasetexrdo.Checked = true;
+                        if (item.BmpType == FSHBmpType.ThirtyTwoBit)
+                        {
+                            bmpitem.BmpType = FSHBmpType.TwentyFourBit;
+                            FshtypeBox.SelectedIndex = 0;
+                        }
+                    }
+                    else if (item.BmpType == FSHBmpType.DXT3)
+                    {
+                        item.BmpType = FSHBmpType.DXT1;
+                        FshtypeBox.SelectedIndex = 2;
                     }
                 }
                 else
@@ -3130,6 +3192,11 @@ namespace loaddatfsh
                     regFshrdo.Checked = true;
                     hdfshRadio.Enabled = false;
                     hdBasetexrdo.Enabled = false;
+                    if (item.BmpType == FSHBmpType.DXT3)
+                    {
+                        item.BmpType = FSHBmpType.DXT1;
+                        FshtypeBox.SelectedIndex = 2;
+                    }
                 }
             }
             else
@@ -3154,12 +3221,10 @@ namespace loaddatfsh
                 return false;
             }
         }
-        private void FshtypeBox_DrawItem(object sender, DrawItemEventArgs e)
+        private FSHImage GetImageFromSelectedTab(int index)
         {
-            ComboBox cb = sender as ComboBox;
             FSHImage image = null;
-
-            switch (tabControl1.SelectedIndex)
+            switch (index)
             {
                 case 0:
                     image = curimage;
@@ -3177,6 +3242,13 @@ namespace loaddatfsh
                     image = mip8fsh;
                     break;
             }
+            return image;
+        }
+        private void FshtypeBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            FSHImage image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
+
             if (image != null && image.Bitmaps.Count > 0 && bmpitem != null && bmpitem.Bitmap != null)
             {
                 if (!Checkhdimgsize(bmpitem.Bitmap))
@@ -3191,18 +3263,29 @@ namespace loaddatfsh
                     }
                     else
                     {
-                        //leave the other items alone
-                        string text = cb.Items[e.Index].ToString();
-                        e.DrawBackground();
-                        e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-                        e.DrawFocusRectangle();
+                        if (!CheckDXTBitmapType(image,e.Index))
+                        {
+                            // make the DXT3 fsh item look disabled 
+                            string text = cb.Items[e.Index].ToString();
+                            e.DrawBackground();
+                            e.Graphics.DrawString(text, e.Font, SystemBrushes.GrayText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
+                            e.DrawFocusRectangle();
+                        }
+                        else
+                        {
+                            //leave the other items alone
+                            string text = cb.Items[e.Index].ToString();
+                            e.DrawBackground();
+                            e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
+                            e.DrawFocusRectangle();
+                        }
                     }
                 }
                 else
                 {
-                    if (!CheckHdBitmapType(image, e.Index))
+                    if (!CheckHdBitmapType(image, e.Index) || !CheckDXTBitmapType(image,e.Index))
                     {
-                        // make the 32-bit hd fsh item look disabled 
+                        // make the 32-bit hd or DXT3 fsh item look disabled 
                         string text = cb.Items[e.Index].ToString();
                         e.DrawBackground();
                         e.Graphics.DrawString(text, e.Font, SystemBrushes.GrayText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
