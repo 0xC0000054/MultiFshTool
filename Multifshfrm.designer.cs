@@ -102,6 +102,7 @@
             this.genNewInstcb = new System.Windows.Forms.CheckBox();
             this.compDatcb = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.Fshwritecompcb = new System.Windows.Forms.CheckBox();
             this.alphasavebtn = new System.Windows.Forms.Button();
             this.savebmpblendbtn = new System.Windows.Forms.Button();
             this.bmpsavebtn = new System.Windows.Forms.Button();
@@ -112,7 +113,6 @@
             this.Alphabox = new System.Windows.Forms.TextBox();
             this.bmpbtn = new System.Windows.Forms.Button();
             this.bmpBox = new System.Windows.Forms.TextBox();
-            this.Fshwritecompcb = new System.Windows.Forms.CheckBox();
             this.bmpmanBox1.SuspendLayout();
             this.fshDefbox.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -729,6 +729,9 @@
             // 
             // DatlistView1
             // 
+            this.DatlistView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.DatlistView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.NameHeader1,
             this.GroupHeader,
@@ -863,6 +866,19 @@
             this.compDatcb.UseVisualStyleBackColor = true;
             this.compDatcb.CheckedChanged += new System.EventHandler(this.compDatcb_CheckedChanged);
             // 
+            // Fshwritecompcb
+            // 
+            this.Fshwritecompcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Fshwritecompcb.AutoSize = true;
+            this.Fshwritecompcb.Location = new System.Drawing.Point(3, 535);
+            this.Fshwritecompcb.Name = "Fshwritecompcb";
+            this.Fshwritecompcb.Size = new System.Drawing.Size(127, 17);
+            this.Fshwritecompcb.TabIndex = 91;
+            this.Fshwritecompcb.Text = "Fshwrite compression";
+            this.toolTip1.SetToolTip(this.Fshwritecompcb, "Use Fshwrite compression when saving DXT1 and DXT3 fsh images");
+            this.Fshwritecompcb.UseVisualStyleBackColor = true;
+            this.Fshwritecompcb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
+            // 
             // alphasavebtn
             // 
             this.alphasavebtn.Location = new System.Drawing.Point(87, 18);
@@ -966,18 +982,6 @@
             this.bmpBox.Size = new System.Drawing.Size(223, 20);
             this.bmpBox.TabIndex = 85;
             // 
-            // Fshwritecompcb
-            // 
-            this.Fshwritecompcb.AutoSize = true;
-            this.Fshwritecompcb.Location = new System.Drawing.Point(3, 535);
-            this.Fshwritecompcb.Name = "Fshwritecompcb";
-            this.Fshwritecompcb.Size = new System.Drawing.Size(127, 17);
-            this.Fshwritecompcb.TabIndex = 91;
-            this.Fshwritecompcb.Text = "Fshwrite compression";
-            this.toolTip1.SetToolTip(this.Fshwritecompcb, "Use Fshwrite compression when saving DXT1 and DXT3 fsh images");
-            this.Fshwritecompcb.UseVisualStyleBackColor = true;
-            this.Fshwritecompcb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
-            // 
             // Multifshfrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1016,7 +1020,7 @@
             this.Controls.Add(this.loadfsh);
             this.Controls.Add(this.fshDefbox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.MinimumSize = new System.Drawing.Size(555, 570);
+            this.MinimumSize = new System.Drawing.Size(555, 591);
             this.Name = "Multifshfrm";
             this.Text = "Multi fsh tool";
             this.Load += new System.EventHandler(this.Multifshfrm_Load);
