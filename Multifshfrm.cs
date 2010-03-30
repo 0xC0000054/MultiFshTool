@@ -1357,36 +1357,33 @@ namespace loaddatfsh
         /// </summary>
         private void WriteTgi(string filename, int zoom)
         {
-            FileStream fs = new FileStream(filename + ".TGI", FileMode.OpenOrCreate, FileAccess.Write);
-            StreamWriter sw = new StreamWriter(fs);
-            try 
-	        {	        
-		        sw.WriteLine("7ab50e44\t\n");
-                sw.WriteLine(string.Format("{0:X8}", TgiGrouptxt.Text.ToString()+ "\n"));
-                switch (zoom)
-                { 
-                    case 0:
-                        sw.WriteLine(string.Format("{0:X8}",tgiInstancetxt.Text.Substring(0, 7) + end8));
-                        break;
-                    case 1:
-                        sw.WriteLine(string.Format("{0:X8}",tgiInstancetxt.Text.Substring(0, 7) + end16));
-                        break;
-                    case 2:
-                        sw.WriteLine(string.Format("{0:X8}",tgiInstancetxt.Text.Substring(0, 7) + end32));
-                        break;
-                    case 3:
-                        sw.WriteLine(string.Format("{0:X8}",tgiInstancetxt.Text.Substring(0, 7) + end64));
-                        break;
-                    case 4:
-                       sw.WriteLine(string.Format("{0:X8}",tgiInstancetxt.Text.Substring(0, 7) + endreg));
-                        break;
+            using (FileStream fs = new FileStream(filename + ".TGI", FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.WriteLine("7ab50e44\t\n");
+                    sw.WriteLine(string.Format("{0:X8}", TgiGrouptxt.Text.ToString() + "\n"));
+                    switch (zoom)
+                    {
+                        case 0:
+                            sw.WriteLine(string.Format("{0:X8}", tgiInstancetxt.Text.Substring(0, 7) + end8));
+                            break;
+                        case 1:
+                            sw.WriteLine(string.Format("{0:X8}", tgiInstancetxt.Text.Substring(0, 7) + end16));
+                            break;
+                        case 2:
+                            sw.WriteLine(string.Format("{0:X8}", tgiInstancetxt.Text.Substring(0, 7) + end32));
+                            break;
+                        case 3:
+                            sw.WriteLine(string.Format("{0:X8}", tgiInstancetxt.Text.Substring(0, 7) + end64));
+                            break;
+                        case 4:
+                            sw.WriteLine(string.Format("{0:X8}", tgiInstancetxt.Text.Substring(0, 7) + endreg));
+                            break;
+
+                    }
                 }
-	        }
-	        finally
-	        {
-                sw.Flush();
-                sw.Close();
-	        }
+            }
         }
         
         private void FshtypeBox_SelectedIndexChanged(object sender, EventArgs e)
