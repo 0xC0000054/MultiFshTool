@@ -950,10 +950,8 @@ namespace loaddatfsh
                         string alphamap = string.Empty;
                         string bmpfilename = string.Empty; // holds the filename from the bmpBox TextBox or the OpenBitmapDialog 
 
-                        if (bmpBox.Text.Length > 0)
+                        if (bmpBox.Text.Length > 0 && File.Exists(bmpBox.Text))
                         {
-                            if (File.Exists(bmpBox.Text))
-                            {
                                 bmp = new Bitmap(bmpBox.Text);
                                 if (CheckSize(bmp))
                                 {
@@ -961,7 +959,6 @@ namespace loaddatfsh
                                     bmpfilename = bmpBox.Text;
                                     bmploaded = true;
                                 }
-                            }
                         }
                         else if (openBitmapDialog1.ShowDialog() == DialogResult.OK)
                         {
@@ -985,22 +982,19 @@ namespace loaddatfsh
                         if (bmploaded)
                         {
 
-                            if (Alphabox.Text.Length > 0)
+                            if (Alphabox.Text.Length > 0 && File.Exists(Alphabox.Text))
                             {
-                                if (File.Exists(Alphabox.Text))
+                                Bitmap alpha = new Bitmap(Alphabox.Text);
+                                repbmp.Alpha = alpha;
+                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpfilename).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    Bitmap alpha = new Bitmap(Alphabox.Text);
-                                    repbmp.Alpha = alpha;
-                                    if (Checkhdimgsize(bmp) && Path.GetFileName(bmpfilename).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        repbmp.BmpType = FSHBmpType.ThirtyTwoBit;
-                                        FshtypeBox.SelectedIndex = 1;
-                                    }
-                                    else
-                                    {
-                                        repbmp.BmpType = FSHBmpType.DXT3;
-                                        FshtypeBox.SelectedIndex = 3;
-                                    }
+                                    repbmp.BmpType = FSHBmpType.ThirtyTwoBit;
+                                    FshtypeBox.SelectedIndex = 1;
+                                }
+                                else
+                                {
+                                    repbmp.BmpType = FSHBmpType.DXT3;
+                                    FshtypeBox.SelectedIndex = 3;
                                 }
                             }
                             else if (!string.IsNullOrEmpty(alphamap) && File.Exists(alphamap))
@@ -2120,6 +2114,7 @@ namespace loaddatfsh
             {
                 bool loaded = false;
                 int pngcnt = CountPngArgs(args);
+                List<string> pnglist = null;
                 for (int i = 0; i < args.Length; i++)
                 {
                     FileInfo fi = new FileInfo(args[i]);
@@ -2147,76 +2142,14 @@ namespace loaddatfsh
                             {
                                 if (!loaded)
                                 {
-                                    bmpitem = new BitmapItem();
-                                    Bitmap img = new Bitmap(fi.FullName);
-
-                                    bmpitem.Bitmap = img;
-
-                                    string alphapath = Path.Combine(fi.DirectoryName, Path.GetFileNameWithoutExtension(fi.FullName) + "_a" + fi.Extension);
-
-                                    if (fi.Extension.Equals(".png") && img.PixelFormat == PixelFormat.Format32bppArgb)
+                                    if (pnglist == null)
                                     {
-                                        Bitmap alpha = GetAlphafromPng(img);
-                                        bmpitem.Alpha = alpha;
-                                        if (Checkhdimgsize(img) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            bmpitem.BmpType = FSHBmpType.ThirtyTwoBit;
-                                            FshtypeBox.SelectedIndex = 1;
-                                        }
-                                        else
-                                        {
-                                            bmpitem.BmpType = FSHBmpType.DXT3;
-                                            FshtypeBox.SelectedIndex = 3;
-                                        }
+                                        pnglist = new List<string>();
                                     }
-                                    else if (File.Exists(alphapath))
+                                    pnglist.Add(fi.FullName);
+                                    if (pnglist.Count == pngcnt)
                                     {
-                                        Bitmap alpha = new Bitmap(alphapath);
-                                        bmpitem.Alpha = alpha;
-                                        if (Checkhdimgsize(img) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            bmpitem.BmpType = FSHBmpType.ThirtyTwoBit;
-                                            FshtypeBox.SelectedIndex = 1;
-                                        }
-                                        else
-                                        {
-                                            bmpitem.BmpType = FSHBmpType.DXT3;
-                                            FshtypeBox.SelectedIndex = 3;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Bitmap alpha = new Bitmap(img.Width, img.Height);
-                                        for (int y = 0; y < alpha.Height; y++)
-                                        {
-                                            for (int x = 0; x < alpha.Width; x++)
-                                            {
-                                                alpha.SetPixel(x, y, Color.White);
-                                            }
-                                        }
-                                        bmpitem.Alpha = alpha;
-                                        if (Checkhdimgsize(img) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            bmpitem.BmpType = FSHBmpType.TwentyFourBit;
-                                            FshtypeBox.SelectedIndex = 0;
-                                        }
-                                        else
-                                        {
-                                            bmpitem.BmpType = FSHBmpType.DXT1;
-                                            FshtypeBox.SelectedIndex = 2;
-                                        }
-                                    }
-
-                                    if (img.Width >= 128 && img.Height >= 128)
-                                    {
-                                        curimage = new FSHImage();
-                                        curimage.Bitmaps.Add(bmpitem);
-                                        curimage.UpdateDirty();
-                                        if (curimage.Bitmaps.Count == pngcnt)
-                                        {
-                                            Temp_fsh();
-                                            loaded = true;
-                                        }
+                                        NewFsh(pnglist);
                                     }
                                 }
 
