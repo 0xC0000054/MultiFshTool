@@ -75,7 +75,7 @@ namespace loaddatfsh
                             if (tempitem.Bitmap.Width >= 128 && tempitem.Bitmap.Height >= 128)
                             {
                                 curimage = new FSHImage(fstream);
-                                RefreshBitmapList();
+                                RefreshImageLists();
                                 ListViewItem item = listViewmain.Items[0];
                                 item.Selected = true;
                                 success = true;
@@ -86,7 +86,7 @@ namespace loaddatfsh
                             {
 
                                 mip64fsh = new FSHImage(fstream);
-                                RefreshMipList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+                                RefreshMipImageList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
                                 ListViewItem item = listViewMip64.Items[0];
                                 item.Selected = true;
                                 loadisMip = true;
@@ -97,7 +97,7 @@ namespace loaddatfsh
                             else if (tempitem.Bitmap.Width == 32 && tempitem.Bitmap.Height == 32)
                             {
                                 mip32fsh = new FSHImage(fstream);
-                                RefreshMipList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+                                RefreshMipImageList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
                                 ListViewItem item = listViewMip32.Items[0];
                                 item.Selected = true;
                                 loadisMip = true;
@@ -107,7 +107,7 @@ namespace loaddatfsh
                             else if (tempitem.Bitmap.Width == 16 && tempitem.Bitmap.Height == 16)
                             {
                                 mip16fsh = new FSHImage(fstream);
-                                RefreshMipList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+                                RefreshMipImageList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
                                 ListViewItem item = listViewMip16.Items[0];
                                 item.Selected = true;
                                 loadisMip = true; 
@@ -117,7 +117,7 @@ namespace loaddatfsh
                             else if (tempitem.Bitmap.Width == 8 && tempitem.Bitmap.Height == 8)
                             {
                                 mip8fsh = new FSHImage(fstream);
-                                RefreshMipList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+                                RefreshMipImageList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
                                 ListViewItem item = listViewMip8.Items[0];
                                 item.Selected = true;
                                 loadisMip = true;
@@ -293,7 +293,7 @@ namespace loaddatfsh
 
                 bmpitem = new BitmapItem();
                 ClearFshlists();
-                RefreshBitmapList();
+                RefreshImageLists();
 
                 RefreshBmpType();
 
@@ -310,40 +310,29 @@ namespace loaddatfsh
         {
             FSHImage image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
             
-            if (image != null)
+            if (image != null && image.Bitmaps.Count > 0)
             {
                 if (colorRadio.Checked)
                 {
                     if (tabControl1.SelectedTab == Maintab)
                     {
-                        listViewmain.Items.Clear();
-                        listViewmain.SmallImageList = BitmapList1;
-                        listViewmain.LargeImageList = BitmapList1;
-                        RefreshBitmapList();
+                        RefreshBitmapList(curimage, listViewmain, BitmapList1);
                     }
                     else if (tabControl1.SelectedTab == mip64tab)
                     {
-                        listViewMip64.LargeImageList = bmp64Mip;
-                        listViewMip64.SmallImageList = bmp64Mip;
-                        RefreshMipList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+                        RefreshBitmapList(mip64fsh, listViewMip64, bmp64Mip);
                     }
                     else if (tabControl1.SelectedTab == mip32tab)
                     {
-                        listViewMip32.LargeImageList = bmp32Mip;
-                        listViewMip32.SmallImageList = bmp32Mip;
-                        RefreshMipList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+                        RefreshBitmapList(mip32fsh, listViewMip32, bmp32Mip);
                     }
                     else if (tabControl1.SelectedTab == mip16tab)
                     {
-                        listViewMip16.LargeImageList = bmp16Mip;
-                        listViewMip16.SmallImageList = bmp16Mip;
-                        RefreshMipList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+                        RefreshBitmapList(mip16fsh, listViewMip16, bmp16Mip);
                     }
                     else if (tabControl1.SelectedTab == mip8tab)
                     {
-                        listViewMip8.LargeImageList = bmp8Mip;
-                        listViewMip8.SmallImageList = bmp8Mip;
-                        RefreshMipList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+                        RefreshBitmapList(mip8fsh, listViewMip8, bmp8Mip);
                     }
                 }
                 else if (alphaRadio.Checked)
@@ -401,6 +390,39 @@ namespace loaddatfsh
             }
             
         }
+        
+        /// <summary>
+        /// Refreshes the list of bitmaps
+        /// </summary>
+        /// <param name="image">The image to refresh the list from</param>
+        /// <param name="listview">The listview to add the images to</param>
+        /// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
+        private void RefreshBitmapList(FSHImage image, ListView listview, ImageList imglist)
+        {
+            if (listview.Items.Count > 0)
+            {
+                listview.Items.Clear();
+            }
+            listview.LargeImageList = imglist;
+            listview.SmallImageList = imglist;
+            if (image.Bitmaps.Count > 1)
+            {
+
+                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
+                {
+                    ListViewItem alpha = new ListViewItem("bitmap # :" + cnt.ToString(), cnt);
+                    listview.Items.Add(alpha);
+                }
+
+            }
+            else
+            {
+                ListViewItem alpha = new ListViewItem("bitmap # :0", 0);
+                listview.Items.Add(alpha);
+            }
+            listview.Items[0].Selected = true;
+        }
+
         /// <summary>
         /// Refreshes the list of alpha bitmaps
         /// </summary>
@@ -409,14 +431,17 @@ namespace loaddatfsh
         /// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
         private void RefreshAlphaList(FSHImage image, ListView listview, ImageList imglist)
         {
-            listview.Items.Clear();
+            if (listview.Items.Count > 0)
+            {
+                listview.Items.Clear();
+            }
+            listview.LargeImageList = imglist;
+            listview.SmallImageList = imglist;
             if (image.Bitmaps.Count > 1)
             {
 
                 for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
                 {
-                    listview.LargeImageList = imglist;
-                    listview.SmallImageList = imglist;
                     ListViewItem alpha = new ListViewItem("alpha # :" + cnt.ToString(), cnt);
                     listview.Items.Add(alpha);
                 }
@@ -424,8 +449,6 @@ namespace loaddatfsh
             }
             else
             {
-                listview.LargeImageList = imglist;
-                listview.SmallImageList = imglist;
                 ListViewItem alpha = new ListViewItem("alpha # :0", 0);
                 listview.Items.Add(alpha);
             }
@@ -439,15 +462,17 @@ namespace loaddatfsh
         /// <param name="imglist">The ImageList containing the blended bitmaps to use</param>
         private void RefreshBlendList(FSHImage image,ListView listview,ImageList imglist)
         {
-            listview.Items.Clear();
+            if (listview.Items.Count > 0)
+            {
+                listview.Items.Clear();
+            }
+            listview.LargeImageList = imglist;
+            listview.SmallImageList = imglist; 
             if (image.Bitmaps.Count > 1)
             {
 
                 for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
                 {
-                    bmpitem = (BitmapItem)image.Bitmaps[cnt];
-                    listview.LargeImageList = imglist;
-                    listview.SmallImageList = imglist;
                     ListViewItem blend = new ListViewItem("blend # :" + cnt.ToString(), cnt);
                     listview.Items.Add(blend);
                 }
@@ -455,10 +480,6 @@ namespace loaddatfsh
             }
             else
             {
-                bmpitem = (BitmapItem)image.Bitmaps[0];
-
-                listview.LargeImageList = imglist;
-                listview.SmallImageList = imglist;
                 ListViewItem blend = new ListViewItem("blend # :0", 0);
                 listview.Items.Add(blend);
             }
@@ -721,12 +742,12 @@ namespace loaddatfsh
                                 if (curimage == null)
                                 {
                                     curimage = new FSHImage();
-                                }
+                                }   
+                                CheckBitmapType(curimage, addbmp); 
                                 curimage.Bitmaps.Add(addbmp);
                                 curimage.UpdateDirty();
                                 if (f == files.Count - 1)
                                 {
-                                    CheckBitmapType(curimage, addbmp); 
                                     Temp_fsh();
                                     mipbtn_Click(null, null);
                                     listViewmain.Items[0].Selected = true;
@@ -751,10 +772,17 @@ namespace loaddatfsh
                 AddbtnFiles(files, false);
             }
         }
-
-        private void RefreshMipList(FSHImage image,ImageList bmplist,ImageList alphalist,ImageList blendlist, ListView list)
+        
+        /// <summary>
+        /// Rebuilds the Mip ImageLists
+        /// </summary>
+        /// <param name="image">The image to build the lists from</param>
+        /// <param name="bmplist">The list to hold the Bitmap</param>
+        /// <param name="alphalist">The list to hold the Alpha</param>
+        /// <param name="blendlist">The list to hold the Blended Bitmap</param>
+        /// <param name="list">The ListView to display the images</param>
+        private void RefreshMipImageList(FSHImage image, ImageList bmplist, ImageList alphalist, ImageList blendlist, ListView list)
         {
-            list.Items.Clear();
             bmplist.Images.Clear();
             alphalist.Images.Clear();
             blendlist.Images.Clear(); 
@@ -770,8 +798,6 @@ namespace loaddatfsh
                     alphalist.Images.Add(bmpitem.Alpha);
                     blendlist.Images.Add(Alphablend(bmpitem));
 
-                    ListViewItem bitmap = new ListViewItem("bitmap # :" + cnt.ToString(), cnt);
-                    list.Items.Add(bitmap);
                 }
 
             }
@@ -783,30 +809,22 @@ namespace loaddatfsh
                 bmplist.Images.Add(bmpitem.Bitmap);
                 alphalist.Images.Add(bmpitem.Alpha);
                 blendlist.Images.Add(Alphablend(bmpitem));
-
-                ListViewItem bitmap = new ListViewItem("bitmap # :0", 0);
-                list.Items.Add(bitmap);
             }
+            RefreshDirectory(image);
+
             if (colorRadio.Checked)
             {
-                list.LargeImageList = bmplist;
-                list.SmallImageList = bmplist;
+                RefreshBitmapList(image, list, bmplist);
             }
             else if (alphaRadio.Checked)
             {
-                list.LargeImageList = bmplist;
-                list.SmallImageList = bmplist;
                 RefreshAlphaList(image, list, alphalist);
             }
             else if (blendRadio.Checked)
             {
-                list.LargeImageList = blendlist;
-                list.SmallImageList = blendlist;               
                 RefreshBlendList(image, list, blendlist);
-
             }
-            RefreshDirectory(image);
-            list.Items[0].Selected = true;
+
         }
         private void Reset24bitAlpha(BitmapItem item)
         {
@@ -823,10 +841,11 @@ namespace loaddatfsh
                 item.Alpha = alpha;
             }
         }
+
         /// <summary>
         /// Refreshes the listviewMain ImageLists from the current fsh 
         /// </summary>
-        private void RefreshBitmapList()
+        private void RefreshImageLists()
         {
             if (listViewmain.Items.Count > 0)
             {
@@ -847,8 +866,6 @@ namespace loaddatfsh
                     alphaList1.Images.Add(bmpitem.Alpha);
                     blendList1.Images.Add(Alphablend(bmpitem));
 
-                    ListViewItem bitmap = new ListViewItem("bitmap # :" + cnt.ToString(), cnt);
-                    listViewmain.Items.Add(bitmap); 
                 }
                   
             }
@@ -861,28 +878,22 @@ namespace loaddatfsh
                 alphaList1.Images.Add(bmpitem.Alpha);
                 blendList1.Images.Add(Alphablend(bmpitem));
 
-                ListViewItem bitmap = new ListViewItem("bitmap # :0", 0);
-                listViewmain.Items.Add(bitmap);
-            }
+            } 
+            
+            RefreshDirectory(curimage);
+
             if (colorRadio.Checked)
             {
-                listViewmain.LargeImageList = BitmapList1;
-                listViewmain.SmallImageList = BitmapList1;
+                RefreshBitmapList(curimage, listViewmain, BitmapList1);
             }
             else if (alphaRadio.Checked)
             {
-                listViewmain.LargeImageList = alphaList1;
-                listViewmain.SmallImageList = alphaList1;
                 RefreshAlphaList(curimage, listViewmain, alphaList1);
             }
             else if (blendRadio.Checked)
             {
-                listViewmain.LargeImageList = blendList1;
-                listViewmain.SmallImageList = blendList1;
                 RefreshBlendList(curimage, listViewmain, blendList1);
             }
-            RefreshDirectory(curimage);
-            listViewmain.Items[0].Selected = true;
         }
         /// <summary>
         /// Refresh the fsh size and dir name for the input image 
@@ -1083,7 +1094,7 @@ namespace loaddatfsh
         }
         private bool thabort()
         {
-            return false;
+            return false; // GetThumbnailImage abort for the GenerateMips function
         }
         private void hdFshRadio_CheckedChanged(object sender, EventArgs e)
         {
@@ -1124,7 +1135,7 @@ namespace loaddatfsh
                     {
                         if (bmpitem.Alpha.GetPixel(0, 0).ToArgb() == Color.Black.ToArgb())
                         {
-                            bmpitem.BmpType = FSHBmpType.DXT3;
+                            bmpitem.BmpType = FSHBmpType.DXT3; 
                             FshtypeBox.SelectedIndex = 3;
                         }
                         else
@@ -1138,19 +1149,9 @@ namespace loaddatfsh
             }
             else
             {
-                if (curimage == null)
-                {
-                    hdfshRadio.Checked = false;
-                    hdBasetexrdo.Checked = false;
-                    regFshrdo.Checked = true;
-                }
-                else if ((curimage != null) && bmpitem.Bitmap == null)
-                {
-                    hdfshRadio.Checked = false;
-                    hdBasetexrdo.Checked = false;
-                    regFshrdo.Checked = true;
-                }
-
+                hdfshRadio.Checked = false;
+                hdBasetexrdo.Checked = false;
+                regFshrdo.Checked = true;
             }
         }
         /// <summary>
@@ -1190,16 +1191,16 @@ namespace loaddatfsh
                 switch (mipsize)
                 { 
                     case 64:
-                        RefreshMipList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+                        RefreshMipImageList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
                         break;
                     case 32:
-                        RefreshMipList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+                        RefreshMipImageList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
                         break;
                     case 16:
-                        RefreshMipList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+                        RefreshMipImageList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
                         break;
                     case 8:
-                        RefreshMipList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+                        RefreshMipImageList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
                         break;
                 }
                 if (tabControl1.SelectedTab != Maintab)
@@ -1609,72 +1610,50 @@ namespace loaddatfsh
             }
             if (listv.SelectedItems.Count > 0)
             {
-                if (bmpitem.Bitmap != null && bmpitem.Alpha != null)
+                try
                 {
-                    try
+                    string bitmapnum = image.Bitmaps.Count > 1 ? listv.SelectedItems[0].Index.ToString() : string.Empty;
+                    Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+
+                    if (!string.IsNullOrEmpty(fshfilename))
                     {
-                        string bitmapnum = image.Bitmaps.Count > 1 ? listv.SelectedItems[0].Index.ToString() : string.Empty;
-                        if (!string.IsNullOrEmpty(fshfilename))
+                        string name = string.Concat(fshfilename, bitmapnum, addtofilename, ".png");
+                        using (FileStream fs = new FileStream(name, FileMode.OpenOrCreate, FileAccess.Write))
                         {
-                            string name = string.Concat(fshfilename, bitmapnum, addtofilename, ".png");
+                            using (Bitmap tempbmp = bmp.Clone(rect, format))
+                            {
+                                tempbmp.Save(fs, ImageFormat.Png);
+                            }
+                        }
+
+                    }
+                    else if (loadeddat && DatlistView1.SelectedItems.Count > 0)
+                    {
+                        if (!string.IsNullOrEmpty(dat.FileName))
+                        {
+                            ListViewItem item = DatlistView1.SelectedItems[0];
+                            string fshname = Path.Combine(Path.GetDirectoryName(dat.FileName), "0x" + item.SubItems[2].Text);
+
+                            string name = string.Concat(fshname, bitmapnum, addtofilename, ".png");
 
                             using (FileStream fs = new FileStream(name, FileMode.OpenOrCreate, FileAccess.Write))
                             {
-                                using (Bitmap tempbmp = new Bitmap(bmpitem.Bitmap.Width, bmpitem.Bitmap.Height, format))
+                                using (Bitmap tempbmp = bmp.Clone(rect, format))
                                 {
-                                    for (int y = 0; y < tempbmp.Height; y++)
-                                    {
-                                        for (int x = 0; x < tempbmp.Width; x++)
-                                        {
-                                            Color srcclr = bmp.GetPixel(x, y);
-                                            tempbmp.SetPixel(x, y, srcclr);
-                                        }
-                                    }
                                     tempbmp.Save(fs, ImageFormat.Png);
                                 }
                             }
 
                         }
-                        else if (loadeddat && DatlistView1.SelectedItems.Count > 0)
-                        {
-                            if (!string.IsNullOrEmpty(dat.FileName))
-                            {
-                                ListViewItem item = DatlistView1.SelectedItems[0];
-                                string fshname = Path.Combine(Path.GetDirectoryName(dat.FileName), "0x" + item.SubItems[2].Text);
-
-                                string name = string.Concat(fshname, bitmapnum, addtofilename, ".png");
-
-                                using (FileStream fs = new FileStream(name, FileMode.OpenOrCreate, FileAccess.Write))
-                                {
-                                    using (Bitmap tempbmp = new Bitmap(bmpitem.Bitmap.Width, bmpitem.Bitmap.Height, format))
-                                    {
-                                        for (int y = 0; y < tempbmp.Height; y++)
-                                        {
-                                            for (int x = 0; x < tempbmp.Width; x++)
-                                            {
-                                                Color srcclr = bmp.GetPixel(x, y);
-                                                tempbmp.SetPixel(x, y, srcclr);
-                                            }
-                                        }
-                                        tempbmp.Save(fs, ImageFormat.Png);
-                                    }
-                                }
-
-                            }
-                        }
-                        else
-                        {
-                            Debug.WriteLine("fshfilename is null");
-                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Debug.WriteLine("fshfilename is null");
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show(this, "No image in current fsh", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -2041,20 +2020,20 @@ namespace loaddatfsh
             }
             TgiGrouptxt.Text = g;
         }
+        /// <summary>
+        /// Gets the alpha map from a 32-bit png
+        /// </summary>
+        /// <param name="sourcepng">The source png</param>
+        /// <returns>The resulting alpha map</returns>
         private Bitmap GetAlphafromPng(Bitmap sourcepng)
         {
-            Bitmap image = new Bitmap(sourcepng.Width, sourcepng.Height, PixelFormat.Format32bppArgb);
+            Bitmap image = new Bitmap(sourcepng.Width, sourcepng.Height, PixelFormat.Format24bppRgb);
             for (int y = 0; y < image.Height; y++)
             {
                 for (int x = 0; x < image.Width; x++)
                 {
                     Color srcpxl = sourcepng.GetPixel(x, y);
-                    Color destpxl = image.GetPixel(x, y);
-                    image.SetPixel(x, y, Color.FromArgb(srcpxl.A, srcpxl.A, srcpxl.A, srcpxl.A));
-                    while (image.GetPixel(x, y).A < 255)
-                    {
-                        image.SetPixel(x, y, Color.FromArgb(srcpxl.A, srcpxl.A, srcpxl.A));
-                    }
+                    image.SetPixel(x, y, Color.FromArgb(srcpxl.A, srcpxl.A, srcpxl.A));
                 }
             }
             return image;
@@ -2257,7 +2236,7 @@ namespace loaddatfsh
                 SetHdRadios(tabControl1.SelectedTab);
                 if (mip64fsh != null && mip64fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip64tab)
                 {
-                    RefreshMipList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+                    RefreshMipImageList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
                     ListViewItem item = listViewMip64.Items[0];
                     item.Selected = true;
                     RefreshBmpType();
@@ -2265,7 +2244,7 @@ namespace loaddatfsh
                 }
                 else if (mip32fsh != null && mip32fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip32tab)
                 {
-                    RefreshMipList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+                    RefreshMipImageList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
                     bmpitem = (BitmapItem)mip32fsh.Bitmaps[0];
                     ListViewItem item = listViewMip32.Items[0];
                     item.Selected = true;
@@ -2274,7 +2253,7 @@ namespace loaddatfsh
                 }
                 else if (mip16fsh != null && mip16fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip16tab)
                 {
-                    RefreshMipList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+                    RefreshMipImageList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
                     bmpitem = (BitmapItem)mip16fsh.Bitmaps[0];
                     ListViewItem item = listViewMip16.Items[0];
                     item.Selected = true;
@@ -2283,7 +2262,7 @@ namespace loaddatfsh
                 }
                 else if (mip8fsh != null && mip8fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip8tab)
                 {
-                    RefreshMipList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+                    RefreshMipImageList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
                     bmpitem = (BitmapItem)mip8fsh.Bitmaps[0];
                     ListViewItem item = listViewMip8.Items[0];
                     item.Selected = true;
@@ -2292,7 +2271,7 @@ namespace loaddatfsh
                 }
                 else if (curimage != null && curimage.Bitmaps.Count > 0 && tabControl1.SelectedTab == Maintab)
                 {
-                    RefreshBitmapList(); 
+                    RefreshImageLists(); 
                     bmpitem = (BitmapItem)curimage.Bitmaps[0];
                     ListViewItem item = listViewmain.Items[0];
                     item.Selected = true;
@@ -2916,7 +2895,7 @@ namespace loaddatfsh
                             if (tempitem.Bitmap.Width >= 128 && tempitem.Bitmap.Height >= 128)
                             {
                                 curimage = new FSHImage(fstream);
-                                RefreshBitmapList();
+                                RefreshImageLists();
                                 listViewmain.Items[0].Selected = true;
                                 tabControl1.SelectedTab = Maintab;
 
