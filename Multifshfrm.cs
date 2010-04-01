@@ -586,7 +586,14 @@ namespace loaddatfsh
             if (openBitmapDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 List<string> list = new List<string>(openBitmapDialog1.FileNames);
-                AddbtnFiles(list, false);
+                if (curimage == null && bmpitem == null)
+                {
+                    NewFsh(list); // use the NewFsh function to create a new fsh if one does not exist
+                }
+                else
+                {
+                    AddbtnFiles(list, false);
+                }
             }
         }
 
@@ -607,22 +614,17 @@ namespace loaddatfsh
         {
             try
             {
-                if (!listfiltered)
+                if (curimage != null && bmpitem != null)
                 {
-                    files = CheckSize(files);
-                    files = TrimAlphaBitmaps(files);
-                }
-                for (int f = 0; f < files.Count; f++)
-                {
-                    FileInfo fi = new FileInfo(files[f]);
-
-                    if (curimage == null && bmpitem == null)
+                    if (!listfiltered)
                     {
-                        curimage = new FSHImage();
-                        bmpitem = new BitmapItem();
+                        files = CheckSize(files);
+                        files = TrimAlphaBitmaps(files);
                     }
-                    if (curimage != null && bmpitem != null)
+                    for (int f = 0; f < files.Count; f++)
                     {
+                        FileInfo fi = new FileInfo(files[f]);
+
                         BitmapItem addbmp = new BitmapItem();
                         Bitmap bmp = null;
                         bool bmploaded = false;
@@ -700,7 +702,7 @@ namespace loaddatfsh
                                         addbmp.BmpType = FSHBmpType.DXT1;
                                         FshtypeBox.SelectedIndex = 2;
                                     }
-                                    
+
                                 }
                             }
                             if ((dirtxt.Text.Length > 0) && dirtxt.Text.Length == 4)
@@ -737,13 +739,13 @@ namespace loaddatfsh
                             }
 
                             if (tabControl1.SelectedTab == Maintab)
-                            {                           
+                            {
                                 colorRadio.Checked = true;
                                 if (curimage == null)
                                 {
                                     curimage = new FSHImage();
-                                }   
-                                CheckBitmapType(curimage, addbmp); 
+                                }
+                                CheckBitmapType(curimage, addbmp);
                                 curimage.Bitmaps.Add(addbmp);
                                 curimage.UpdateDirty();
                                 if (f == files.Count - 1)
@@ -768,8 +770,15 @@ namespace loaddatfsh
         {
             if (tabControl1.SelectedTab == Maintab)
             {
-                List<string> files = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop)); 
-                AddbtnFiles(files, false);
+                List<string> files = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop));
+                if (curimage == null && bmpitem == null)
+                {
+                    NewFsh(files); // use the NewFsh function to create a new fsh if one does not exist
+                }
+                else
+                {
+                    AddbtnFiles(files, false);
+                }
             }
         }
         
@@ -2995,11 +3004,11 @@ namespace loaddatfsh
                 {
                     bmpitem = null;
                     FshtypeBox.SelectedIndex = 2;
-                    Sizelbl.Text = null;
-                    dirtxt.Text = null;
+                    Sizelbl.Text = string.Empty;
+                    dirtxt.Text = string.Empty;
                     ReloadGroupid();
-                    inststr = null;
-                    tgiInstancetxt.Text = null;
+                    inststr = string.Empty;
+                    tgiInstancetxt.Text = string.Empty;
                     origbmplist.Clear();
                 }
                 hdfshRadio.Enabled = true;
