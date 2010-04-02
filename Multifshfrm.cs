@@ -33,7 +33,6 @@ namespace loaddatfsh
         private string fshfilename = null;
         private FSHImage curimage = null;
         private BitmapItem bmpitem = null;
-        private FSHEntryHeader entryhead;
 
         private void loadfsh_Click(object sender, EventArgs e)
         {
@@ -283,6 +282,7 @@ namespace loaddatfsh
         {
             try
             {
+                SetLoadedDatEnables();
                 using (MemoryStream mstream = new MemoryStream())
                 {
                     SaveFsh(mstream, curimage);
@@ -860,6 +860,7 @@ namespace loaddatfsh
             {
                 listViewmain.Items.Clear();
             }
+
             if (curimage.Bitmaps.Count > 1)
             {
 
@@ -915,7 +916,7 @@ namespace loaddatfsh
             for (int dirnum = 0; dirnum < image.Bitmaps.Count; dirnum++)
             {
                 FSHDirEntry dir = image.Directory[dirnum];
-                entryhead = new FSHEntryHeader();
+                FSHEntryHeader entryhead = new FSHEntryHeader();
                 entryhead = image.GetEntryHeader(dir.offset);
                 dirname[dirnum] = Encoding.ASCII.GetString(dir.name);
                 fshsize[dirnum] = entryhead.width.ToString() + "x" + entryhead.height.ToString();
@@ -2285,8 +2286,9 @@ namespace loaddatfsh
                     ListViewItem item = listViewmain.Items[0];
                     item.Selected = true;
                     tgiInstancetxt.Text = string.Concat(inststr, endreg);
+                    CheckBitmapType(curimage, bmpitem);  
                     RefreshBmpType();
-                    CheckBitmapType(curimage, bmpitem); 
+
                 }
                 
             }
@@ -2647,13 +2649,14 @@ namespace loaddatfsh
                             EndFormat_Refresh();
                             string tempinst = index.InstanceID.ToString("X8");
                             originst = tempinst.Substring(0, 7);
-                            Datnametxt.Text = Path.GetFileName(dat.FileName) + " - Loaded";
-                            ListViewItem selitem = DatlistView1.Items[0];
-                            selitem.Selected = true;
+                            Datnametxt.Text = Path.GetFileName(dat.FileName)/* + " - Loaded"*/;
+                            DatlistView1.Items[0].Selected = true;
                         }
                     }
                 }
                 loadeddat = true;
+                SetLoadedDatEnables();
+
             }
             catch (Exception ex)
             {
@@ -2766,7 +2769,7 @@ namespace loaddatfsh
                         {
                             dat.FileName = saveDatDialog1.FileName;
                         }                            
-                        Datnametxt.Text = Path.GetFileName(dat.FileName) + " - Saved";
+                        Datnametxt.Text = Path.GetFileName(dat.FileName);
 
                         dat.Save();
                         dat.Close();
@@ -2781,7 +2784,6 @@ namespace loaddatfsh
                         {
                             dat = null;
                             ClearandReset(true);
-                            Datnametxt.Text = "No dat loaded";
                         }
                         else
                         {
@@ -2869,7 +2871,9 @@ namespace loaddatfsh
            }
            this.dat = new DatFile4();
            DatRebuilt = false;
-           Datnametxt.Text = "Dat in Memory";
+           Datnametxt.Text = "Dat in Memory";       
+           SetLoadedDatEnables();
+
         }
         
         private void DatlistView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -2971,6 +2975,7 @@ namespace loaddatfsh
             {
                 dat.Close();
                 dat = null;
+                Datnametxt.Text = "No dat loaded";
             }
             if (DatlistView1.Items.Count > 0)
             {
@@ -3009,7 +3014,10 @@ namespace loaddatfsh
                     ReloadGroupid();
                     inststr = string.Empty;
                     tgiInstancetxt.Text = string.Empty;
-                    origbmplist.Clear();
+                    if (origbmplist != null)
+                    {
+                        origbmplist.Clear();
+                    }
                 }
                 hdfshRadio.Enabled = true;
                 hdBasetexrdo.Enabled = true;
@@ -3267,7 +3275,67 @@ namespace loaddatfsh
                 useorigimage = false; // reset it to false
             }
         }
-       
+        /// <summary>
+        /// Set if the close dat button and fshwrite compression checkbox are enabled 
+        /// </summary>
+        private void SetLoadedDatEnables()
+        { 
+            if (!loadeddat && DatlistView1.Items.Count == 0)
+            {
+                if (!Fshwritecompcb.Enabled)
+                {
+                    Fshwritecompcb.Enabled = true;
+                }
+                if (closeDatbtn.Enabled)
+                {
+                    closeDatbtn.Enabled = false;
+                }
+            }
+            else
+            {
+                if (Fshwritecompcb.Enabled)
+                {
+                    if (Fshwritecompcb.Checked)
+                    {
+                        Fshwritecompcb.Checked = false;
+                    }
+                    Fshwritecompcb.Enabled = false;
+                }
+                if (!closeDatbtn.Enabled)
+                {
+                    closeDatbtn.Enabled = true;
+                }
+            }
+        }
+
+        private void closeDatbtn_Click(object sender, EventArgs e)
+        {
+            if (dat != null && loadeddat)
+            {
+                if (dat.IsDirty)
+                {
+                    switch (MessageBox.Show(this, "Save changes to Dat?", "Save Dat?", MessageBoxButtons.YesNo))
+                    {
+                        case DialogResult.Yes:
+                            dat.Save();
+                            dat.Close();
+                            break;
+                        case DialogResult.No:
+                            dat.Close();
+                            break;
+                    }
+                }
+                else
+                {
+                    dat.Close();
+                }
+                ClearandReset(true);
+                loadeddat = false;
+                SetLoadedDatEnables();
+
+            }
+        }
+
     }
     // Implements the manual sorting of items by columns.
     class ListViewItemComparer : IComparer

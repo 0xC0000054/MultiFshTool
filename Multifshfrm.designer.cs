@@ -97,6 +97,7 @@
             this.saveDatbtn = new System.Windows.Forms.Button();
             this.newDatbtn = new System.Windows.Forms.Button();
             this.DatfuncBox1 = new System.Windows.Forms.GroupBox();
+            this.closeDatbtn = new System.Windows.Forms.Button();
             this.Datnametxt = new System.Windows.Forms.Label();
             this.datlbl = new System.Windows.Forms.Label();
             this.genNewInstcb = new System.Windows.Forms.CheckBox();
@@ -139,10 +140,10 @@
             this.listViewmain.BackgroundImageTiled = true;
             this.listViewmain.HideSelection = false;
             this.listViewmain.LargeImageList = this.BitmapList1;
-            this.listViewmain.Location = new System.Drawing.Point(-5, -5);
+            this.listViewmain.Location = new System.Drawing.Point(-7, -8);
             this.listViewmain.MultiSelect = false;
             this.listViewmain.Name = "listViewmain";
-            this.listViewmain.Size = new System.Drawing.Size(523, 143);
+            this.listViewmain.Size = new System.Drawing.Size(523, 150);
             this.listViewmain.SmallImageList = this.BitmapList1;
             this.listViewmain.TabIndex = 0;
             this.listViewmain.TileSize = new System.Drawing.Size(184, 34);
@@ -153,7 +154,7 @@
             // 
             this.loadfsh.AllowDrop = true;
             this.loadfsh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadfsh.Location = new System.Drawing.Point(349, 529);
+            this.loadfsh.Location = new System.Drawing.Point(349, 541);
             this.loadfsh.Name = "loadfsh";
             this.loadfsh.Size = new System.Drawing.Size(75, 23);
             this.loadfsh.TabIndex = 1;
@@ -166,7 +167,7 @@
             // 
             this.blendRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.blendRadio.AutoSize = true;
-            this.blendRadio.Location = new System.Drawing.Point(12, 348);
+            this.blendRadio.Location = new System.Drawing.Point(12, 360);
             this.blendRadio.Name = "blendRadio";
             this.blendRadio.Size = new System.Drawing.Size(81, 17);
             this.blendRadio.TabIndex = 45;
@@ -179,7 +180,7 @@
             // 
             this.alphaRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.alphaRadio.AutoSize = true;
-            this.alphaRadio.Location = new System.Drawing.Point(12, 325);
+            this.alphaRadio.Location = new System.Drawing.Point(12, 337);
             this.alphaRadio.Name = "alphaRadio";
             this.alphaRadio.Size = new System.Drawing.Size(52, 17);
             this.alphaRadio.TabIndex = 44;
@@ -192,7 +193,7 @@
             this.colorRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.colorRadio.AutoSize = true;
             this.colorRadio.Checked = true;
-            this.colorRadio.Location = new System.Drawing.Point(12, 302);
+            this.colorRadio.Location = new System.Drawing.Point(12, 314);
             this.colorRadio.Name = "colorRadio";
             this.colorRadio.Size = new System.Drawing.Size(49, 17);
             this.colorRadio.TabIndex = 43;
@@ -216,7 +217,7 @@
             "32 Bit ARGB (8:8:8:8)",
             "DXT1 Compressed, no Alpha",
             "DXT3 Compressed, with Alpha"});
-            this.FshtypeBox.Location = new System.Drawing.Point(12, 275);
+            this.FshtypeBox.Location = new System.Drawing.Point(12, 287);
             this.FshtypeBox.Name = "FshtypeBox";
             this.FshtypeBox.Size = new System.Drawing.Size(164, 21);
             this.FshtypeBox.TabIndex = 46;
@@ -240,7 +241,7 @@
             // 
             this.Sizelbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Sizelbl.AutoSize = true;
-            this.Sizelbl.Location = new System.Drawing.Point(142, 306);
+            this.Sizelbl.Location = new System.Drawing.Point(142, 318);
             this.Sizelbl.Name = "Sizelbl";
             this.Sizelbl.Size = new System.Drawing.Size(0, 13);
             this.Sizelbl.TabIndex = 48;
@@ -249,7 +250,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(100, 306);
+            this.label3.Location = new System.Drawing.Point(100, 318);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(33, 13);
             this.label3.TabIndex = 47;
@@ -259,7 +260,7 @@
             // 
             this.dirnamelbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dirnamelbl.AutoSize = true;
-            this.dirnamelbl.Location = new System.Drawing.Point(95, 327);
+            this.dirnamelbl.Location = new System.Drawing.Point(95, 339);
             this.dirnamelbl.Name = "dirnamelbl";
             this.dirnamelbl.Size = new System.Drawing.Size(81, 13);
             this.dirnamelbl.TabIndex = 50;
@@ -301,7 +302,7 @@
             // dirtxt
             // 
             this.dirtxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dirtxt.Location = new System.Drawing.Point(182, 324);
+            this.dirtxt.Location = new System.Drawing.Point(182, 336);
             this.dirtxt.MaxLength = 4;
             this.dirtxt.Name = "dirtxt";
             this.dirtxt.Size = new System.Drawing.Size(45, 20);
@@ -322,7 +323,7 @@
             // mipbtn
             // 
             this.mipbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mipbtn.Location = new System.Drawing.Point(145, 529);
+            this.mipbtn.Location = new System.Drawing.Point(145, 541);
             this.mipbtn.Name = "mipbtn";
             this.mipbtn.Size = new System.Drawing.Size(106, 23);
             this.mipbtn.TabIndex = 61;
@@ -334,7 +335,7 @@
             // savefshbtn
             // 
             this.savefshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.savefshbtn.Location = new System.Drawing.Point(430, 529);
+            this.savefshbtn.Location = new System.Drawing.Point(430, 541);
             this.savefshbtn.Name = "savefshbtn";
             this.savefshbtn.Size = new System.Drawing.Size(75, 23);
             this.savefshbtn.TabIndex = 62;
@@ -352,7 +353,7 @@
             // 
             this.newfshbtn.AllowDrop = true;
             this.newfshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.newfshbtn.Location = new System.Drawing.Point(268, 529);
+            this.newfshbtn.Location = new System.Drawing.Point(268, 541);
             this.newfshbtn.Name = "newfshbtn";
             this.newfshbtn.Size = new System.Drawing.Size(75, 23);
             this.newfshbtn.TabIndex = 66;
@@ -369,7 +370,7 @@
             this.bmpmanBox1.Controls.Add(this.addbtn);
             this.bmpmanBox1.Controls.Add(this.rembtn);
             this.bmpmanBox1.Controls.Add(this.repbtn);
-            this.bmpmanBox1.Location = new System.Drawing.Point(261, 373);
+            this.bmpmanBox1.Location = new System.Drawing.Point(261, 385);
             this.bmpmanBox1.Name = "bmpmanBox1";
             this.bmpmanBox1.Size = new System.Drawing.Size(260, 52);
             this.bmpmanBox1.TabIndex = 67;
@@ -382,7 +383,7 @@
             this.fshDefbox.Controls.Add(this.regFshrdo);
             this.fshDefbox.Controls.Add(this.hdBasetexrdo);
             this.fshDefbox.Controls.Add(this.hdfshRadio);
-            this.fshDefbox.Location = new System.Drawing.Point(3, 390);
+            this.fshDefbox.Location = new System.Drawing.Point(3, 402);
             this.fshDefbox.Name = "fshDefbox";
             this.fshDefbox.Size = new System.Drawing.Size(130, 93);
             this.fshDefbox.TabIndex = 69;
@@ -433,7 +434,7 @@
             this.tabControl1.Controls.Add(this.mip32tab);
             this.tabControl1.Controls.Add(this.mip16tab);
             this.tabControl1.Controls.Add(this.mip8tab);
-            this.tabControl1.Location = new System.Drawing.Point(15, 105);
+            this.tabControl1.Location = new System.Drawing.Point(15, 117);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.ShowToolTips = true;
@@ -637,7 +638,7 @@
             // TgiGrouptxt
             // 
             this.TgiGrouptxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TgiGrouptxt.Location = new System.Drawing.Point(145, 347);
+            this.TgiGrouptxt.Location = new System.Drawing.Point(145, 359);
             this.TgiGrouptxt.MaxLength = 8;
             this.TgiGrouptxt.Name = "TgiGrouptxt";
             this.TgiGrouptxt.Size = new System.Drawing.Size(82, 20);
@@ -648,7 +649,7 @@
             // tgiInstancetxt
             // 
             this.tgiInstancetxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tgiInstancetxt.Location = new System.Drawing.Point(145, 373);
+            this.tgiInstancetxt.Location = new System.Drawing.Point(145, 385);
             this.tgiInstancetxt.MaxLength = 8;
             this.tgiInstancetxt.Name = "tgiInstancetxt";
             this.tgiInstancetxt.Size = new System.Drawing.Size(82, 20);
@@ -660,7 +661,7 @@
             // 
             this.tgiGrouplbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tgiGrouplbl.AutoSize = true;
-            this.tgiGrouplbl.Location = new System.Drawing.Point(103, 353);
+            this.tgiGrouplbl.Location = new System.Drawing.Point(103, 365);
             this.tgiGrouplbl.Name = "tgiGrouplbl";
             this.tgiGrouplbl.Size = new System.Drawing.Size(36, 13);
             this.tgiGrouplbl.TabIndex = 73;
@@ -671,7 +672,7 @@
             this.tgiInstlbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tgiInstlbl.AutoSize = true;
             this.tgiInstlbl.BackColor = System.Drawing.SystemColors.Control;
-            this.tgiInstlbl.Location = new System.Drawing.Point(91, 376);
+            this.tgiInstlbl.Location = new System.Drawing.Point(91, 388);
             this.tgiInstlbl.Name = "tgiInstlbl";
             this.tgiInstlbl.Size = new System.Drawing.Size(48, 13);
             this.tgiInstlbl.TabIndex = 74;
@@ -683,7 +684,7 @@
             this.InstendBox1.Controls.Add(this.InstA_Erdo);
             this.InstendBox1.Controls.Add(this.Inst5_9rdo);
             this.InstendBox1.Controls.Add(this.Inst0_4rdo);
-            this.InstendBox1.Location = new System.Drawing.Point(145, 400);
+            this.InstendBox1.Location = new System.Drawing.Point(145, 412);
             this.InstendBox1.Name = "InstendBox1";
             this.InstendBox1.Size = new System.Drawing.Size(82, 80);
             this.InstendBox1.TabIndex = 75;
@@ -741,7 +742,7 @@
             this.DatlistView1.Location = new System.Drawing.Point(15, 12);
             this.DatlistView1.MultiSelect = false;
             this.DatlistView1.Name = "DatlistView1";
-            this.DatlistView1.Size = new System.Drawing.Size(523, 87);
+            this.DatlistView1.Size = new System.Drawing.Size(523, 99);
             this.DatlistView1.TabIndex = 76;
             this.toolTip1.SetToolTip(this.DatlistView1, "The list of images in the loaded dat");
             this.DatlistView1.UseCompatibleStateImageBehavior = false;
@@ -766,7 +767,7 @@
             // 
             // loadDatbtn
             // 
-            this.loadDatbtn.Location = new System.Drawing.Point(87, 34);
+            this.loadDatbtn.Location = new System.Drawing.Point(93, 42);
             this.loadDatbtn.Name = "loadDatbtn";
             this.loadDatbtn.Size = new System.Drawing.Size(75, 23);
             this.loadDatbtn.TabIndex = 77;
@@ -787,7 +788,7 @@
             // 
             // saveDatbtn
             // 
-            this.saveDatbtn.Location = new System.Drawing.Point(168, 34);
+            this.saveDatbtn.Location = new System.Drawing.Point(174, 42);
             this.saveDatbtn.Name = "saveDatbtn";
             this.saveDatbtn.Size = new System.Drawing.Size(75, 23);
             this.saveDatbtn.TabIndex = 78;
@@ -798,7 +799,7 @@
             // 
             // newDatbtn
             // 
-            this.newDatbtn.Location = new System.Drawing.Point(6, 34);
+            this.newDatbtn.Location = new System.Drawing.Point(12, 42);
             this.newDatbtn.Name = "newDatbtn";
             this.newDatbtn.Size = new System.Drawing.Size(75, 23);
             this.newDatbtn.TabIndex = 81;
@@ -809,30 +810,42 @@
             // DatfuncBox1
             // 
             this.DatfuncBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DatfuncBox1.Controls.Add(this.closeDatbtn);
             this.DatfuncBox1.Controls.Add(this.Datnametxt);
             this.DatfuncBox1.Controls.Add(this.datlbl);
             this.DatfuncBox1.Controls.Add(this.newDatbtn);
             this.DatfuncBox1.Controls.Add(this.loadDatbtn);
             this.DatfuncBox1.Controls.Add(this.saveDatbtn);
-            this.DatfuncBox1.Location = new System.Drawing.Point(262, 431);
+            this.DatfuncBox1.Location = new System.Drawing.Point(256, 443);
             this.DatfuncBox1.Name = "DatfuncBox1";
-            this.DatfuncBox1.Size = new System.Drawing.Size(249, 64);
+            this.DatfuncBox1.Size = new System.Drawing.Size(265, 75);
             this.DatfuncBox1.TabIndex = 82;
             this.DatfuncBox1.TabStop = false;
             this.DatfuncBox1.Text = "Dat Functions";
             // 
+            // closeDatbtn
+            // 
+            this.closeDatbtn.Location = new System.Drawing.Point(174, 13);
+            this.closeDatbtn.Name = "closeDatbtn";
+            this.closeDatbtn.Size = new System.Drawing.Size(75, 23);
+            this.closeDatbtn.TabIndex = 84;
+            this.closeDatbtn.Text = "Close dat";
+            this.closeDatbtn.UseVisualStyleBackColor = true;
+            this.closeDatbtn.Click += new System.EventHandler(this.closeDatbtn_Click);
+            // 
             // Datnametxt
             // 
             this.Datnametxt.AutoSize = true;
-            this.Datnametxt.Location = new System.Drawing.Point(48, 18);
+            this.Datnametxt.Location = new System.Drawing.Point(28, 18);
             this.Datnametxt.Name = "Datnametxt";
-            this.Datnametxt.Size = new System.Drawing.Size(0, 13);
+            this.Datnametxt.Size = new System.Drawing.Size(22, 13);
             this.Datnametxt.TabIndex = 83;
+            this.Datnametxt.Text = "dat";
             // 
             // datlbl
             // 
             this.datlbl.AutoSize = true;
-            this.datlbl.Location = new System.Drawing.Point(6, 18);
+            this.datlbl.Location = new System.Drawing.Point(-3, 18);
             this.datlbl.Name = "datlbl";
             this.datlbl.Size = new System.Drawing.Size(36, 13);
             this.datlbl.TabIndex = 82;
@@ -842,7 +855,7 @@
             // 
             this.genNewInstcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.genNewInstcb.AutoSize = true;
-            this.genNewInstcb.Location = new System.Drawing.Point(3, 489);
+            this.genNewInstcb.Location = new System.Drawing.Point(3, 501);
             this.genNewInstcb.Name = "genNewInstcb";
             this.genNewInstcb.Size = new System.Drawing.Size(142, 17);
             this.genNewInstcb.TabIndex = 80;
@@ -857,7 +870,7 @@
             this.compDatcb.AutoSize = true;
             this.compDatcb.Checked = true;
             this.compDatcb.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.compDatcb.Location = new System.Drawing.Point(3, 512);
+            this.compDatcb.Location = new System.Drawing.Point(3, 524);
             this.compDatcb.Name = "compDatcb";
             this.compDatcb.Size = new System.Drawing.Size(120, 17);
             this.compDatcb.TabIndex = 84;
@@ -870,7 +883,7 @@
             // 
             this.Fshwritecompcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Fshwritecompcb.AutoSize = true;
-            this.Fshwritecompcb.Location = new System.Drawing.Point(3, 535);
+            this.Fshwritecompcb.Location = new System.Drawing.Point(3, 547);
             this.Fshwritecompcb.Name = "Fshwritecompcb";
             this.Fshwritecompcb.Size = new System.Drawing.Size(127, 17);
             this.Fshwritecompcb.TabIndex = 91;
@@ -915,7 +928,7 @@
             this.expbmpBox1.Controls.Add(this.bmpsavebtn);
             this.expbmpBox1.Controls.Add(this.savebmpblendbtn);
             this.expbmpBox1.Controls.Add(this.alphasavebtn);
-            this.expbmpBox1.Location = new System.Drawing.Point(256, 317);
+            this.expbmpBox1.Location = new System.Drawing.Point(256, 329);
             this.expbmpBox1.Name = "expbmpBox1";
             this.expbmpBox1.Size = new System.Drawing.Size(278, 50);
             this.expbmpBox1.TabIndex = 68;
@@ -926,7 +939,7 @@
             // 
             this.alphalbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.alphalbl.AutoSize = true;
-            this.alphalbl.Location = new System.Drawing.Point(229, 300);
+            this.alphalbl.Location = new System.Drawing.Point(229, 312);
             this.alphalbl.Name = "alphalbl";
             this.alphalbl.Size = new System.Drawing.Size(46, 13);
             this.alphalbl.TabIndex = 90;
@@ -936,7 +949,7 @@
             // 
             this.bmplbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bmplbl.AutoSize = true;
-            this.bmplbl.Location = new System.Drawing.Point(225, 275);
+            this.bmplbl.Location = new System.Drawing.Point(225, 287);
             this.bmplbl.Name = "bmplbl";
             this.bmplbl.Size = new System.Drawing.Size(51, 13);
             this.bmplbl.TabIndex = 89;
@@ -946,7 +959,7 @@
             // 
             this.Alphabtn.AllowDrop = true;
             this.Alphabtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Alphabtn.Location = new System.Drawing.Point(511, 296);
+            this.Alphabtn.Location = new System.Drawing.Point(511, 308);
             this.Alphabtn.Name = "Alphabtn";
             this.Alphabtn.Size = new System.Drawing.Size(24, 21);
             this.Alphabtn.TabIndex = 88;
@@ -958,7 +971,7 @@
             // 
             this.Alphabox.AllowDrop = true;
             this.Alphabox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Alphabox.Location = new System.Drawing.Point(282, 297);
+            this.Alphabox.Location = new System.Drawing.Point(282, 309);
             this.Alphabox.Name = "Alphabox";
             this.Alphabox.Size = new System.Drawing.Size(223, 20);
             this.Alphabox.TabIndex = 87;
@@ -966,7 +979,7 @@
             // bmpbtn
             // 
             this.bmpbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bmpbtn.Location = new System.Drawing.Point(511, 271);
+            this.bmpbtn.Location = new System.Drawing.Point(511, 283);
             this.bmpbtn.Name = "bmpbtn";
             this.bmpbtn.Size = new System.Drawing.Size(24, 21);
             this.bmpbtn.TabIndex = 86;
@@ -977,7 +990,7 @@
             // bmpBox
             // 
             this.bmpBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bmpBox.Location = new System.Drawing.Point(282, 271);
+            this.bmpBox.Location = new System.Drawing.Point(282, 283);
             this.bmpBox.Name = "bmpBox";
             this.bmpBox.Size = new System.Drawing.Size(223, 20);
             this.bmpBox.TabIndex = 85;
@@ -986,7 +999,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(545, 555);
+            this.ClientSize = new System.Drawing.Size(545, 567);
             this.Controls.Add(this.Fshwritecompcb);
             this.Controls.Add(this.alphalbl);
             this.Controls.Add(this.bmplbl);
@@ -1130,6 +1143,7 @@
         private System.Windows.Forms.Button bmpbtn;
         private System.Windows.Forms.TextBox bmpBox;
         private System.Windows.Forms.CheckBox Fshwritecompcb;
+        private System.Windows.Forms.Button closeDatbtn;
     }
 }
 
