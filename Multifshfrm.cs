@@ -2077,11 +2077,11 @@ namespace loaddatfsh
             FshtypeBox.SelectedIndex = 2;
 
             Loadsettings();
-#if DEBUG
+/*#if DEBUG
             mipbtn.Visible = true;
 #else
             mipbtn.Visible = false;
-#endif
+#endif*/
             if (TgiGrouptxt.Text.Length <= 0)
             {
                 ReloadGroupid();
