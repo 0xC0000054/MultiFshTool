@@ -250,7 +250,7 @@ namespace loaddatfsh
                     ms.Write(BitConverter.GetBytes(0), 0, 4); // placeholder for the length
                     ms.Write(BitConverter.GetBytes(bmplist.Count), 0, 4); // write the number of bitmaps in the list
 
-                    ms.Write(Encoding.ASCII.GetBytes("G264"), 0, 4); // 
+                    ms.Write(Encoding.ASCII.GetBytes("G264"), 0, 4); // header directory id
 
                     int fshlen = 16 + (8 * bmplist.Count); // fsh length
                     for (int c = 0; c < bmplist.Count; c++)
