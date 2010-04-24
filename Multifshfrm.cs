@@ -204,35 +204,28 @@ namespace loaddatfsh
         {
             try
             {
-                if (IsDXTFsh(image))
+                if (IsDXTFsh(image) && Fshwritecompcb.Checked)
                 {
-                    if (Fshwritecompcb.Checked)
-                    {
-                        Fshwrite fw = new Fshwrite();
-                        for (int i = 0; i < image.Bitmaps.Count; i++)
-			            {
-                            BitmapItem bi = (BitmapItem)image.Bitmaps[i];
-                            if ((bi.Bitmap != null && bi.Alpha != null) && bi.BmpType == FSHBmpType.DXT1 || bi.BmpType == FSHBmpType.DXT3)
+                    Fshwrite fw = new Fshwrite();
+                    for (int i = 0; i < image.Bitmaps.Count; i++)
+		            {
+                        BitmapItem bi = (BitmapItem)image.Bitmaps[i];
+                        if ((bi.Bitmap != null && bi.Alpha != null) && bi.BmpType == FSHBmpType.DXT1 || bi.BmpType == FSHBmpType.DXT3)
+                        {
+                            if (useorigimage && origbmplist[i].Size == bi.Bitmap.Size)
                             {
-                                if (useorigimage && origbmplist[i].Size == bi.Bitmap.Size)
-                                {
-                                    fw.bmp.Add(origbmplist[i]);
-                                }
-                                else
-                                {
-                                    fw.bmp.Add(bi.Bitmap);
-                                }
-                                fw.alpha.Add(bi.Alpha);
-                                fw.dir.Add(bi.DirName);
-                                fw.code.Add((int)bi.BmpType);
+                                fw.bmp.Add(origbmplist[i]);
                             }
+                            else
+                            {
+                                fw.bmp.Add(bi.Bitmap);
+                            }
+                            fw.alpha.Add(bi.Alpha);
+                            fw.dir.Add(bi.DirName);
+                            fw.code.Add((int)bi.BmpType);
                         }
-                        fw.WriteFsh(fs);
                     }
-                    else
-                    {
-                        image.Save(fs);
-                    }
+                    fw.WriteFsh(fs);
                 }
                 else
                 {
