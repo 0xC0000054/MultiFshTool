@@ -745,7 +745,6 @@ namespace loaddatfsh
                                 {
                                     curimage = new FSHImage();
                                 }
-                                CheckBitmapType(curimage, addbmp);
                                 curimage.Bitmaps.Add(addbmp);
                                 curimage.UpdateDirty();
                                 if (f == files.Count - 1)
@@ -869,8 +868,6 @@ namespace loaddatfsh
                 {
                     bmpitem = (BitmapItem)curimage.Bitmaps[cnt];
 
-                    CheckBitmapType(curimage, bmpitem); // reset the 32-bit images to 24-bit and DXT3 images to DXT1
-
                     Reset24bitAlpha(bmpitem);
                     BitmapList1.Images.Add(bmpitem.Bitmap);
                     alphaList1.Images.Add(bmpitem.Alpha);
@@ -944,7 +941,6 @@ namespace loaddatfsh
                     {
                         curimage.Bitmaps.Remove(bmpitem); //remove the item and rebuild the mipmaps
                         Temp_fsh();
-                        CheckBitmapType(curimage, bmpitem); // the first item in listViewmain 
                         mipbtn_Click(null, null);
                         listViewmain.Items[0].Selected = true;
                     }
@@ -1085,7 +1081,6 @@ namespace loaddatfsh
                             curimage.Bitmaps.Insert(listViewmain.SelectedItems[0].Index, repbmp);
                             curimage.UpdateDirty();
                                                         
-                            CheckBitmapType(curimage, repbmp); 
                             Temp_fsh();
                             mipbtn_Click(null, null);
                         }
@@ -1111,7 +1106,7 @@ namespace loaddatfsh
             
             if (bmpitem != null && bmpitem.Bitmap != null)
             {
-                if (/*(hdfshRadio.Checked || hdBasetexrdo.Checked) &&*/ bmpitem.Bitmap.Width < 256 && bmpitem.Bitmap.Height < 256)
+                if (bmpitem.Bitmap.Width < 256 && bmpitem.Bitmap.Height < 256)
                 {
                     // MessageBox.Show(this, "A bitmap must be at least 256 x 256 to use High definition fsh", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     hdfshRadio.Checked = false;
@@ -1409,13 +1404,7 @@ namespace loaddatfsh
                         FshtypeBox.SelectedIndex = typeindex;
                     }
                 }
-                if (image != null && image.Bitmaps.Count > 1)
-                {
-                    if (FshtypeBox.SelectedIndex == 3)
-                    {
-                        FshtypeBox.SelectedIndex = 2;
-                    }
-                }
+             
                 if (FshtypeBox.SelectedIndex == 0)
                 {
                     hdBasetexrdo.Checked = true;
@@ -2286,7 +2275,6 @@ namespace loaddatfsh
                     ListViewItem item = listViewmain.Items[0];
                     item.Selected = true;
                     tgiInstancetxt.Text = string.Concat(inststr, endreg);
-                    CheckBitmapType(curimage, bmpitem);  
                     RefreshBmpType();
 
                 }
@@ -3050,86 +3038,6 @@ namespace loaddatfsh
                 }
             }
         }
-        /// <summary>
-        /// Checks if the image can use the 32-bit hd fsh
-        /// </summary>
-        /// <param name="image">The image to check</param>
-        /// <param name="index">The FshtypeBox selected index</param>
-        /// <returns>True on success otherwise false</returns>
-        private bool CheckHdBitmapType(FSHImage image, int index)
-        {
-            if (image.Bitmaps.Count > 1 && index == 1)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        /// <summary>
-        /// Checks if the image can use the DXT# fsh
-        /// </summary>
-        /// <param name="image">The image to check</param>
-        /// <param name="index">The FshtypeBox selected index</param>
-        /// <returns>True on success otherwise false</returns>
-        private bool CheckDXTBitmapType(FSHImage image, int index)
-        {
-            if (image.Bitmaps.Count > 1 && index == 3)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        /// <summary>
-        /// Checks if the image can use the 32-bit or DXT3 fsh
-        /// </summary>
-        /// <param name="image">The image to check</param>
-        /// <param name="item">The BitmapItem to check</param>
-        private void CheckBitmapType(FSHImage image, BitmapItem item)
-        {
-            if (image.Bitmaps.Count > 1)
-            {
-                if (Checkhdimgsize(item.Bitmap))
-                {
-                    hdfshRadio.Enabled = false;
-                    if (item.BmpType == FSHBmpType.ThirtyTwoBit || hdfshRadio.Checked)
-                    {
-                        hdBasetexrdo.Checked = true;
-                        if (item.BmpType == FSHBmpType.ThirtyTwoBit)
-                        {
-                            bmpitem.BmpType = FSHBmpType.TwentyFourBit;
-                            FshtypeBox.SelectedIndex = 0;
-                        }
-                    }
-                    else if (item.BmpType == FSHBmpType.DXT3)
-                    {
-                        item.BmpType = FSHBmpType.DXT1;
-                        FshtypeBox.SelectedIndex = 2;
-                    }
-                }
-                else
-                {
-                    hdfshRadio.Checked = false;
-                    hdBasetexrdo.Checked = false;
-                    regFshrdo.Checked = true;
-                    hdfshRadio.Enabled = false;
-                    hdBasetexrdo.Enabled = false;
-                    if (item.BmpType == FSHBmpType.DXT3)
-                    {
-                        item.BmpType = FSHBmpType.DXT1;
-                        FshtypeBox.SelectedIndex = 2;
-                    }
-                }
-            }
-            else
-            {
-                hdfshRadio.Enabled = true;
-            }
-        }
 
         /// <summary>
         /// Check if the bitmap size is 256 x 256 or larger for the hd fsh
@@ -3189,42 +3097,20 @@ namespace loaddatfsh
                     }
                     else
                     {
-                        if (!CheckDXTBitmapType(image,e.Index))
-                        {
-                            // make the DXT3 fsh item look disabled 
-                            string text = cb.Items[e.Index].ToString();
-                            e.DrawBackground();
-                            e.Graphics.DrawString(text, e.Font, SystemBrushes.GrayText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-                            e.DrawFocusRectangle();
-                        }
-                        else
-                        {
-                            //leave the other items alone
-                            string text = cb.Items[e.Index].ToString();
-                            e.DrawBackground();
-                            e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-                            e.DrawFocusRectangle();
-                        }
-                    }
-                }
-                else
-                {
-                    if (!CheckHdBitmapType(image, e.Index) || !CheckDXTBitmapType(image,e.Index))
-                    {
-                        // make the 32-bit hd or DXT3 fsh item look disabled 
-                        string text = cb.Items[e.Index].ToString();
-                        e.DrawBackground();
-                        e.Graphics.DrawString(text, e.Font, SystemBrushes.GrayText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-                        e.DrawFocusRectangle();
-                    }
-                    else
-                    {
-                        // draw it normally
+                        //leave the other items alone
                         string text = cb.Items[e.Index].ToString();
                         e.DrawBackground();
                         e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
                         e.DrawFocusRectangle();
                     }
+                }
+                else
+                {
+                    // draw it normally
+                    string text = cb.Items[e.Index].ToString();
+                    e.DrawBackground();
+                    e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
+                    e.DrawFocusRectangle();
                 }
             }
             else
@@ -3265,14 +3151,21 @@ namespace loaddatfsh
         private bool useorigimage = false;
         private void Fshwritecompcb_CheckedChanged(object sender, EventArgs e)
         {
-            if (curimage != null && curimage.Bitmaps.Count > 0 && !loadeddat && DatlistView1.Items.Count == 0)
+            try
             {
-                useorigimage = true;
+                if (curimage != null && curimage.Bitmaps.Count > 0 && origbmplist != null && !loadeddat && DatlistView1.Items.Count == 0)
+                {
+                    useorigimage = true;
 
-                Temp_fsh();
-                mipbtn_Click(null, null);
+                    Temp_fsh();
+                    mipbtn_Click(null, null);
 
-                useorigimage = false; // reset it to false
+                    useorigimage = false; // reset it to false
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         /// <summary>
