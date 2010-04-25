@@ -2735,7 +2735,7 @@ namespace loaddatfsh
                 RebuildDat(dat);
             }
 
-            if (genNewInstcb.Checked == false && DatRebuilt == false)
+            if (!genNewInstcb.Checked && !DatRebuilt)
             {
                 RebuildDat(dat);
             }
@@ -2872,7 +2872,7 @@ namespace loaddatfsh
                     
                     FileItem fshitem = dat.LoadFile(uint.Parse("7ab50e44", NumberStyles.HexNumber), uint.Parse(group,NumberStyles.HexNumber), uint.Parse(instance,NumberStyles.HexNumber));
                     Unknown fshobj = (Unknown)fshitem.FileObject;
-                    if (fshobj.IsCompressed == true)
+                    if (fshobj.IsCompressed)
                     {
                         compress_datmips = true;
                         compDatcb.Checked = true;
