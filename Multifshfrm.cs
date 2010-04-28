@@ -56,7 +56,7 @@ namespace loaddatfsh
             if (fi.Exists)
             {
                 string path = Path.GetDirectoryName(Application.ExecutablePath);
-                if (fi.Extension.Equals(".fsh") || fi.Extension.Equals(".qfs"))
+                if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
@@ -156,11 +156,11 @@ namespace loaddatfsh
                                 using (StreamReader sr = new StreamReader(tgistr))
                                 {
                                     string line;
-                                    int lncnt = 0;
+                                    bool groupread = false;
+                                    bool instread = false;
 
                                     while ((line = sr.ReadLine()) != null)
                                     {
-                                        lncnt++;
                                         if (!string.IsNullOrEmpty(line))
                                         {
                                             if (line.Equals("7ab50e44", StringComparison.OrdinalIgnoreCase))
@@ -169,15 +169,17 @@ namespace loaddatfsh
                                             }
                                             else
                                             {
-                                                if (lncnt == 3)
+                                                if (!groupread)
                                                 {
                                                     TgiGrouptxt.Text = line;
+                                                    groupread = true;
                                                 }
-                                                else if (lncnt == 5)
+                                                else if (!instread)
                                                 {
                                                     inststr = line;
                                                     tgiInstancetxt.Text = inststr;
                                                     EndFormat_Refresh();
+                                                    instread = true;
                                                 }
                                             }
                                         }
