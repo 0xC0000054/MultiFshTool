@@ -55,7 +55,6 @@ namespace loaddatfsh
             FileInfo fi = new FileInfo(filename);
             if (fi.Exists)
             {
-                string path = Path.GetDirectoryName(Application.ExecutablePath);
                 if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
                 {
                     try
