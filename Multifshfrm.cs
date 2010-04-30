@@ -2764,7 +2764,6 @@ namespace loaddatfsh
                     {
                         if (!loadeddat && DatlistView1.Items.Count == 0)
                         {
-                            dat = null;
                             ClearandReset(true);
                         }
                         else
