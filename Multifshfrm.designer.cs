@@ -472,7 +472,7 @@
             this.listViewMip64.BackgroundImageTiled = true;
             this.listViewMip64.HideSelection = false;
             this.listViewMip64.LargeImageList = this.BitmapList1;
-            this.listViewMip64.Location = new System.Drawing.Point(-4, -2);
+            this.listViewMip64.Location = new System.Drawing.Point(-7, -2);
             this.listViewMip64.MultiSelect = false;
             this.listViewMip64.Name = "listViewMip64";
             this.listViewMip64.Size = new System.Drawing.Size(523, 143);
@@ -1035,7 +1035,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MinimumSize = new System.Drawing.Size(555, 591);
             this.Name = "Multifshfrm";
-            this.Text = "Multi fsh tool";
+            this.Text = "Multi Fsh tool";
             this.Load += new System.EventHandler(this.Multifshfrm_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Multifshfrm_FormClosing);
             this.bmpmanBox1.ResumeLayout(false);

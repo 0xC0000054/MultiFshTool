@@ -813,7 +813,8 @@ namespace loaddatfsh
                 blendlist.Images.Add(Alphablend(bmpitem));
             }
             RefreshDirectory(image);
-
+            
+            list.BeginUpdate();
             if (colorRadio.Checked)
             {
                 RefreshBitmapList(image, list, bmplist);
@@ -826,6 +827,7 @@ namespace loaddatfsh
             {
                 RefreshBlendList(image, list, blendlist);
             }
+            list.EndUpdate();
 
         }
         private void Reset24bitAlpha(BitmapItem item)
@@ -849,11 +851,6 @@ namespace loaddatfsh
         /// </summary>
         private void RefreshImageLists()
         {
-            if (listViewmain.Items.Count > 0)
-            {
-                listViewmain.Items.Clear();
-            }
-
             if (curimage.Bitmaps.Count > 1)
             {
 
@@ -883,6 +880,7 @@ namespace loaddatfsh
             
             RefreshDirectory(curimage);
 
+            listViewmain.BeginUpdate();
             if (colorRadio.Checked)
             {
                 RefreshBitmapList(curimage, listViewmain, BitmapList1);
@@ -895,6 +893,7 @@ namespace loaddatfsh
             {
                 RefreshBlendList(curimage, listViewmain, blendList1);
             }
+            listViewmain.EndUpdate();
         }
         /// <summary>
         /// Refresh the fsh size and dir name for the input image 
@@ -1330,7 +1329,7 @@ namespace loaddatfsh
         {
             if (curimage != null)
             {
-                if (curimage.Bitmaps.Count >= 1 && tabControl1.SelectedTab == Maintab)
+                if (curimage.Bitmaps.Count >= 1)
                 {
                     try
                     {
@@ -2076,7 +2075,7 @@ namespace loaddatfsh
                 EndFormat_Refresh();
 
             }
-            this.Text += string.Concat(" ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            //this.Text += string.Concat(" ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Datnametxt.Text = "No dat loaded";
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length > 0)
@@ -2230,8 +2229,7 @@ namespace loaddatfsh
                 if (mip64fsh != null && mip64fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip64tab)
                 {
                     RefreshMipImageList(mip64fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
-                    ListViewItem item = listViewMip64.Items[0];
-                    item.Selected = true;
+                    listViewMip64.Items[0].Selected = true;
                     RefreshBmpType();
                     tgiInstancetxt.Text = string.Concat(inststr, end64);
                 }
@@ -2239,8 +2237,7 @@ namespace loaddatfsh
                 {
                     RefreshMipImageList(mip32fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
                     bmpitem = (BitmapItem)mip32fsh.Bitmaps[0];
-                    ListViewItem item = listViewMip32.Items[0];
-                    item.Selected = true;
+                    listViewMip32.Items[0].Selected = true;
                     RefreshBmpType();
                     tgiInstancetxt.Text = string.Concat(inststr, end32);
                 }
@@ -2248,8 +2245,7 @@ namespace loaddatfsh
                 {
                     RefreshMipImageList(mip16fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
                     bmpitem = (BitmapItem)mip16fsh.Bitmaps[0];
-                    ListViewItem item = listViewMip16.Items[0];
-                    item.Selected = true;
+                    listViewMip16.Items[0].Selected = true;
                     RefreshBmpType();
                     tgiInstancetxt.Text = string.Concat(inststr, end16);
                 }
@@ -2257,8 +2253,7 @@ namespace loaddatfsh
                 {
                     RefreshMipImageList(mip8fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
                     bmpitem = (BitmapItem)mip8fsh.Bitmaps[0];
-                    ListViewItem item = listViewMip8.Items[0];
-                    item.Selected = true;
+                    listViewMip8.Items[0].Selected = true;
                     RefreshBmpType();
                     tgiInstancetxt.Text = string.Concat(inststr, end8);
                 }
@@ -2266,11 +2261,9 @@ namespace loaddatfsh
                 {
                     RefreshImageLists(); 
                     bmpitem = (BitmapItem)curimage.Bitmaps[0];
-                    ListViewItem item = listViewmain.Items[0];
-                    item.Selected = true;
+                    listViewmain.Items[0].Selected = true;
                     tgiInstancetxt.Text = string.Concat(inststr, endreg);
                     RefreshBmpType();
-
                 }
                 
             }
@@ -2610,6 +2603,7 @@ namespace loaddatfsh
                 DatlistView1.Items.Clear();
                 ClearFshlists();
                 int fshnum = 0;
+                DatlistView1.BeginUpdate();
                 for (int i = 0; i < dat.Files.Count; i++)
                 {
                     FileItem item = (FileItem)dat.Files[i];
@@ -2632,12 +2626,13 @@ namespace loaddatfsh
                             string tempinst = index.InstanceID.ToString("X8");
                             originst = tempinst.Substring(0, 7);
                             Datnametxt.Text = Path.GetFileName(dat.FileName)/* + " - Loaded"*/;
-                            DatlistView1.Items[0].Selected = true;
                         }
                     }
                 }
+                DatlistView1.EndUpdate();
                 loadeddat = true;
                 SetLoadedDatEnables();
+                DatlistView1.Items[0].Selected = true;
 
             }
             catch (Exception ex)
@@ -3154,6 +3149,7 @@ namespace loaddatfsh
                     mipbtn_Click(null, null);
 
                     useorigimage = false; // reset it to false
+
                 }
             }
             catch (Exception ex)
