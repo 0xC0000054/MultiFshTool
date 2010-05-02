@@ -2620,26 +2620,32 @@ namespace loaddatfsh
 
                             item1.SubItems.Add(index.GroupID.ToString("X8"));
                             item1.SubItems.Add(index.InstanceID.ToString("X8"));
+                            item1.Tag = index.InstanceID.ToString("X8").Substring(0,7);
                             DatlistView1.Items.Add(item1);
-                            TgiGrouptxt.Text = index.GroupID.ToString("X8");
-                            inststr = index.InstanceID.ToString("X8");
-                            EndFormat_Refresh();
-                            string tempinst = index.InstanceID.ToString("X8");
-                            originst = tempinst.Substring(0, 7);
-                            Datnametxt.Text = Path.GetFileName(dat.FileName)/* + " - Loaded"*/;
                         }
                     }
                 }
                 DatlistView1.EndUpdate();
-                loadeddat = true;
-                DatRebuilt = false;
-                SetLoadedDatEnables();
-                DatlistView1.Items[0].Selected = true;
 
+                if (DatlistView1.Items.Count > 0)
+                {
+                    loadeddat = true;
+                    DatRebuilt = false;
+                    SetLoadedDatEnables();
+                    DatlistView1.Items[0].Selected = true;
+                    Datnametxt.Text = Path.GetFileName(dat.FileName);
+                }
+                else
+                {
+                    string message = string.Format("No images loaded from {0}", Path.GetFileName(filename));
+                    MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    loadeddat = false;
+                    ClearandReset(true);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, this.Text);
+                MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void loadDatbtn_Click(object sender, EventArgs e)
@@ -2880,7 +2886,8 @@ namespace loaddatfsh
                     TgiGrouptxt.Text = group;
                     inststr = instance;
                     EndFormat_Refresh();
-                    
+                    originst = DatlistView1.SelectedItems[0].Tag as String;
+
                     FileItem fshitem = dat.LoadFile(uint.Parse("7ab50e44", NumberStyles.HexNumber), uint.Parse(group,NumberStyles.HexNumber), uint.Parse(instance,NumberStyles.HexNumber));
                     Unknown fshobj = (Unknown)fshitem.FileObject;
                     if (fshobj.IsCompressed)
