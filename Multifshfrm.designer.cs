@@ -804,6 +804,7 @@
             this.newDatbtn.Size = new System.Drawing.Size(75, 23);
             this.newDatbtn.TabIndex = 81;
             this.newDatbtn.Text = "New dat";
+            this.toolTip1.SetToolTip(this.newDatbtn, "Create a new dat");
             this.newDatbtn.UseVisualStyleBackColor = true;
             this.newDatbtn.Click += new System.EventHandler(this.newDatbtn_Click);
             // 
@@ -830,6 +831,7 @@
             this.closeDatbtn.Size = new System.Drawing.Size(75, 23);
             this.closeDatbtn.TabIndex = 84;
             this.closeDatbtn.Text = "Close dat";
+            this.toolTip1.SetToolTip(this.closeDatbtn, "Close the loaded dat");
             this.closeDatbtn.UseVisualStyleBackColor = true;
             this.closeDatbtn.Click += new System.EventHandler(this.closeDatbtn_Click);
             // 

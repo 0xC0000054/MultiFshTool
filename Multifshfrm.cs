@@ -1604,7 +1604,7 @@ namespace loaddatfsh
             {
                 try
                 {
-                    string bitmapnum = image.Bitmaps.Count > 1 ? listv.SelectedItems[0].Index.ToString() : string.Empty;
+                    string bitmapnum = image.Bitmaps.Count > 1 ? "-" + listv.SelectedItems[0].Index.ToString() : string.Empty;
                     Rectangle rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
 
                     if (!string.IsNullOrEmpty(fshfilename))
@@ -1659,11 +1659,12 @@ namespace loaddatfsh
                             prefix = "alpha";
                             break;
                         case "_blend":
-                            prefix = "blended bitmap";
+                            prefix = "blended";
                             break;
                     }
                     // use the prefix if it exists
-                    string message = string.Format("An image must be selected to save the {0}", !string.IsNullOrEmpty(prefix) ? prefix : "bitmap");
+
+                    string message = string.Format("An image must be selected to save the {0}", !string.IsNullOrEmpty(prefix) ? string.Concat(prefix," bitmap") : "bitmap");
                     MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
