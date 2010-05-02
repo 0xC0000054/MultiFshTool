@@ -2632,6 +2632,7 @@ namespace loaddatfsh
                 }
                 DatlistView1.EndUpdate();
                 loadeddat = true;
+                DatRebuilt = false;
                 SetLoadedDatEnables();
                 DatlistView1.Items[0].Selected = true;
 
@@ -2714,7 +2715,39 @@ namespace loaddatfsh
                 }
             }
         }
+        /// <summary>
+        /// Saves the new or modified dat
+        /// </summary>
+        /// <param name="filename">The filename to save as</param>
+        private void SaveDat(string filename)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(dat.FileName) || dat.FileName != filename)
+                {
+                    dat.FileName = filename;
+                }
+                Datnametxt.Text = Path.GetFileName(dat.FileName);
 
+                dat.Save();
+                dat.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (!loadeddat && DatlistView1.Items.Count == 0)
+                {
+                    ClearandReset(true);
+                }
+                else
+                {
+                    Load_Dat(dat.FileName); // reload the modified dat
+                }
+            }
+        }
         private void saveDatbtn_Click(object sender, EventArgs e)
         {
             if (dat == null)
@@ -2739,34 +2772,16 @@ namespace loaddatfsh
            
             if (dat.Files.Count > 0)
             {
-                if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
+                if (!loadeddat && DatlistView1.Items.Count == 0)
                 {
-                    try
+                    if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
                     {
-                        if (string.IsNullOrEmpty(dat.FileName) || dat.FileName != saveDatDialog1.FileName)
-                        {
-                            dat.FileName = saveDatDialog1.FileName;
-                        }                            
-                        Datnametxt.Text = Path.GetFileName(dat.FileName);
-
-                        dat.Save();
-                        dat.Close();
+                        SaveDat(saveDatDialog1.FileName);
                     }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(this,ex.Message + Environment.NewLine + ex.StackTrace,this.Text,MessageBoxButtons.OK,MessageBoxIcon.Error);
-                    }
-                    finally
-                    {
-                        if (!loadeddat && DatlistView1.Items.Count == 0)
-                        {
-                            ClearandReset(true);
-                        }
-                        else
-                        {
-                            Load_Dat(dat.FileName); // reload the modified dat
-                        }
-                    }
+                }
+                else
+                {
+                    SaveDat(dat.FileName);
                 }
             }
         }
