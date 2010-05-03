@@ -2318,7 +2318,7 @@ namespace loaddatfsh
             }
         }
         private Random ra = new Random(); 
-        internal virtual string RandomHexString(int length)
+        private string RandomHexString(int length)
         {
             const string numbers = "0123456789";
             const string hexcode = "ABCDEF";
@@ -2331,16 +2331,18 @@ namespace loaddatfsh
             string lowerinst = string.Empty;
             string upperinst = string.Empty;
             if (File.Exists(rangepath))
-            {
-                StreamReader sr = new StreamReader(rangepath);
-                string line; 
+            {                    
                 string[] instarray = null;
-                char[] splitchar = new char[] {','};
-                while ((line = sr.ReadLine()) != null)
+                using (StreamReader sr = new StreamReader(rangepath))
                 {
-                    if (!string.IsNullOrEmpty(line))
+                    string line;
+                    char[] splitchar = new char[] { ',' };
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        instarray = line.Split(splitchar, StringSplitOptions.RemoveEmptyEntries);
+                        if (!string.IsNullOrEmpty(line))
+                        {
+                            instarray = line.Split(splitchar, StringSplitOptions.RemoveEmptyEntries);
+                        }
                     }
                 }
                 if (instarray != null)
