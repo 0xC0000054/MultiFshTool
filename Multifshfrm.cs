@@ -2084,30 +2084,23 @@ namespace loaddatfsh
                 bool loaded = false;
                 int pngcnt = CountPngArgs(args);
                 List<string> pnglist = null;
-                for (int i = 0; i < args.Length; i++)
+
+                try
                 {
-                    FileInfo fi = new FileInfo(args[i]);
-                    if (fi.Exists)
+                    for (int i = 0; i < args.Length; i++)
                     {
-                        if (fi.Extension.Equals(".fsh") || fi.Extension.Equals(".qfs"))
+                        FileInfo fi = new FileInfo(args[i]);
+                        if (fi.Exists)
                         {
-                            if (!loaded)
+                            if (fi.Extension.Equals(".fsh") || fi.Extension.Equals(".qfs"))
                             {
-                                try
+                                if (!loaded)
                                 {
                                     Load_Fsh(fi.FullName);
                                     loaded = true;
                                 }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(this, ex.Message, this.Text);
-                                }
                             }
-
-                        }
-                        else if (fi.Extension.Equals(".png") || fi.Extension.Equals(".bmp"))
-                        {
-                            try
+                            else if (fi.Extension.Equals(".png") || fi.Extension.Equals(".bmp"))
                             {
                                 if (!loaded)
                                 {
@@ -2121,29 +2114,21 @@ namespace loaddatfsh
                                         NewFsh(pnglist);
                                     }
                                 }
-
                             }
-                            catch (Exception ex)
+                            else if (fi.Extension.Equals(".dat"))
                             {
-                                MessageBox.Show(this, ex.Message, this.Text);
-                            }
-                        }
-                        else if (fi.Extension.Equals(".dat"))
-                        {
-                            if (!loaded)
-                            {
-                                try
+                                if (!loaded)
                                 {
                                     Load_Dat(fi.FullName);
                                     loaded = true;
                                 }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(this, ex.Message, this.Text);
-                                }
                             }
                         }
-                    } 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
