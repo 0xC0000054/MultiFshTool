@@ -1212,6 +1212,27 @@ namespace loaddatfsh
             }
 
         }
+        /// <summary>
+        /// Creates the mip thumbnail using Graphics.DrawImage
+        /// </summary>
+        /// <param name="source">The Bitmap to draw</param>
+        /// <param name="width">The width of the new bitmap</param>
+        /// <param name="height">The height of the new bitmap</param>
+        /// <returns>The new scaled Bitmap</returns>
+        private Bitmap GetBitmapThumbnail(Bitmap source, int width, int height)
+        {
+            Bitmap image = new Bitmap(width, height);
+            using (Graphics gr = Graphics.FromImage(image)) // this is hopfully higher quality that GetThumbnailImage
+            {
+                gr.InterpolationMode = InterpolationMode.HighQualityBilinear;
+                gr.SmoothingMode = SmoothingMode.HighQuality;
+                gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                gr.CompositingQuality = CompositingQuality.HighQuality;
+                gr.DrawImage(source, new Rectangle(0, 0, width, height));
+            }
+
+            return image;
+        }
         private bool mipsbtn_clicked = false;
         private FSHImage mip64fsh = null;
         private FSHImage mip32fsh = null;
@@ -1231,19 +1252,19 @@ namespace loaddatfsh
             {
                 BitmapItem item = (BitmapItem)curimage.Bitmaps[index];
                 // 0 = 8, 1 = 16, 2 = 32, 3 = 64
-                Image.GetThumbnailImageAbort abort = new Image.GetThumbnailImageAbort(thabort);
 
                 Bitmap bmp = new Bitmap(item.Bitmap);
-                bmps[3] = (Bitmap)bmp.GetThumbnailImage(64, 64, abort, IntPtr.Zero);
-                bmps[2] = (Bitmap)bmp.GetThumbnailImage(32, 32, abort, IntPtr.Zero);
-                bmps[1] = (Bitmap)bmp.GetThumbnailImage(16, 16, abort, IntPtr.Zero);
-                bmps[0] = (Bitmap)bmp.GetThumbnailImage(8, 8, abort, IntPtr.Zero);
+                bmps[0] = GetBitmapThumbnail(bmp, 8, 8);
+                bmps[1] = GetBitmapThumbnail(bmp, 16, 16);
+                bmps[2] = GetBitmapThumbnail(bmp, 32, 32);
+                bmps[3] = GetBitmapThumbnail(bmp, 64, 64);
                 //alpha
                 Bitmap alpha = new Bitmap(item.Alpha);
-                alphas[3] = (Bitmap)alpha.GetThumbnailImage(64, 64, abort, IntPtr.Zero);
-                alphas[2] = (Bitmap)alpha.GetThumbnailImage(32, 32, abort, IntPtr.Zero);
-                alphas[1] = (Bitmap)alpha.GetThumbnailImage(16, 16, abort, IntPtr.Zero);
-                alphas[0] = (Bitmap)alpha.GetThumbnailImage(8, 8, abort, IntPtr.Zero);
+                alphas[0] = GetBitmapThumbnail(alpha, 8, 8);
+                alphas[1] = GetBitmapThumbnail(alpha, 16, 16);
+                alphas[2] = GetBitmapThumbnail(alpha, 32, 32);
+                alphas[3] = GetBitmapThumbnail(alpha, 64, 64);
+
                 for (int i = 0; i < 4; i++)
                 {
                     if (bmps[i] != null && alphas[i] != null)
@@ -1920,6 +1941,7 @@ namespace loaddatfsh
                             if (files.Count - 1 == 0)
                             {
                                 Temp_fsh();
+                                mipbtn_Click(null, null);
                             }
                         }
                         else
