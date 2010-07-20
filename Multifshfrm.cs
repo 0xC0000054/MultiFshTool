@@ -11,14 +11,10 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 using FSHLib;
-using SynapticEffect.SimCity;
-using SynapticEffect.SimCity.DatNamespace;
-using SynapticEffect.SimCity.IO;
-using SynapticEffect.SimCity.IO.FileTypes;
-using SynapticEffect;
 using System.Globalization;
 using loaddatfsh.Properties;
 using System.Text.RegularExpressions;
+using FshDatIO;
 
 namespace loaddatfsh
 {
@@ -1642,10 +1638,10 @@ namespace loaddatfsh
                     }
                     else if (loadeddat && DatlistView1.SelectedItems.Count > 0)
                     {
-                        if (!string.IsNullOrEmpty(dat.FileName))
+                        if (!string.IsNullOrEmpty(dat.Filename))
                         {
                             ListViewItem item = DatlistView1.SelectedItems[0];
-                            string fshname = Path.Combine(Path.GetDirectoryName(dat.FileName), "0x" + item.SubItems[2].Text);
+                            string fshname = Path.Combine(Path.GetDirectoryName(dat.Filename), "0x" + item.SubItems[2].Text);
 
                             string name = string.Concat(fshname, bitmapnum, addtofilename, ".png");
 
@@ -2382,7 +2378,7 @@ namespace loaddatfsh
 
             }
 
-            bool copied = false;
+            //bool copied = false;
             for (int c = 0; c < charArray.Length; c++)
             {
                 int index;
@@ -2396,14 +2392,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    if (!copied)
-                    {
-                        char[] id = DatFile4.GenerateGUID().ToString("X").ToCharArray();
-                        Array.Copy(id, charArray, 5);
-                        c = 5;
-                        copied = true;
-                    }
-                    index = ra.Next(5, hexstring.Length);
+                    index = ra.Next(0, hexstring.Length);
                     charArray[c] = hexstring[index];
                 }
 
@@ -2600,7 +2589,7 @@ namespace loaddatfsh
             blend16Mip.Images.Clear();
             blend8Mip.Images.Clear();
         }
-        private DatFile4 dat = null;
+        private DatFile dat = null;
         private bool compress_datmips = false;
         private string originst = null;
         private bool loadeddat = false;
@@ -2608,29 +2597,32 @@ namespace loaddatfsh
         {
             try
             {
-                dat = new DatFile4(filename);
-                dat.Load();
+                dat = new DatFile(filename);
                 DatlistView1.Items.Clear();
                 ClearFshlists();
                 int fshnum = 0;
                 DatlistView1.BeginUpdate();
-                for (int i = 0; i < dat.Files.Count; i++)
+                for (int i = 0; i < dat.Indexes.Count; i++)
                 {
-                    FileItem item = (FileItem)dat.Files[i];
-                    DatIndex4 index = dat.Indexes[item.IndexNumber];
-                    if (index.TypeID == uint.Parse("7ab50e44", NumberStyles.HexNumber))
+                    DatIndex index = dat.Indexes[i]; 
+                    if (index.Type == uint.Parse("7ab50e44", NumberStyles.HexNumber))
                     {
 
-                        string istr = index.InstanceID.ToString("X8");
+                        string istr = index.Instance.ToString("X8");
                         if (istr.EndsWith("4") || istr.EndsWith("9") || istr.EndsWith("E"))
                         {
-                            fshnum++;
-                            ListViewItem item1 = new ListViewItem("Fsh # " + fshnum.ToString());
+                            FshWrapper wrap = dat.LoadFile(index.Group, index.Instance);
 
-                            item1.SubItems.Add(index.GroupID.ToString("X8"));
-                            item1.SubItems.Add(index.InstanceID.ToString("X8"));
-                            item1.Tag = index.InstanceID.ToString("X8").Substring(0,7);
-                            DatlistView1.Items.Add(item1);
+                            if (wrap.Image != null && ((BitmapItem)wrap.Image.Bitmaps[0]).Bitmap.Width >= 128 && ((BitmapItem)wrap.Image.Bitmaps[0]).Bitmap.Width >= 128)
+                            {
+                                fshnum++;
+                                ListViewItem item1 = new ListViewItem("Fsh # " + fshnum.ToString());
+
+                                item1.SubItems.Add(index.Group.ToString("X8"));
+                                item1.SubItems.Add(index.Instance.ToString("X8"));
+                                item1.Tag = wrap;
+                                DatlistView1.Items.Add(item1);
+                            }
                         }
                     }
                 }
@@ -2642,7 +2634,7 @@ namespace loaddatfsh
                     DatRebuilt = false;
                     SetLoadedDatEnables();
                     DatlistView1.Items[0].Selected = true;
-                    Datnametxt.Text = Path.GetFileName(dat.FileName);
+                    Datnametxt.Text = Path.GetFileName(dat.Filename);
                 }
                 else
                 {
@@ -2672,16 +2664,14 @@ namespace loaddatfsh
         /// Rebuild the dat with the new items
         /// </summary>
         /// <param name="inputdat">The dat file to build</param>
-        private void RebuildDat(DatFile4 inputdat)
+        private void RebuildDat(DatFile inputdat)
         {
             if (mipsbtn_clicked && mip64fsh != null && mip32fsh != null && mip16fsh != null && mip8fsh != null && curimage != null)
             { 
-                TGIEntry tgi = new TGIEntry();
-                tgi.TypeID = uint.Parse("7ab50e44",NumberStyles.HexNumber);
-                tgi.GroupID = uint.Parse(TgiGrouptxt.Text,NumberStyles.HexNumber);
+                uint type = uint.Parse("7ab50e44",NumberStyles.HexNumber);
+                uint group = uint.Parse(TgiGrouptxt.Text,NumberStyles.HexNumber);
                 uint[] instanceid = new uint[5];
-                FileItem[] fi = new FileItem[5];
-                FSHWrapper[] fshwrap = new FSHWrapper[5];
+                FshWrapper[] fshwrap = new FshWrapper[5];
                 FSHImage[] fshimg = new FSHImage[5];
                 fshimg[0] = mip8fsh; fshimg[1] = mip16fsh; fshimg[2] = mip32fsh;
                 fshimg[3] = mip64fsh; fshimg[4] = curimage;
@@ -2692,40 +2682,37 @@ namespace loaddatfsh
                 instanceid[4] = uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber);
                 if (inputdat == null)
                 {
-                    dat = new DatFile4();
+                    dat = new DatFile();
                 }
                 
                 for (int i = 4; i >= 0; i--)
                 {
-                    if (fi[i] == null)
-                    {
-                        fi[i] = new FileItem();
-                    }
-                    fi[i].FileObject = fshwrap[i] = new FSHWrapper(fshimg[i]);
-                    tgi.InstanceID = instanceid[i];
-                    CheckInstance(inputdat, tgi.GroupID, tgi.InstanceID);
-                    fi[i].Size = ((IRawData)fi[i].FileObject).RawData.Length;
+                    
+                    fshwrap[i] = new FshWrapper(fshimg[i]);
+                    CheckInstance(inputdat, group, instanceid[i]);
                         
-                    inputdat.Insert(fi[i], tgi, false, compress_datmips);
+                    inputdat.Add(fshwrap[i], group, instanceid[i], compress_datmips);
                 }
                 DatRebuilt = true;
             }
         }
-        private void CheckInstance(DatFile4 checkdat,uint group, uint instance)
+
+        /// <summary>
+        /// Checks the dat for files with the same TGI id
+        /// </summary>
+        /// <param name="checkdat">The Dat to check</param>
+        /// <param name="group">The group id to check</param>
+        /// <param name="instance">The instance id to check</param>
+        private void CheckInstance(DatFile checkdat,uint group, uint instance)
         {
-            for (int n = 0; n < checkdat.Files.Count; n++)
+            for (int n = 0; n < checkdat.Indexes.Count; n++)
             {
-                FileItem chkitem = (FileItem)checkdat.Files[n];
-                DatIndex4 chkindex = checkdat.Indexes[chkitem.IndexNumber];
-                if (chkindex.TypeID == uint.Parse("7ab50e44",NumberStyles.HexNumber) && chkindex.GroupID == group && chkindex.Flags != IndexFlags.New)
+                DatIndex chkindex = checkdat.Indexes[n];
+                if (chkindex.Type == uint.Parse("7ab50e44",NumberStyles.HexNumber) && chkindex.Group == group && chkindex.Flags != DatIndexFlags.New)
                 {
-                    if (chkindex.InstanceID == instance)
+                    if (chkindex.Instance == instance)
                     { 
-                        TGIEntry remtgi = new TGIEntry();
-                        remtgi.TypeID = chkindex.TypeID; 
-                        remtgi.GroupID = chkindex.GroupID;
-                        remtgi.InstanceID = chkindex.InstanceID;
-                        checkdat.Remove(remtgi);
+                        checkdat.Remove(group, instance);
                     }
                 }
             }
@@ -2738,13 +2725,10 @@ namespace loaddatfsh
         {
             try
             {
-                if (string.IsNullOrEmpty(dat.FileName) || dat.FileName != filename)
-                {
-                    dat.FileName = filename;
-                }
-                Datnametxt.Text = Path.GetFileName(dat.FileName);
+                dat.Save(filename);   
+                
+                Datnametxt.Text = Path.GetFileName(dat.Filename);
 
-                dat.Save();
                 dat.Close();
             }
             catch (Exception ex)
@@ -2759,7 +2743,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    Load_Dat(dat.FileName); // reload the modified dat
+                    Load_Dat(dat.Filename); // reload the modified dat
                 }
             }
         }
@@ -2767,7 +2751,7 @@ namespace loaddatfsh
         {
             if (dat == null)
             {
-                dat = new DatFile4();
+                dat = new DatFile();
                 DatRebuilt = false;
             }
             if (compDatcb.Checked && !compress_datmips)
@@ -2785,7 +2769,7 @@ namespace loaddatfsh
                 RebuildDat(dat);
             }
            
-            if (dat.Files.Count > 0)
+            if (dat.Indexes.Count > 0)
             {
                 if (!loadeddat && DatlistView1.Items.Count == 0)
                 {
@@ -2796,7 +2780,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    SaveDat(dat.FileName);
+                    SaveDat(dat.Filename);
                 }
             }
         }
@@ -2808,39 +2792,38 @@ namespace loaddatfsh
                 settings.PutSetting("genNewInstcb_checked",genNewInstcb.Checked.ToString());
                 if (genNewInstcb.Checked)
                 {
-                    for (int n = 0; n < dat.Files.Count; n++)
+                    for (int n = 0; n < dat.Indexes.Count; n++)
                     {
-                        FileItem additem = (FileItem)dat.Files[n];
-                        DatIndex4 addindex = dat.Indexes[additem.IndexNumber];
-                        if (addindex.TypeID == uint.Parse("7ab50e44", NumberStyles.HexNumber))
+                        DatIndex addindex = dat.Indexes[n];
+                        if (addindex.Type == uint.Parse("7ab50e44", NumberStyles.HexNumber))
                         {
                             string newinstance = null;
 
-                            if (addindex.InstanceID == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end8, NumberStyles.HexNumber))
+                            if (addindex.Instance == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end8, NumberStyles.HexNumber))
                             {
                                 newinstance = RandomHexString(7);
                                 inststr = newinstance.Substring(0, 7);
                                 EndFormat_Refresh();
                             }
-                            else if (addindex.InstanceID == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber))
+                            else if (addindex.Instance == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber))
                             {
                                 newinstance = RandomHexString(7);
                                 inststr = newinstance.Substring(0, 7);
                                 EndFormat_Refresh();
                             }
-                            else if (addindex.InstanceID == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber))
+                            else if (addindex.Instance == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber))
                             {
                                 newinstance = RandomHexString(7);
                                 inststr = newinstance.Substring(0, 7);
                                 EndFormat_Refresh();
                             }
-                            else if (addindex.InstanceID == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber))
+                            else if (addindex.Instance == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber))
                             {
                                 newinstance = RandomHexString(7);
                                 inststr = newinstance.Substring(0, 7);
                                 EndFormat_Refresh();
                             }
-                            else if (addindex.InstanceID == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber))
+                            else if (addindex.Instance == uint.Parse(tgiInstancetxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber))
                             {
                                 newinstance = RandomHexString(7);
                                 inststr = newinstance.Substring(0,7);
@@ -2876,7 +2859,7 @@ namespace loaddatfsh
            {
                ClearandReset(false);
            }
-           this.dat = new DatFile4();
+           this.dat = new DatFile();
            DatRebuilt = false;
            Datnametxt.Text = "Dat in Memory";       
            SetLoadedDatEnables();
@@ -2895,22 +2878,20 @@ namespace loaddatfsh
                     TgiGrouptxt.Text = group;
                     inststr = instance;
                     EndFormat_Refresh();
-                    originst = DatlistView1.SelectedItems[0].Tag as String;
+                    originst = instance.Substring(0,7);
 
-                    FileItem fshitem = dat.LoadFile(uint.Parse("7ab50e44", NumberStyles.HexNumber), uint.Parse(group,NumberStyles.HexNumber), uint.Parse(instance,NumberStyles.HexNumber));
-                    Unknown fshobj = (Unknown)fshitem.FileObject;
-                    if (fshobj.IsCompressed)
+
+                    FshWrapper fshitem = DatlistView1.SelectedItems[0].Tag as FshWrapper;
+                    if (fshitem.Compressed)
                     {
                         compress_datmips = true;
                         compDatcb.Checked = true;
                     }
-                    FSHWrapper wrapper = (FSHWrapper)fshitem.FileObject;
-                    using (MemoryStream fstream = new MemoryStream())
-                    {
-                        if (wrapper.BaseFSH != null)
-                        {
-                            wrapper.BaseFSH.Save(fstream);
 
+                    if (fshitem.Image != null)
+                    {
+                        using (MemoryStream fstream = new MemoryStream(fshitem.Image.RawData))
+                        {
                             FSHImage image = new FSHImage(fstream);
                             BitmapItem tempitem = (BitmapItem)image.Bitmaps[0];
                             if (tempitem.Bitmap.Width >= 128 && tempitem.Bitmap.Height >= 128)
@@ -2964,7 +2945,7 @@ namespace loaddatfsh
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message, this.Text);
+                    MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text);
                 }
             }
         }
