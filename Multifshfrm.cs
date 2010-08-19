@@ -184,9 +184,9 @@ namespace loaddatfsh
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        throw ex;
+                        throw;
                     }
 
                 }
@@ -229,9 +229,9 @@ namespace loaddatfsh
                     image.Save(fs);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         /// <summary>
@@ -290,9 +290,9 @@ namespace loaddatfsh
                 listViewmain.Items[0].Selected = true;
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }
@@ -1217,7 +1217,7 @@ namespace loaddatfsh
         /// <returns>The new scaled Bitmap</returns>
         private Bitmap GetBitmapThumbnail(Bitmap source, int width, int height)
         {
-            Bitmap image = new Bitmap(width, height);
+            /*Bitmap image = new Bitmap(width, height);
             using (Graphics gr = Graphics.FromImage(image)) // this is hopfully higher quality that GetThumbnailImage
             {
                 gr.InterpolationMode = InterpolationMode.HighQualityBilinear;
@@ -1225,8 +1225,8 @@ namespace loaddatfsh
                 gr.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 gr.CompositingQuality = CompositingQuality.HighQuality;
                 gr.DrawImage(source, new Rectangle(0, 0, width, height));
-            }
-
+            }*/
+            Bitmap image = SuperSample.SuperSample.GetBitmapThumbnail(source, width, height); 
             return image;
         }
         private bool mipsbtn_clicked = false;
@@ -1337,9 +1337,9 @@ namespace loaddatfsh
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
         private void mipbtn_Click(object sender, EventArgs e)
