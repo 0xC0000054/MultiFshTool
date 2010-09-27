@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "loaddatfsh", "loaddatfsh.csproj", "{B566DF90-453C-42CB-87C0-9CDE126EBABD}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A3BEDB3-D795-4033-A5DE-013DD6A67B0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "loaddatfsh", "loaddatfsh.csproj", "{B566DF90-453C-42CB-87C0-9CDE126EBABD}"
 EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
