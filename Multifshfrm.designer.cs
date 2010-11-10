@@ -1,4 +1,5 @@
-﻿namespace loaddatfsh
+﻿using loaddatfsh.Properties;
+namespace loaddatfsh
 {
     partial class Multifshfrm
     {
@@ -26,32 +27,33 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "qfs"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Fsh"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "diget"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "fsh")]
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
             this.BitmapList1 = new System.Windows.Forms.ImageList(this.components);
-            this.listViewmain = new System.Windows.Forms.ListView();
-            this.loadfsh = new System.Windows.Forms.Button();
+            this.listViewMain = new System.Windows.Forms.ListView();
+            this.loadFshBtn = new System.Windows.Forms.Button();
             this.blendRadio = new System.Windows.Forms.RadioButton();
             this.alphaRadio = new System.Windows.Forms.RadioButton();
             this.colorRadio = new System.Windows.Forms.RadioButton();
             this.openFshDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.FshtypeBox = new System.Windows.Forms.ComboBox();
+            this.fshTypeBox = new System.Windows.Forms.ComboBox();
             this.alphaList1 = new System.Windows.Forms.ImageList(this.components);
             this.blendList1 = new System.Windows.Forms.ImageList(this.components);
             this.Sizelbl = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.dirnamelbl = new System.Windows.Forms.Label();
+            this.imgSizeLbl = new System.Windows.Forms.Label();
+            this.dirNameLbl = new System.Windows.Forms.Label();
             this.openBitmapDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.rembtn = new System.Windows.Forms.Button();
+            this.remBtn = new System.Windows.Forms.Button();
             this.addbtn = new System.Windows.Forms.Button();
             this.openAlphaDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.dirtxt = new System.Windows.Forms.TextBox();
-            this.repbtn = new System.Windows.Forms.Button();
+            this.dirTxt = new System.Windows.Forms.TextBox();
+            this.repBtn = new System.Windows.Forms.Button();
             this.mipbtn = new System.Windows.Forms.Button();
-            this.savefshbtn = new System.Windows.Forms.Button();
+            this.saveFshBtn = new System.Windows.Forms.Button();
             this.saveFshDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.newfshbtn = new System.Windows.Forms.Button();
+            this.newFshBtn = new System.Windows.Forms.Button();
             this.bmpmanBox1 = new System.Windows.Forms.GroupBox();
             this.fshDefbox = new System.Windows.Forms.GroupBox();
             this.regFshrdo = new System.Windows.Forms.RadioButton();
@@ -79,37 +81,37 @@
             this.blend16Mip = new System.Windows.Forms.ImageList(this.components);
             this.alpha8Mip = new System.Windows.Forms.ImageList(this.components);
             this.blend8Mip = new System.Windows.Forms.ImageList(this.components);
-            this.TgiGrouptxt = new System.Windows.Forms.TextBox();
-            this.tgiInstancetxt = new System.Windows.Forms.TextBox();
-            this.tgiGrouplbl = new System.Windows.Forms.Label();
-            this.tgiInstlbl = new System.Windows.Forms.Label();
+            this.tgiGroupTxt = new System.Windows.Forms.TextBox();
+            this.tgiInstanceTxt = new System.Windows.Forms.TextBox();
+            this.tgiGroupLbl = new System.Windows.Forms.Label();
+            this.tgiInstLbl = new System.Windows.Forms.Label();
             this.InstendBox1 = new System.Windows.Forms.GroupBox();
-            this.InstA_Erdo = new System.Windows.Forms.RadioButton();
-            this.Inst5_9rdo = new System.Windows.Forms.RadioButton();
-            this.Inst0_4rdo = new System.Windows.Forms.RadioButton();
+            this.instA_ERdo = new System.Windows.Forms.RadioButton();
+            this.inst5_9Rdo = new System.Windows.Forms.RadioButton();
+            this.inst0_4Rdo = new System.Windows.Forms.RadioButton();
             this.DatlistView1 = new System.Windows.Forms.ListView();
-            this.NameHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.GroupHeader = new System.Windows.Forms.ColumnHeader();
-            this.InstanceHeader = new System.Windows.Forms.ColumnHeader();
-            this.loadDatbtn = new System.Windows.Forms.Button();
+            this.NameHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.GroupHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.InstanceHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.loadDatBtn = new System.Windows.Forms.Button();
             this.openDatDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveDatDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.saveDatbtn = new System.Windows.Forms.Button();
-            this.newDatbtn = new System.Windows.Forms.Button();
+            this.saveDatBtn = new System.Windows.Forms.Button();
+            this.newDatBtn = new System.Windows.Forms.Button();
             this.DatfuncBox1 = new System.Windows.Forms.GroupBox();
-            this.closeDatbtn = new System.Windows.Forms.Button();
-            this.Datnametxt = new System.Windows.Forms.Label();
-            this.datlbl = new System.Windows.Forms.Label();
-            this.genNewInstcb = new System.Windows.Forms.CheckBox();
-            this.compDatcb = new System.Windows.Forms.CheckBox();
+            this.closeDatBtn = new System.Windows.Forms.Button();
+            this.datNameTxt = new System.Windows.Forms.Label();
+            this.datLbl = new System.Windows.Forms.Label();
+            this.genNewInstCb = new System.Windows.Forms.CheckBox();
+            this.compDatCb = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.Fshwritecompcb = new System.Windows.Forms.CheckBox();
-            this.alphasavebtn = new System.Windows.Forms.Button();
-            this.savebmpblendbtn = new System.Windows.Forms.Button();
-            this.bmpsavebtn = new System.Windows.Forms.Button();
+            this.fshWriteCompCb = new System.Windows.Forms.CheckBox();
+            this.alphaSaveBtn = new System.Windows.Forms.Button();
+            this.saveBmpBlendBtn = new System.Windows.Forms.Button();
+            this.bmpSaveBtn = new System.Windows.Forms.Button();
             this.expbmpBox1 = new System.Windows.Forms.GroupBox();
-            this.alphalbl = new System.Windows.Forms.Label();
-            this.bmplbl = new System.Windows.Forms.Label();
+            this.alphaLbl = new System.Windows.Forms.Label();
+            this.bmpLbl = new System.Windows.Forms.Label();
             this.Alphabtn = new System.Windows.Forms.Button();
             this.Alphabox = new System.Windows.Forms.TextBox();
             this.bmpbtn = new System.Windows.Forms.Button();
@@ -133,35 +135,35 @@
             this.BitmapList1.ImageSize = new System.Drawing.Size(96, 96);
             this.BitmapList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // listViewmain
+            // listViewMain
             // 
-            this.listViewmain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.listViewMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewmain.BackgroundImageTiled = true;
-            this.listViewmain.HideSelection = false;
-            this.listViewmain.LargeImageList = this.BitmapList1;
-            this.listViewmain.Location = new System.Drawing.Point(-7, -8);
-            this.listViewmain.MultiSelect = false;
-            this.listViewmain.Name = "listViewmain";
-            this.listViewmain.Size = new System.Drawing.Size(523, 150);
-            this.listViewmain.SmallImageList = this.BitmapList1;
-            this.listViewmain.TabIndex = 0;
-            this.listViewmain.TileSize = new System.Drawing.Size(184, 34);
-            this.listViewmain.UseCompatibleStateImageBehavior = false;
-            this.listViewmain.SelectedIndexChanged += new System.EventHandler(this.listViewmain_SelectedIndexChanged);
+            this.listViewMain.BackgroundImageTiled = true;
+            this.listViewMain.HideSelection = false;
+            this.listViewMain.LargeImageList = this.BitmapList1;
+            this.listViewMain.Location = new System.Drawing.Point(-7, -8);
+            this.listViewMain.MultiSelect = false;
+            this.listViewMain.Name = "listViewMain";
+            this.listViewMain.Size = new System.Drawing.Size(523, 150);
+            this.listViewMain.SmallImageList = this.BitmapList1;
+            this.listViewMain.TabIndex = 0;
+            this.listViewMain.TileSize = new System.Drawing.Size(184, 34);
+            this.listViewMain.UseCompatibleStateImageBehavior = false;
+            this.listViewMain.SelectedIndexChanged += new System.EventHandler(this.listViewmain_SelectedIndexChanged);
             // 
-            // loadfsh
+            // loadFshBtn
             // 
-            this.loadfsh.AllowDrop = true;
-            this.loadfsh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadfsh.Location = new System.Drawing.Point(349, 541);
-            this.loadfsh.Name = "loadfsh";
-            this.loadfsh.Size = new System.Drawing.Size(75, 23);
-            this.loadfsh.TabIndex = 1;
-            this.loadfsh.Text = "Load fsh";
-            this.toolTip1.SetToolTip(this.loadfsh, "Load an existing fsh");
-            this.loadfsh.UseVisualStyleBackColor = true;
-            this.loadfsh.Click += new System.EventHandler(this.loadfsh_Click);
+            this.loadFshBtn.AllowDrop = true;
+            this.loadFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.loadFshBtn.Location = new System.Drawing.Point(349, 541);
+            this.loadFshBtn.Name = "loadFshBtn";
+            this.loadFshBtn.Size = new System.Drawing.Size(75, 23);
+            this.loadFshBtn.TabIndex = 1;
+            this.loadFshBtn.Text = "Load Fsh";
+            this.toolTip1.SetToolTip(this.loadFshBtn, "Load an existing fsh");
+            this.loadFshBtn.UseVisualStyleBackColor = true;
+            this.loadFshBtn.Click += new System.EventHandler(this.loadfsh_Click);
             // 
             // blendRadio
             // 
@@ -169,10 +171,10 @@
             this.blendRadio.AutoSize = true;
             this.blendRadio.Location = new System.Drawing.Point(12, 360);
             this.blendRadio.Name = "blendRadio";
-            this.blendRadio.Size = new System.Drawing.Size(81, 17);
+            this.blendRadio.Size = new System.Drawing.Size(82, 17);
             this.blendRadio.TabIndex = 45;
             this.blendRadio.TabStop = true;
-            this.blendRadio.Text = "Alpha blend";
+            this.blendRadio.Text = "Alpha Blend";
             this.blendRadio.UseVisualStyleBackColor = true;
             this.blendRadio.CheckedChanged += new System.EventHandler(this.Radio_CheckedChanged);
             // 
@@ -204,26 +206,26 @@
             // 
             // openFshDialog1
             // 
-            this.openFshDialog1.Filter = "Fsh files (*.fsh;*.qfs)|*.fsh;*.qfs|All files (*.*)|*.*";
+            this.openFshDialog1.Filter = global::loaddatfsh.Properties.Resources.FshFiles_Filter;
             // 
-            // FshtypeBox
+            // fshTypeBox
             // 
-            this.FshtypeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.FshtypeBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.FshtypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.FshtypeBox.FormattingEnabled = true;
-            this.FshtypeBox.Items.AddRange(new object[] {
+            this.fshTypeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.fshTypeBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.fshTypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fshTypeBox.FormattingEnabled = true;
+            this.fshTypeBox.Items.AddRange(new object[] {
             "24 Bit RGB (0:8:8:8)",
             "32 Bit ARGB (8:8:8:8)",
             "DXT1 Compressed, no Alpha",
             "DXT3 Compressed, with Alpha"});
-            this.FshtypeBox.Location = new System.Drawing.Point(12, 287);
-            this.FshtypeBox.Name = "FshtypeBox";
-            this.FshtypeBox.Size = new System.Drawing.Size(164, 21);
-            this.FshtypeBox.TabIndex = 46;
-            this.toolTip1.SetToolTip(this.FshtypeBox, "Change the fsh type of the selected bitmap");
-            this.FshtypeBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FshtypeBox_DrawItem);
-            this.FshtypeBox.SelectedIndexChanged += new System.EventHandler(this.FshtypeBox_SelectedIndexChanged);
+            this.fshTypeBox.Location = new System.Drawing.Point(12, 287);
+            this.fshTypeBox.Name = "fshTypeBox";
+            this.fshTypeBox.Size = new System.Drawing.Size(164, 21);
+            this.fshTypeBox.TabIndex = 46;
+            this.toolTip1.SetToolTip(this.fshTypeBox, "Change the fsh type of the selected bitmap");
+            this.fshTypeBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FshtypeBox_DrawItem);
+            this.fshTypeBox.SelectedIndexChanged += new System.EventHandler(this.FshtypeBox_SelectedIndexChanged);
             // 
             // alphaList1
             // 
@@ -246,40 +248,40 @@
             this.Sizelbl.Size = new System.Drawing.Size(0, 13);
             this.Sizelbl.TabIndex = 48;
             // 
-            // label3
+            // imgSizeLbl
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(100, 318);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(33, 13);
-            this.label3.TabIndex = 47;
-            this.label3.Text = "Size: ";
+            this.imgSizeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.imgSizeLbl.AutoSize = true;
+            this.imgSizeLbl.Location = new System.Drawing.Point(100, 318);
+            this.imgSizeLbl.Name = "imgSizeLbl";
+            this.imgSizeLbl.Size = new System.Drawing.Size(33, 13);
+            this.imgSizeLbl.TabIndex = 47;
+            this.imgSizeLbl.Text = "Size: ";
             // 
-            // dirnamelbl
+            // dirNameLbl
             // 
-            this.dirnamelbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dirnamelbl.AutoSize = true;
-            this.dirnamelbl.Location = new System.Drawing.Point(95, 339);
-            this.dirnamelbl.Name = "dirnamelbl";
-            this.dirnamelbl.Size = new System.Drawing.Size(81, 13);
-            this.dirnamelbl.TabIndex = 50;
-            this.dirnamelbl.Text = "Directory name:";
+            this.dirNameLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dirNameLbl.AutoSize = true;
+            this.dirNameLbl.Location = new System.Drawing.Point(95, 339);
+            this.dirNameLbl.Name = "dirNameLbl";
+            this.dirNameLbl.Size = new System.Drawing.Size(81, 13);
+            this.dirNameLbl.TabIndex = 50;
+            this.dirNameLbl.Text = "Directory name:";
             // 
             // openBitmapDialog1
             // 
-            this.openBitmapDialog1.Filter = "Bitmap files (*.png;*.bmp)|*.png;*.bmp|All files (*.*)|*.*";
+            this.openBitmapDialog1.Filter = global::loaddatfsh.Properties.Resources.ImageFiles_Filter;
             // 
-            // rembtn
+            // remBtn
             // 
-            this.rembtn.Location = new System.Drawing.Point(169, 20);
-            this.rembtn.Name = "rembtn";
-            this.rembtn.Size = new System.Drawing.Size(75, 23);
-            this.rembtn.TabIndex = 54;
-            this.rembtn.Text = "Remove ";
-            this.toolTip1.SetToolTip(this.rembtn, "Remove the selected bitmap from the image");
-            this.rembtn.UseVisualStyleBackColor = true;
-            this.rembtn.Click += new System.EventHandler(this.rembtn_Click);
+            this.remBtn.Location = new System.Drawing.Point(169, 20);
+            this.remBtn.Name = "remBtn";
+            this.remBtn.Size = new System.Drawing.Size(75, 23);
+            this.remBtn.TabIndex = 54;
+            this.remBtn.Text = "Remove";
+            this.toolTip1.SetToolTip(this.remBtn, "Remove the selected bitmap from the image");
+            this.remBtn.UseVisualStyleBackColor = true;
+            this.remBtn.Click += new System.EventHandler(this.remBtn_Click);
             // 
             // addbtn
             // 
@@ -288,7 +290,7 @@
             this.addbtn.Name = "addbtn";
             this.addbtn.Size = new System.Drawing.Size(75, 23);
             this.addbtn.TabIndex = 53;
-            this.addbtn.Text = "Add ";
+            this.addbtn.Text = "Add";
             this.toolTip1.SetToolTip(this.addbtn, "Add new bitmaps to the image");
             this.addbtn.UseVisualStyleBackColor = true;
             this.addbtn.Click += new System.EventHandler(this.addbtn_Click);
@@ -297,28 +299,29 @@
             // 
             // openAlphaDialog1
             // 
-            this.openAlphaDialog1.Filter = "Bitmap files (*.png;*.bmp)|*.png;*.bmp|All files (*.*)|*.*";
+            this.openAlphaDialog1.Filter = global::loaddatfsh.Properties.Resources.ImageFiles_Filter;
             // 
-            // dirtxt
+            // dirTxt
             // 
-            this.dirtxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dirtxt.Location = new System.Drawing.Point(182, 336);
-            this.dirtxt.MaxLength = 4;
-            this.dirtxt.Name = "dirtxt";
-            this.dirtxt.Size = new System.Drawing.Size(45, 20);
-            this.dirtxt.TabIndex = 57;
-            this.toolTip1.SetToolTip(this.dirtxt, "Change the directory name for the selected image");
+            this.dirTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dirTxt.Location = new System.Drawing.Point(182, 336);
+            this.dirTxt.MaxLength = 4;
+            this.dirTxt.Name = "dirTxt";
+            this.dirTxt.Size = new System.Drawing.Size(45, 20);
+            this.dirTxt.TabIndex = 57;
+            this.toolTip1.SetToolTip(this.dirTxt, "Change the directory name for the selected image");
+            this.dirTxt.TextChanged += new System.EventHandler(this.dirTxt_TextChanged);
             // 
-            // repbtn
+            // repBtn
             // 
-            this.repbtn.Location = new System.Drawing.Point(88, 20);
-            this.repbtn.Name = "repbtn";
-            this.repbtn.Size = new System.Drawing.Size(75, 23);
-            this.repbtn.TabIndex = 58;
-            this.repbtn.Text = "Replace";
-            this.toolTip1.SetToolTip(this.repbtn, "Replace the selected bitmap");
-            this.repbtn.UseVisualStyleBackColor = true;
-            this.repbtn.Click += new System.EventHandler(this.repbtn_Click);
+            this.repBtn.Location = new System.Drawing.Point(88, 20);
+            this.repBtn.Name = "repBtn";
+            this.repBtn.Size = new System.Drawing.Size(75, 23);
+            this.repBtn.TabIndex = 58;
+            this.repBtn.Text = "Replace";
+            this.toolTip1.SetToolTip(this.repBtn, "Replace the selected bitmap");
+            this.repBtn.UseVisualStyleBackColor = true;
+            this.repBtn.Click += new System.EventHandler(this.repBtn_Click);
             // 
             // mipbtn
             // 
@@ -332,44 +335,44 @@
             this.mipbtn.Visible = false;
             this.mipbtn.Click += new System.EventHandler(this.mipbtn_Click);
             // 
-            // savefshbtn
+            // saveFshBtn
             // 
-            this.savefshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.savefshbtn.Location = new System.Drawing.Point(430, 541);
-            this.savefshbtn.Name = "savefshbtn";
-            this.savefshbtn.Size = new System.Drawing.Size(75, 23);
-            this.savefshbtn.TabIndex = 62;
-            this.savefshbtn.Text = "Save fsh";
-            this.toolTip1.SetToolTip(this.savefshbtn, "Save the current fsh");
-            this.savefshbtn.UseVisualStyleBackColor = true;
-            this.savefshbtn.Click += new System.EventHandler(this.savefshbtn_Click);
+            this.saveFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveFshBtn.Location = new System.Drawing.Point(430, 541);
+            this.saveFshBtn.Name = "saveFshBtn";
+            this.saveFshBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveFshBtn.TabIndex = 62;
+            this.saveFshBtn.Text = "Save fsh";
+            this.toolTip1.SetToolTip(this.saveFshBtn, "Save the current fsh");
+            this.saveFshBtn.UseVisualStyleBackColor = true;
+            this.saveFshBtn.Click += new System.EventHandler(this.saveFshBtn_Click);
             // 
             // saveFshDialog1
             // 
             this.saveFshDialog1.DefaultExt = "fsh";
-            this.saveFshDialog1.Filter = "Fsh files (*.fsh;*.qfs)|*.fsh;*.qfs|All files (*.*)|*.*";
+            this.saveFshDialog1.Filter = global::loaddatfsh.Properties.Resources.FshFiles_Filter;
             // 
-            // newfshbtn
+            // newFshBtn
             // 
-            this.newfshbtn.AllowDrop = true;
-            this.newfshbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.newfshbtn.Location = new System.Drawing.Point(268, 541);
-            this.newfshbtn.Name = "newfshbtn";
-            this.newfshbtn.Size = new System.Drawing.Size(75, 23);
-            this.newfshbtn.TabIndex = 66;
-            this.newfshbtn.Text = "New fsh";
-            this.toolTip1.SetToolTip(this.newfshbtn, "Create a new fsh");
-            this.newfshbtn.UseVisualStyleBackColor = true;
-            this.newfshbtn.Click += new System.EventHandler(this.newfshbtn_Click);
-            this.newfshbtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.newfshbtn_DragDrop);
-            this.newfshbtn.DragEnter += new System.Windows.Forms.DragEventHandler(this.newfshbtn_DragEnter);
+            this.newFshBtn.AllowDrop = true;
+            this.newFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.newFshBtn.Location = new System.Drawing.Point(268, 541);
+            this.newFshBtn.Name = "newFshBtn";
+            this.newFshBtn.Size = new System.Drawing.Size(75, 23);
+            this.newFshBtn.TabIndex = 66;
+            this.newFshBtn.Text = "New fsh";
+            this.toolTip1.SetToolTip(this.newFshBtn, "Create a new fsh");
+            this.newFshBtn.UseVisualStyleBackColor = true;
+            this.newFshBtn.Click += new System.EventHandler(this.newFshBtn_Click);
+            this.newFshBtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.newfshbtn_DragDrop);
+            this.newFshBtn.DragEnter += new System.Windows.Forms.DragEventHandler(this.newfshbtn_DragEnter);
             // 
             // bmpmanBox1
             // 
             this.bmpmanBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bmpmanBox1.Controls.Add(this.addbtn);
-            this.bmpmanBox1.Controls.Add(this.rembtn);
-            this.bmpmanBox1.Controls.Add(this.repbtn);
+            this.bmpmanBox1.Controls.Add(this.remBtn);
+            this.bmpmanBox1.Controls.Add(this.repBtn);
             this.bmpmanBox1.Location = new System.Drawing.Point(261, 385);
             this.bmpmanBox1.Name = "bmpmanBox1";
             this.bmpmanBox1.Size = new System.Drawing.Size(260, 52);
@@ -440,12 +443,12 @@
             this.tabControl1.ShowToolTips = true;
             this.tabControl1.Size = new System.Drawing.Size(523, 164);
             this.tabControl1.TabIndex = 70;
-            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
             // Maintab
             // 
-            this.Maintab.Controls.Add(this.listViewmain);
+            this.Maintab.Controls.Add(this.listViewMain);
             this.Maintab.Location = new System.Drawing.Point(4, 22);
             this.Maintab.Name = "Maintab";
             this.Maintab.Padding = new System.Windows.Forms.Padding(3);
@@ -635,55 +638,55 @@
             this.blend8Mip.ImageSize = new System.Drawing.Size(8, 8);
             this.blend8Mip.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // TgiGrouptxt
+            // tgiGroupTxt
             // 
-            this.TgiGrouptxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TgiGrouptxt.Location = new System.Drawing.Point(145, 359);
-            this.TgiGrouptxt.MaxLength = 8;
-            this.TgiGrouptxt.Name = "TgiGrouptxt";
-            this.TgiGrouptxt.Size = new System.Drawing.Size(82, 20);
-            this.TgiGrouptxt.TabIndex = 71;
-            this.toolTip1.SetToolTip(this.TgiGrouptxt, "Change the group id of the image");
-            this.TgiGrouptxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
+            this.tgiGroupTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tgiGroupTxt.Location = new System.Drawing.Point(145, 359);
+            this.tgiGroupTxt.MaxLength = 8;
+            this.tgiGroupTxt.Name = "tgiGroupTxt";
+            this.tgiGroupTxt.Size = new System.Drawing.Size(82, 20);
+            this.tgiGroupTxt.TabIndex = 71;
+            this.toolTip1.SetToolTip(this.tgiGroupTxt, "Change the group id of the image");
+            this.tgiGroupTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
             // 
-            // tgiInstancetxt
+            // tgiInstanceTxt
             // 
-            this.tgiInstancetxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tgiInstancetxt.Location = new System.Drawing.Point(145, 385);
-            this.tgiInstancetxt.MaxLength = 8;
-            this.tgiInstancetxt.Name = "tgiInstancetxt";
-            this.tgiInstancetxt.Size = new System.Drawing.Size(82, 20);
-            this.tgiInstancetxt.TabIndex = 72;
-            this.toolTip1.SetToolTip(this.tgiInstancetxt, "Change the instance id of the image");
-            this.tgiInstancetxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
+            this.tgiInstanceTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tgiInstanceTxt.Location = new System.Drawing.Point(145, 385);
+            this.tgiInstanceTxt.MaxLength = 8;
+            this.tgiInstanceTxt.Name = "tgiInstanceTxt";
+            this.tgiInstanceTxt.Size = new System.Drawing.Size(82, 20);
+            this.tgiInstanceTxt.TabIndex = 72;
+            this.toolTip1.SetToolTip(this.tgiInstanceTxt, "Change the instance id of the image");
+            this.tgiInstanceTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
             // 
-            // tgiGrouplbl
+            // tgiGroupLbl
             // 
-            this.tgiGrouplbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tgiGrouplbl.AutoSize = true;
-            this.tgiGrouplbl.Location = new System.Drawing.Point(103, 365);
-            this.tgiGrouplbl.Name = "tgiGrouplbl";
-            this.tgiGrouplbl.Size = new System.Drawing.Size(36, 13);
-            this.tgiGrouplbl.TabIndex = 73;
-            this.tgiGrouplbl.Text = "Group";
+            this.tgiGroupLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tgiGroupLbl.AutoSize = true;
+            this.tgiGroupLbl.Location = new System.Drawing.Point(103, 365);
+            this.tgiGroupLbl.Name = "tgiGroupLbl";
+            this.tgiGroupLbl.Size = new System.Drawing.Size(36, 13);
+            this.tgiGroupLbl.TabIndex = 73;
+            this.tgiGroupLbl.Text = "Group";
             // 
-            // tgiInstlbl
+            // tgiInstLbl
             // 
-            this.tgiInstlbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tgiInstlbl.AutoSize = true;
-            this.tgiInstlbl.BackColor = System.Drawing.SystemColors.Control;
-            this.tgiInstlbl.Location = new System.Drawing.Point(91, 388);
-            this.tgiInstlbl.Name = "tgiInstlbl";
-            this.tgiInstlbl.Size = new System.Drawing.Size(48, 13);
-            this.tgiInstlbl.TabIndex = 74;
-            this.tgiInstlbl.Text = "Instance";
+            this.tgiInstLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.tgiInstLbl.AutoSize = true;
+            this.tgiInstLbl.BackColor = System.Drawing.SystemColors.Control;
+            this.tgiInstLbl.Location = new System.Drawing.Point(91, 388);
+            this.tgiInstLbl.Name = "tgiInstLbl";
+            this.tgiInstLbl.Size = new System.Drawing.Size(48, 13);
+            this.tgiInstLbl.TabIndex = 74;
+            this.tgiInstLbl.Text = "Instance";
             // 
             // InstendBox1
             // 
             this.InstendBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.InstendBox1.Controls.Add(this.InstA_Erdo);
-            this.InstendBox1.Controls.Add(this.Inst5_9rdo);
-            this.InstendBox1.Controls.Add(this.Inst0_4rdo);
+            this.InstendBox1.Controls.Add(this.instA_ERdo);
+            this.InstendBox1.Controls.Add(this.inst5_9Rdo);
+            this.InstendBox1.Controls.Add(this.inst0_4Rdo);
             this.InstendBox1.Location = new System.Drawing.Point(145, 412);
             this.InstendBox1.Name = "InstendBox1";
             this.InstendBox1.Size = new System.Drawing.Size(82, 80);
@@ -691,42 +694,42 @@
             this.InstendBox1.TabStop = false;
             this.InstendBox1.Text = "End format";
             // 
-            // InstA_Erdo
+            // instA_ERdo
             // 
-            this.InstA_Erdo.AutoSize = true;
-            this.InstA_Erdo.Location = new System.Drawing.Point(6, 55);
-            this.InstA_Erdo.Name = "InstA_Erdo";
-            this.InstA_Erdo.Size = new System.Drawing.Size(42, 17);
-            this.InstA_Erdo.TabIndex = 2;
-            this.InstA_Erdo.Text = "A-E";
-            this.toolTip1.SetToolTip(this.InstA_Erdo, "Change the end diget of the instance id");
-            this.InstA_Erdo.UseVisualStyleBackColor = true;
-            this.InstA_Erdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
+            this.instA_ERdo.AutoSize = true;
+            this.instA_ERdo.Location = new System.Drawing.Point(6, 55);
+            this.instA_ERdo.Name = "instA_ERdo";
+            this.instA_ERdo.Size = new System.Drawing.Size(42, 17);
+            this.instA_ERdo.TabIndex = 2;
+            this.instA_ERdo.Text = "A-E";
+            this.toolTip1.SetToolTip(this.instA_ERdo, "Change the end diget of the instance id");
+            this.instA_ERdo.UseVisualStyleBackColor = true;
+            this.instA_ERdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
             // 
-            // Inst5_9rdo
+            // inst5_9Rdo
             // 
-            this.Inst5_9rdo.AutoSize = true;
-            this.Inst5_9rdo.Location = new System.Drawing.Point(6, 36);
-            this.Inst5_9rdo.Name = "Inst5_9rdo";
-            this.Inst5_9rdo.Size = new System.Drawing.Size(40, 17);
-            this.Inst5_9rdo.TabIndex = 1;
-            this.Inst5_9rdo.Text = "5-9";
-            this.toolTip1.SetToolTip(this.Inst5_9rdo, "Change the end diget of the instance id");
-            this.Inst5_9rdo.UseVisualStyleBackColor = true;
+            this.inst5_9Rdo.AutoSize = true;
+            this.inst5_9Rdo.Location = new System.Drawing.Point(6, 36);
+            this.inst5_9Rdo.Name = "inst5_9Rdo";
+            this.inst5_9Rdo.Size = new System.Drawing.Size(40, 17);
+            this.inst5_9Rdo.TabIndex = 1;
+            this.inst5_9Rdo.Text = "5-9";
+            this.toolTip1.SetToolTip(this.inst5_9Rdo, "Change the end diget of the instance id");
+            this.inst5_9Rdo.UseVisualStyleBackColor = true;
             // 
-            // Inst0_4rdo
+            // inst0_4Rdo
             // 
-            this.Inst0_4rdo.AutoSize = true;
-            this.Inst0_4rdo.Checked = true;
-            this.Inst0_4rdo.Location = new System.Drawing.Point(6, 19);
-            this.Inst0_4rdo.Name = "Inst0_4rdo";
-            this.Inst0_4rdo.Size = new System.Drawing.Size(40, 17);
-            this.Inst0_4rdo.TabIndex = 0;
-            this.Inst0_4rdo.TabStop = true;
-            this.Inst0_4rdo.Text = "0-4";
-            this.toolTip1.SetToolTip(this.Inst0_4rdo, "Change the end diget of the instance id");
-            this.Inst0_4rdo.UseVisualStyleBackColor = true;
-            this.Inst0_4rdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
+            this.inst0_4Rdo.AutoSize = true;
+            this.inst0_4Rdo.Checked = true;
+            this.inst0_4Rdo.Location = new System.Drawing.Point(6, 19);
+            this.inst0_4Rdo.Name = "inst0_4Rdo";
+            this.inst0_4Rdo.Size = new System.Drawing.Size(40, 17);
+            this.inst0_4Rdo.TabIndex = 0;
+            this.inst0_4Rdo.TabStop = true;
+            this.inst0_4Rdo.Text = "0-4";
+            this.toolTip1.SetToolTip(this.inst0_4Rdo, "Change the end diget of the instance id");
+            this.inst0_4Rdo.UseVisualStyleBackColor = true;
+            this.inst0_4Rdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
             // 
             // DatlistView1
             // 
@@ -747,8 +750,8 @@
             this.toolTip1.SetToolTip(this.DatlistView1, "The list of images in the loaded dat");
             this.DatlistView1.UseCompatibleStateImageBehavior = false;
             this.DatlistView1.View = System.Windows.Forms.View.Details;
-            this.DatlistView1.SelectedIndexChanged += new System.EventHandler(this.DatlistView1_SelectedIndexChanged);
             this.DatlistView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView1_ColumnClick);
+            this.DatlistView1.SelectedIndexChanged += new System.EventHandler(this.DatlistView1_SelectedIndexChanged);
             // 
             // NameHeader1
             // 
@@ -765,16 +768,16 @@
             this.InstanceHeader.Text = "Instance";
             this.InstanceHeader.Width = 140;
             // 
-            // loadDatbtn
+            // loadDatBtn
             // 
-            this.loadDatbtn.Location = new System.Drawing.Point(93, 42);
-            this.loadDatbtn.Name = "loadDatbtn";
-            this.loadDatbtn.Size = new System.Drawing.Size(75, 23);
-            this.loadDatbtn.TabIndex = 77;
-            this.loadDatbtn.Text = "Load dat";
-            this.toolTip1.SetToolTip(this.loadDatbtn, "Load a dat to modify its images");
-            this.loadDatbtn.UseVisualStyleBackColor = true;
-            this.loadDatbtn.Click += new System.EventHandler(this.loadDatbtn_Click);
+            this.loadDatBtn.Location = new System.Drawing.Point(93, 42);
+            this.loadDatBtn.Name = "loadDatBtn";
+            this.loadDatBtn.Size = new System.Drawing.Size(75, 23);
+            this.loadDatBtn.TabIndex = 77;
+            this.loadDatBtn.Text = "Load dat";
+            this.toolTip1.SetToolTip(this.loadDatBtn, "Load a dat to modify its images");
+            this.loadDatBtn.UseVisualStyleBackColor = true;
+            this.loadDatBtn.Click += new System.EventHandler(this.loadDatbtn_Click);
             // 
             // openDatDialog1
             // 
@@ -786,37 +789,37 @@
             this.saveDatDialog1.FileName = "test";
             this.saveDatDialog1.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
             // 
-            // saveDatbtn
+            // saveDatBtn
             // 
-            this.saveDatbtn.Location = new System.Drawing.Point(174, 42);
-            this.saveDatbtn.Name = "saveDatbtn";
-            this.saveDatbtn.Size = new System.Drawing.Size(75, 23);
-            this.saveDatbtn.TabIndex = 78;
-            this.saveDatbtn.Text = "Save dat";
-            this.toolTip1.SetToolTip(this.saveDatbtn, "Save a new or modified dat");
-            this.saveDatbtn.UseVisualStyleBackColor = true;
-            this.saveDatbtn.Click += new System.EventHandler(this.saveDatbtn_Click);
+            this.saveDatBtn.Location = new System.Drawing.Point(174, 42);
+            this.saveDatBtn.Name = "saveDatBtn";
+            this.saveDatBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveDatBtn.TabIndex = 78;
+            this.saveDatBtn.Text = "Save dat";
+            this.toolTip1.SetToolTip(this.saveDatBtn, "Save a new or modified dat");
+            this.saveDatBtn.UseVisualStyleBackColor = true;
+            this.saveDatBtn.Click += new System.EventHandler(this.saveDatbtn_Click);
             // 
-            // newDatbtn
+            // newDatBtn
             // 
-            this.newDatbtn.Location = new System.Drawing.Point(12, 42);
-            this.newDatbtn.Name = "newDatbtn";
-            this.newDatbtn.Size = new System.Drawing.Size(75, 23);
-            this.newDatbtn.TabIndex = 81;
-            this.newDatbtn.Text = "New dat";
-            this.toolTip1.SetToolTip(this.newDatbtn, "Create a new dat");
-            this.newDatbtn.UseVisualStyleBackColor = true;
-            this.newDatbtn.Click += new System.EventHandler(this.newDatbtn_Click);
+            this.newDatBtn.Location = new System.Drawing.Point(12, 42);
+            this.newDatBtn.Name = "newDatBtn";
+            this.newDatBtn.Size = new System.Drawing.Size(75, 23);
+            this.newDatBtn.TabIndex = 81;
+            this.newDatBtn.Text = "New dat";
+            this.toolTip1.SetToolTip(this.newDatBtn, "Create a new dat");
+            this.newDatBtn.UseVisualStyleBackColor = true;
+            this.newDatBtn.Click += new System.EventHandler(this.newDatbtn_Click);
             // 
             // DatfuncBox1
             // 
             this.DatfuncBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DatfuncBox1.Controls.Add(this.closeDatbtn);
-            this.DatfuncBox1.Controls.Add(this.Datnametxt);
-            this.DatfuncBox1.Controls.Add(this.datlbl);
-            this.DatfuncBox1.Controls.Add(this.newDatbtn);
-            this.DatfuncBox1.Controls.Add(this.loadDatbtn);
-            this.DatfuncBox1.Controls.Add(this.saveDatbtn);
+            this.DatfuncBox1.Controls.Add(this.closeDatBtn);
+            this.DatfuncBox1.Controls.Add(this.datNameTxt);
+            this.DatfuncBox1.Controls.Add(this.datLbl);
+            this.DatfuncBox1.Controls.Add(this.newDatBtn);
+            this.DatfuncBox1.Controls.Add(this.loadDatBtn);
+            this.DatfuncBox1.Controls.Add(this.saveDatBtn);
             this.DatfuncBox1.Location = new System.Drawing.Point(256, 443);
             this.DatfuncBox1.Name = "DatfuncBox1";
             this.DatfuncBox1.Size = new System.Drawing.Size(265, 75);
@@ -824,112 +827,112 @@
             this.DatfuncBox1.TabStop = false;
             this.DatfuncBox1.Text = "Dat Functions";
             // 
-            // closeDatbtn
+            // closeDatBtn
             // 
-            this.closeDatbtn.Location = new System.Drawing.Point(174, 13);
-            this.closeDatbtn.Name = "closeDatbtn";
-            this.closeDatbtn.Size = new System.Drawing.Size(75, 23);
-            this.closeDatbtn.TabIndex = 84;
-            this.closeDatbtn.Text = "Close dat";
-            this.toolTip1.SetToolTip(this.closeDatbtn, "Close the loaded dat");
-            this.closeDatbtn.UseVisualStyleBackColor = true;
-            this.closeDatbtn.Click += new System.EventHandler(this.closeDatbtn_Click);
+            this.closeDatBtn.Location = new System.Drawing.Point(174, 13);
+            this.closeDatBtn.Name = "closeDatBtn";
+            this.closeDatBtn.Size = new System.Drawing.Size(75, 23);
+            this.closeDatBtn.TabIndex = 84;
+            this.closeDatBtn.Text = "Close dat";
+            this.toolTip1.SetToolTip(this.closeDatBtn, "Close the loaded dat");
+            this.closeDatBtn.UseVisualStyleBackColor = true;
+            this.closeDatBtn.Click += new System.EventHandler(this.closeDatbtn_Click);
             // 
-            // Datnametxt
+            // datNameTxt
             // 
-            this.Datnametxt.AutoSize = true;
-            this.Datnametxt.Location = new System.Drawing.Point(28, 18);
-            this.Datnametxt.Name = "Datnametxt";
-            this.Datnametxt.Size = new System.Drawing.Size(22, 13);
-            this.Datnametxt.TabIndex = 83;
-            this.Datnametxt.Text = "dat";
+            this.datNameTxt.AutoSize = true;
+            this.datNameTxt.Location = new System.Drawing.Point(28, 18);
+            this.datNameTxt.Name = "datNameTxt";
+            this.datNameTxt.Size = new System.Drawing.Size(22, 13);
+            this.datNameTxt.TabIndex = 83;
+            this.datNameTxt.Text = "dat";
             // 
-            // datlbl
+            // datLbl
             // 
-            this.datlbl.AutoSize = true;
-            this.datlbl.Location = new System.Drawing.Point(-3, 18);
-            this.datlbl.Name = "datlbl";
-            this.datlbl.Size = new System.Drawing.Size(36, 13);
-            this.datlbl.TabIndex = 82;
-            this.datlbl.Text = "Dat = ";
+            this.datLbl.AutoSize = true;
+            this.datLbl.Location = new System.Drawing.Point(-3, 18);
+            this.datLbl.Name = "datLbl";
+            this.datLbl.Size = new System.Drawing.Size(36, 13);
+            this.datLbl.TabIndex = 82;
+            this.datLbl.Text = "Dat = ";
             // 
-            // genNewInstcb
+            // genNewInstCb
             // 
-            this.genNewInstcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.genNewInstcb.AutoSize = true;
-            this.genNewInstcb.Location = new System.Drawing.Point(3, 501);
-            this.genNewInstcb.Name = "genNewInstcb";
-            this.genNewInstcb.Size = new System.Drawing.Size(142, 17);
-            this.genNewInstcb.TabIndex = 80;
-            this.genNewInstcb.Text = "Generate new Instances";
-            this.toolTip1.SetToolTip(this.genNewInstcb, "Generate new instance ids when saving into an existing dat");
-            this.genNewInstcb.UseVisualStyleBackColor = true;
-            this.genNewInstcb.CheckedChanged += new System.EventHandler(this.genNewInstcb_CheckedChanged);
+            this.genNewInstCb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.genNewInstCb.AutoSize = true;
+            this.genNewInstCb.Location = new System.Drawing.Point(3, 501);
+            this.genNewInstCb.Name = "genNewInstCb";
+            this.genNewInstCb.Size = new System.Drawing.Size(142, 17);
+            this.genNewInstCb.TabIndex = 80;
+            this.genNewInstCb.Text = "Generate new Instances";
+            this.toolTip1.SetToolTip(this.genNewInstCb, "Generate new instance ids when saving into an existing dat");
+            this.genNewInstCb.UseVisualStyleBackColor = true;
+            this.genNewInstCb.CheckedChanged += new System.EventHandler(this.genNewInstcb_CheckedChanged);
             // 
-            // compDatcb
+            // compDatCb
             // 
-            this.compDatcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.compDatcb.AutoSize = true;
-            this.compDatcb.Checked = true;
-            this.compDatcb.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.compDatcb.Location = new System.Drawing.Point(3, 524);
-            this.compDatcb.Name = "compDatcb";
-            this.compDatcb.Size = new System.Drawing.Size(120, 17);
-            this.compDatcb.TabIndex = 84;
-            this.compDatcb.Text = "Compress dat items ";
-            this.toolTip1.SetToolTip(this.compDatcb, "Compress the items in the saved dat");
-            this.compDatcb.UseVisualStyleBackColor = true;
-            this.compDatcb.CheckedChanged += new System.EventHandler(this.compDatcb_CheckedChanged);
+            this.compDatCb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.compDatCb.AutoSize = true;
+            this.compDatCb.Checked = true;
+            this.compDatCb.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.compDatCb.Location = new System.Drawing.Point(3, 524);
+            this.compDatCb.Name = "compDatCb";
+            this.compDatCb.Size = new System.Drawing.Size(120, 17);
+            this.compDatCb.TabIndex = 84;
+            this.compDatCb.Text = "Compress dat items ";
+            this.toolTip1.SetToolTip(this.compDatCb, "Compress the items in the saved dat");
+            this.compDatCb.UseVisualStyleBackColor = true;
+            this.compDatCb.CheckedChanged += new System.EventHandler(this.compDatcb_CheckedChanged);
             // 
-            // Fshwritecompcb
+            // fshWriteCompCb
             // 
-            this.Fshwritecompcb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Fshwritecompcb.AutoSize = true;
-            this.Fshwritecompcb.Location = new System.Drawing.Point(3, 547);
-            this.Fshwritecompcb.Name = "Fshwritecompcb";
-            this.Fshwritecompcb.Size = new System.Drawing.Size(127, 17);
-            this.Fshwritecompcb.TabIndex = 91;
-            this.Fshwritecompcb.Text = "Fshwrite compression";
-            this.toolTip1.SetToolTip(this.Fshwritecompcb, "Use Fshwrite compression when saving DXT1 and DXT3 fsh images");
-            this.Fshwritecompcb.UseVisualStyleBackColor = true;
-            this.Fshwritecompcb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
+            this.fshWriteCompCb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.fshWriteCompCb.AutoSize = true;
+            this.fshWriteCompCb.Location = new System.Drawing.Point(3, 547);
+            this.fshWriteCompCb.Name = "fshWriteCompCb";
+            this.fshWriteCompCb.Size = new System.Drawing.Size(127, 17);
+            this.fshWriteCompCb.TabIndex = 91;
+            this.fshWriteCompCb.Text = "Fshwrite compression";
+            this.toolTip1.SetToolTip(this.fshWriteCompCb, "Use Fshwrite compression when saving DXT1 and DXT3 fsh images");
+            this.fshWriteCompCb.UseVisualStyleBackColor = true;
+            this.fshWriteCompCb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
             // 
-            // alphasavebtn
+            // alphaSaveBtn
             // 
-            this.alphasavebtn.Location = new System.Drawing.Point(87, 18);
-            this.alphasavebtn.Name = "alphasavebtn";
-            this.alphasavebtn.Size = new System.Drawing.Size(75, 23);
-            this.alphasavebtn.TabIndex = 65;
-            this.alphasavebtn.Text = "Alpha";
-            this.alphasavebtn.UseVisualStyleBackColor = true;
-            this.alphasavebtn.Click += new System.EventHandler(this.alphasavebtn_Click);
+            this.alphaSaveBtn.Location = new System.Drawing.Point(87, 18);
+            this.alphaSaveBtn.Name = "alphaSaveBtn";
+            this.alphaSaveBtn.Size = new System.Drawing.Size(75, 23);
+            this.alphaSaveBtn.TabIndex = 65;
+            this.alphaSaveBtn.Text = "Alpha";
+            this.alphaSaveBtn.UseVisualStyleBackColor = true;
+            this.alphaSaveBtn.Click += new System.EventHandler(this.alphaBtn_Click);
             // 
-            // savebmpblendbtn
+            // saveBmpBlendBtn
             // 
-            this.savebmpblendbtn.Location = new System.Drawing.Point(168, 18);
-            this.savebmpblendbtn.Name = "savebmpblendbtn";
-            this.savebmpblendbtn.Size = new System.Drawing.Size(106, 23);
-            this.savebmpblendbtn.TabIndex = 63;
-            this.savebmpblendbtn.Text = "Blended Bitmap ";
-            this.savebmpblendbtn.UseVisualStyleBackColor = true;
-            this.savebmpblendbtn.Click += new System.EventHandler(this.savebmpblendbtn_Click);
+            this.saveBmpBlendBtn.Location = new System.Drawing.Point(168, 18);
+            this.saveBmpBlendBtn.Name = "saveBmpBlendBtn";
+            this.saveBmpBlendBtn.Size = new System.Drawing.Size(106, 23);
+            this.saveBmpBlendBtn.TabIndex = 63;
+            this.saveBmpBlendBtn.Text = "Blended Bitmap ";
+            this.saveBmpBlendBtn.UseVisualStyleBackColor = true;
+            this.saveBmpBlendBtn.Click += new System.EventHandler(this.saveBmpBlendBtn_Click);
             // 
-            // bmpsavebtn
+            // bmpSaveBtn
             // 
-            this.bmpsavebtn.Location = new System.Drawing.Point(6, 18);
-            this.bmpsavebtn.Name = "bmpsavebtn";
-            this.bmpsavebtn.Size = new System.Drawing.Size(75, 23);
-            this.bmpsavebtn.TabIndex = 64;
-            this.bmpsavebtn.Text = "Bitmap";
-            this.bmpsavebtn.UseVisualStyleBackColor = true;
-            this.bmpsavebtn.Click += new System.EventHandler(this.bmpsavebtn_Click);
+            this.bmpSaveBtn.Location = new System.Drawing.Point(6, 18);
+            this.bmpSaveBtn.Name = "bmpSaveBtn";
+            this.bmpSaveBtn.Size = new System.Drawing.Size(75, 23);
+            this.bmpSaveBtn.TabIndex = 64;
+            this.bmpSaveBtn.Text = "Bitmap";
+            this.bmpSaveBtn.UseVisualStyleBackColor = true;
+            this.bmpSaveBtn.Click += new System.EventHandler(this.bmpSaveBtn_Click);
             // 
             // expbmpBox1
             // 
             this.expbmpBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.expbmpBox1.Controls.Add(this.bmpsavebtn);
-            this.expbmpBox1.Controls.Add(this.savebmpblendbtn);
-            this.expbmpBox1.Controls.Add(this.alphasavebtn);
+            this.expbmpBox1.Controls.Add(this.bmpSaveBtn);
+            this.expbmpBox1.Controls.Add(this.saveBmpBlendBtn);
+            this.expbmpBox1.Controls.Add(this.alphaSaveBtn);
             this.expbmpBox1.Location = new System.Drawing.Point(256, 329);
             this.expbmpBox1.Name = "expbmpBox1";
             this.expbmpBox1.Size = new System.Drawing.Size(278, 50);
@@ -937,25 +940,25 @@
             this.expbmpBox1.TabStop = false;
             this.expbmpBox1.Text = "Export bitmap";
             // 
-            // alphalbl
+            // alphaLbl
             // 
-            this.alphalbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.alphalbl.AutoSize = true;
-            this.alphalbl.Location = new System.Drawing.Point(229, 312);
-            this.alphalbl.Name = "alphalbl";
-            this.alphalbl.Size = new System.Drawing.Size(46, 13);
-            this.alphalbl.TabIndex = 90;
-            this.alphalbl.Text = "Alpha = ";
+            this.alphaLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.alphaLbl.AutoSize = true;
+            this.alphaLbl.Location = new System.Drawing.Point(229, 312);
+            this.alphaLbl.Name = "alphaLbl";
+            this.alphaLbl.Size = new System.Drawing.Size(46, 13);
+            this.alphaLbl.TabIndex = 90;
+            this.alphaLbl.Text = "Alpha = ";
             // 
-            // bmplbl
+            // bmpLbl
             // 
-            this.bmplbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bmplbl.AutoSize = true;
-            this.bmplbl.Location = new System.Drawing.Point(225, 287);
-            this.bmplbl.Name = "bmplbl";
-            this.bmplbl.Size = new System.Drawing.Size(51, 13);
-            this.bmplbl.TabIndex = 89;
-            this.bmplbl.Text = "Bitmap = ";
+            this.bmpLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.bmpLbl.AutoSize = true;
+            this.bmpLbl.Location = new System.Drawing.Point(225, 287);
+            this.bmpLbl.Name = "bmpLbl";
+            this.bmpLbl.Size = new System.Drawing.Size(51, 13);
+            this.bmpLbl.TabIndex = 89;
+            this.bmpLbl.Text = "Bitmap = ";
             // 
             // Alphabtn
             // 
@@ -967,7 +970,7 @@
             this.Alphabtn.TabIndex = 88;
             this.Alphabtn.Text = "...";
             this.Alphabtn.UseVisualStyleBackColor = true;
-            this.Alphabtn.Click += new System.EventHandler(this.Alphabtn_Click);
+            this.Alphabtn.Click += new System.EventHandler(this.alphaBtn_Click);
             // 
             // Alphabox
             // 
@@ -987,7 +990,7 @@
             this.bmpbtn.TabIndex = 86;
             this.bmpbtn.Text = "...";
             this.bmpbtn.UseVisualStyleBackColor = true;
-            this.bmpbtn.Click += new System.EventHandler(this.bmpbtn_Click);
+            this.bmpbtn.Click += new System.EventHandler(this.bmpBtn_Click);
             // 
             // bmpBox
             // 
@@ -1002,44 +1005,44 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(545, 567);
-            this.Controls.Add(this.Fshwritecompcb);
-            this.Controls.Add(this.alphalbl);
-            this.Controls.Add(this.bmplbl);
+            this.Controls.Add(this.fshWriteCompCb);
+            this.Controls.Add(this.alphaLbl);
+            this.Controls.Add(this.bmpLbl);
             this.Controls.Add(this.Alphabtn);
             this.Controls.Add(this.Alphabox);
             this.Controls.Add(this.bmpbtn);
             this.Controls.Add(this.bmpBox);
-            this.Controls.Add(this.compDatcb);
+            this.Controls.Add(this.compDatCb);
             this.Controls.Add(this.DatfuncBox1);
-            this.Controls.Add(this.genNewInstcb);
+            this.Controls.Add(this.genNewInstCb);
             this.Controls.Add(this.DatlistView1);
             this.Controls.Add(this.InstendBox1);
-            this.Controls.Add(this.tgiInstlbl);
-            this.Controls.Add(this.tgiGrouplbl);
-            this.Controls.Add(this.tgiInstancetxt);
-            this.Controls.Add(this.TgiGrouptxt);
+            this.Controls.Add(this.tgiInstLbl);
+            this.Controls.Add(this.tgiGroupLbl);
+            this.Controls.Add(this.tgiInstanceTxt);
+            this.Controls.Add(this.tgiGroupTxt);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.mipbtn);
             this.Controls.Add(this.expbmpBox1);
             this.Controls.Add(this.bmpmanBox1);
-            this.Controls.Add(this.newfshbtn);
-            this.Controls.Add(this.savefshbtn);
-            this.Controls.Add(this.dirtxt);
-            this.Controls.Add(this.dirnamelbl);
+            this.Controls.Add(this.newFshBtn);
+            this.Controls.Add(this.saveFshBtn);
+            this.Controls.Add(this.dirTxt);
+            this.Controls.Add(this.dirNameLbl);
             this.Controls.Add(this.Sizelbl);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.FshtypeBox);
+            this.Controls.Add(this.imgSizeLbl);
+            this.Controls.Add(this.fshTypeBox);
             this.Controls.Add(this.blendRadio);
             this.Controls.Add(this.alphaRadio);
             this.Controls.Add(this.colorRadio);
-            this.Controls.Add(this.loadfsh);
+            this.Controls.Add(this.loadFshBtn);
             this.Controls.Add(this.fshDefbox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MinimumSize = new System.Drawing.Size(555, 591);
             this.Name = "Multifshfrm";
             this.Text = "Multi Fsh tool";
-            this.Load += new System.EventHandler(this.Multifshfrm_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Multifshfrm_FormClosing);
+            this.Load += new System.EventHandler(this.Multifshfrm_Load);
             this.bmpmanBox1.ResumeLayout(false);
             this.fshDefbox.ResumeLayout(false);
             this.fshDefbox.PerformLayout();
@@ -1062,28 +1065,28 @@
         #endregion
 
         private System.Windows.Forms.ImageList BitmapList1;
-        private System.Windows.Forms.ListView listViewmain;
-        private System.Windows.Forms.Button loadfsh;
+        private System.Windows.Forms.ListView listViewMain;
+        private System.Windows.Forms.Button loadFshBtn;
         private System.Windows.Forms.RadioButton blendRadio;
         private System.Windows.Forms.RadioButton alphaRadio;
         private System.Windows.Forms.RadioButton colorRadio;
         private System.Windows.Forms.OpenFileDialog openFshDialog1;
-        private System.Windows.Forms.ComboBox FshtypeBox;
+        private System.Windows.Forms.ComboBox fshTypeBox;
         private System.Windows.Forms.ImageList alphaList1;
         private System.Windows.Forms.ImageList blendList1;
         private System.Windows.Forms.Label Sizelbl;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label dirnamelbl;
+        private System.Windows.Forms.Label imgSizeLbl;
+        private System.Windows.Forms.Label dirNameLbl;
         private System.Windows.Forms.OpenFileDialog openBitmapDialog1;
-        private System.Windows.Forms.Button rembtn;
+        private System.Windows.Forms.Button remBtn;
         private System.Windows.Forms.Button addbtn;
         private System.Windows.Forms.OpenFileDialog openAlphaDialog1;
-        private System.Windows.Forms.TextBox dirtxt;
-        private System.Windows.Forms.Button repbtn;
+        private System.Windows.Forms.TextBox dirTxt;
+        private System.Windows.Forms.Button repBtn;
         private System.Windows.Forms.Button mipbtn;
-        private System.Windows.Forms.Button savefshbtn;
+        private System.Windows.Forms.Button saveFshBtn;
         private System.Windows.Forms.SaveFileDialog saveFshDialog1;
-        private System.Windows.Forms.Button newfshbtn;
+        private System.Windows.Forms.Button newFshBtn;
         private System.Windows.Forms.GroupBox bmpmanBox1;
         private System.Windows.Forms.GroupBox fshDefbox;
         private System.Windows.Forms.RadioButton regFshrdo;
@@ -1111,41 +1114,41 @@
         private System.Windows.Forms.ImageList bmp8Mip;
         private System.Windows.Forms.ImageList alpha8Mip;
         private System.Windows.Forms.ImageList blend8Mip;
-        private System.Windows.Forms.TextBox TgiGrouptxt;
-        private System.Windows.Forms.TextBox tgiInstancetxt;
-        private System.Windows.Forms.Label tgiGrouplbl;
-        private System.Windows.Forms.Label tgiInstlbl;
+        private System.Windows.Forms.TextBox tgiGroupTxt;
+        private System.Windows.Forms.TextBox tgiInstanceTxt;
+        private System.Windows.Forms.Label tgiGroupLbl;
+        private System.Windows.Forms.Label tgiInstLbl;
         private System.Windows.Forms.GroupBox InstendBox1;
-        private System.Windows.Forms.RadioButton Inst5_9rdo;
-        private System.Windows.Forms.RadioButton Inst0_4rdo;
-        private System.Windows.Forms.RadioButton InstA_Erdo;
+        private System.Windows.Forms.RadioButton inst5_9Rdo;
+        private System.Windows.Forms.RadioButton inst0_4Rdo;
+        private System.Windows.Forms.RadioButton instA_ERdo;
         private System.Windows.Forms.ListView DatlistView1;
-        private System.Windows.Forms.Button loadDatbtn;
+        private System.Windows.Forms.Button loadDatBtn;
         private System.Windows.Forms.OpenFileDialog openDatDialog1;
         private System.Windows.Forms.ColumnHeader GroupHeader;
         private System.Windows.Forms.ColumnHeader InstanceHeader;
         private System.Windows.Forms.ColumnHeader NameHeader1;
         private System.Windows.Forms.SaveFileDialog saveDatDialog1;
-        private System.Windows.Forms.Button saveDatbtn;
-        private System.Windows.Forms.Button newDatbtn;
+        private System.Windows.Forms.Button saveDatBtn;
+        private System.Windows.Forms.Button newDatBtn;
         private System.Windows.Forms.GroupBox DatfuncBox1;
-        private System.Windows.Forms.CheckBox genNewInstcb;
-        private System.Windows.Forms.Label datlbl;
-        private System.Windows.Forms.Label Datnametxt;
-        private System.Windows.Forms.CheckBox compDatcb;
+        private System.Windows.Forms.CheckBox genNewInstCb;
+        private System.Windows.Forms.Label datLbl;
+        private System.Windows.Forms.Label datNameTxt;
+        private System.Windows.Forms.CheckBox compDatCb;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button alphasavebtn;
-        private System.Windows.Forms.Button savebmpblendbtn;
-        private System.Windows.Forms.Button bmpsavebtn;
+        private System.Windows.Forms.Button alphaSaveBtn;
+        private System.Windows.Forms.Button saveBmpBlendBtn;
+        private System.Windows.Forms.Button bmpSaveBtn;
         private System.Windows.Forms.GroupBox expbmpBox1;
-        private System.Windows.Forms.Label alphalbl;
-        private System.Windows.Forms.Label bmplbl;
+        private System.Windows.Forms.Label alphaLbl;
+        private System.Windows.Forms.Label bmpLbl;
         private System.Windows.Forms.Button Alphabtn;
         private System.Windows.Forms.TextBox Alphabox;
         private System.Windows.Forms.Button bmpbtn;
         private System.Windows.Forms.TextBox bmpBox;
-        private System.Windows.Forms.CheckBox Fshwritecompcb;
-        private System.Windows.Forms.Button closeDatbtn;
+        private System.Windows.Forms.CheckBox fshWriteCompCb;
+        private System.Windows.Forms.Button closeDatBtn;
     }
 }
 
