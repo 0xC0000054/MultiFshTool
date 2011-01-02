@@ -1618,10 +1618,10 @@ namespace loaddatfsh
                     }
                     else if (loadeddat && DatlistView1.SelectedItems.Count > 0)
                     {
-                        if (!string.IsNullOrEmpty(dat.Filename))
+                        if (!string.IsNullOrEmpty(dat.FileName))
                         {
                             ListViewItem item = DatlistView1.SelectedItems[0];
-                            string fshname = Path.Combine(Path.GetDirectoryName(dat.Filename), "0x" + item.SubItems[2].Text);
+                            string fshname = Path.Combine(Path.GetDirectoryName(dat.FileName), "0x" + item.SubItems[2].Text);
 
                             string name = string.Concat(fshname, bitmapnum, addtofilename, ".png");
 
@@ -2653,7 +2653,7 @@ namespace loaddatfsh
                     DatRebuilt = false;
                     SetLoadedDatEnables();
                     DatlistView1.Items[0].Selected = true;
-                    datNameTxt.Text = Path.GetFileName(dat.Filename);
+                    datNameTxt.Text = Path.GetFileName(dat.FileName);
                 }
                 else
                 {
@@ -2746,7 +2746,7 @@ namespace loaddatfsh
             {
                 dat.Save(filename);   
                 
-                datNameTxt.Text = Path.GetFileName(dat.Filename);
+                datNameTxt.Text = Path.GetFileName(dat.FileName);
 
                 dat.Close();
                 dat = null;
@@ -2763,7 +2763,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    Load_Dat(dat.Filename); // reload the modified dat
+                    Load_Dat(dat.FileName); // reload the modified dat
                 }
             }
         }
@@ -2800,7 +2800,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    SaveDat(dat.Filename);
+                    SaveDat(dat.FileName);
                 }
             }
         }
