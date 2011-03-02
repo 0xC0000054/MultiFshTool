@@ -146,7 +146,7 @@ namespace loaddatfsh
                                 regFshrdo.Checked = true;
                             }
                             string tgistr = fi.FullName + ".TGI";
-                            if (File.Exists(tgistr))
+                            if (File.Exists(tgistr)) // check for a TGI file from Ilive's Reader
                             {
                                 using (StreamReader sr = new StreamReader(tgistr))
                                 {
@@ -241,15 +241,14 @@ namespace loaddatfsh
         /// <returns>True if successful otherwise false</returns>
         private bool IsDXTFsh(FSHImage image)
         {
-            bool result = true;
             foreach (BitmapItem bi in image.Bitmaps)
             {
                 if (bi.BmpType != FSHBmpType.DXT3 && bi.BmpType != FSHBmpType.DXT1)
                 {
-                    result = false;
+                   return false;
                 }
             }
-            return result;
+            return true;
         }
         /// <summary>
         /// Sets the IsDirty flag on the loaded dat if it has changed
@@ -395,21 +394,13 @@ namespace loaddatfsh
             }
             listview.LargeImageList = imglist;
             listview.SmallImageList = imglist;
-            if (image.Bitmaps.Count > 1)
-            {
 
-                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
-                {
-                    ListViewItem alpha = new ListViewItem("bitmap # :" + cnt.ToString(), cnt);
-                    listview.Items.Add(alpha);
-                }
-
-            }
-            else
+            for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
             {
-                ListViewItem alpha = new ListViewItem("bitmap # :0", 0);
+                ListViewItem alpha = new ListViewItem("bitmap # :" + cnt.ToString(), cnt);
                 listview.Items.Add(alpha);
             }
+
             listview.Items[0].Selected = true;
         }
 
@@ -427,21 +418,13 @@ namespace loaddatfsh
             }
             listview.LargeImageList = imglist;
             listview.SmallImageList = imglist;
-            if (image.Bitmaps.Count > 1)
+          
+            for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
             {
-
-                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
-                {
-                    ListViewItem alpha = new ListViewItem("alpha # :" + cnt.ToString(), cnt);
-                    listview.Items.Add(alpha);
-                }
-
-            }
-            else
-            {
-                ListViewItem alpha = new ListViewItem("alpha # :0", 0);
+                ListViewItem alpha = new ListViewItem("alpha # :" + cnt.ToString(), cnt);
                 listview.Items.Add(alpha);
             }
+
             listview.Items[0].Selected = true;
         }
         /// <summary>
@@ -458,21 +441,13 @@ namespace loaddatfsh
             }
             listview.LargeImageList = imglist;
             listview.SmallImageList = imglist; 
-            if (image.Bitmaps.Count > 1)
+         
+            for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
             {
-
-                for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
-                {
-                    ListViewItem blend = new ListViewItem("blend # :" + cnt.ToString(), cnt);
-                    listview.Items.Add(blend);
-                }
-
-            }
-            else
-            {
-                ListViewItem blend = new ListViewItem("blend # :0", 0);
+                ListViewItem blend = new ListViewItem("blend # :" + cnt.ToString(), cnt);
                 listview.Items.Add(blend);
             }
+       
             listview.Items[0].Selected = true;
 
         }
@@ -617,7 +592,6 @@ namespace loaddatfsh
 
                         BitmapItem addbmp = new BitmapItem();
                         Bitmap bmp = null;
-                        bool bmploaded = false;
                         string alpath = Path.Combine(fi.DirectoryName, Path.GetFileNameWithoutExtension(fi.FullName) + "_a" + fi.Extension);
 
                         if (fi.Exists)
@@ -629,10 +603,7 @@ namespace loaddatfsh
                             }
                             origbmplist.Add(bmp);
                             addbmp.Bitmap = bmp;
-                            bmploaded = true;
-                        }
-                        if (bmploaded)
-                        {
+                        
 
                             if (File.Exists(alpath))
                             {
@@ -1755,7 +1726,6 @@ namespace loaddatfsh
             }
 
             bmpitem = new BitmapItem();
-            bool bitmaploaded = false;
             Bitmap bmp = null;
 
             try
@@ -1774,14 +1744,7 @@ namespace loaddatfsh
                             alphamap = Path.Combine(Path.GetDirectoryName(files[0]), Path.GetFileNameWithoutExtension(files[0]) + "_a" + Path.GetExtension(files[0]));
                         }
                         bmpitem.Bitmap = bmp;
-                        bitmaploaded = true;
-                    }
-                    else
-                    {
-                        bitmaploaded = false;
-                    }
-                    if (bitmaploaded)
-                    {
+                   
                         if (Alphabox.Text.Length > 0 && File.Exists(Alphabox.Text))
                         {
                             Bitmap alpha = new Bitmap(Alphabox.Text);
@@ -1846,7 +1809,7 @@ namespace loaddatfsh
                         }
 
 
-                        if (dirTxt.Text.Length > 0)
+                        if (dirTxt.Text.Length > 0 && dirTxt.Text.Length == 4)
                         {
                             bmpitem.SetDirName(dirTxt.Text);
                         }
@@ -1911,10 +1874,6 @@ namespace loaddatfsh
                                 Temp_fsh();
                                 mipbtn_Click(null, null);
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show(this, "The bitmap must be at least 128 x 128 to create a  new fsh", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
                         if (files.Count - 1 > 0)
