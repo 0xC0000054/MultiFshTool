@@ -18,6 +18,12 @@ namespace loaddatfsh
             {
                 components.Dispose();
             }
+            if (disposing && dat != null)
+            {
+                dat.Dispose();
+                dat = null;
+            }
+
             base.Dispose(disposing);
         }
 
@@ -41,12 +47,12 @@ namespace loaddatfsh
             this.fshTypeBox = new System.Windows.Forms.ComboBox();
             this.alphaList1 = new System.Windows.Forms.ImageList(this.components);
             this.blendList1 = new System.Windows.Forms.ImageList(this.components);
-            this.Sizelbl = new System.Windows.Forms.Label();
+            this.sizeLbl = new System.Windows.Forms.Label();
             this.imgSizeLbl = new System.Windows.Forms.Label();
             this.dirNameLbl = new System.Windows.Forms.Label();
             this.openBitmapDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.remBtn = new System.Windows.Forms.Button();
-            this.addbtn = new System.Windows.Forms.Button();
+            this.addBtn = new System.Windows.Forms.Button();
             this.openAlphaDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.dirTxt = new System.Windows.Forms.TextBox();
             this.repBtn = new System.Windows.Forms.Button();
@@ -56,9 +62,9 @@ namespace loaddatfsh
             this.newFshBtn = new System.Windows.Forms.Button();
             this.bmpmanBox1 = new System.Windows.Forms.GroupBox();
             this.fshDefbox = new System.Windows.Forms.GroupBox();
-            this.regFshrdo = new System.Windows.Forms.RadioButton();
-            this.hdBasetexrdo = new System.Windows.Forms.RadioButton();
-            this.hdfshRadio = new System.Windows.Forms.RadioButton();
+            this.regFshRadio = new System.Windows.Forms.RadioButton();
+            this.hdBaseFshRadio = new System.Windows.Forms.RadioButton();
+            this.hdFshRadio = new System.Windows.Forms.RadioButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Maintab = new System.Windows.Forms.TabPage();
             this.mip64tab = new System.Windows.Forms.TabPage();
@@ -89,7 +95,7 @@ namespace loaddatfsh
             this.instA_ERdo = new System.Windows.Forms.RadioButton();
             this.inst5_9Rdo = new System.Windows.Forms.RadioButton();
             this.inst0_4Rdo = new System.Windows.Forms.RadioButton();
-            this.DatlistView1 = new System.Windows.Forms.ListView();
+            this.datListView = new System.Windows.Forms.ListView();
             this.NameHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.GroupHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.InstanceHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -161,7 +167,7 @@ namespace loaddatfsh
             this.loadFshBtn.Size = new System.Drawing.Size(75, 23);
             this.loadFshBtn.TabIndex = 1;
             this.loadFshBtn.Text = "Load Fsh";
-            this.toolTip1.SetToolTip(this.loadFshBtn, "Load an existing fsh");
+            this.toolTip1.SetToolTip(this.loadFshBtn, Resources.loadFshBtn_ToolTip);
             this.loadFshBtn.UseVisualStyleBackColor = true;
             this.loadFshBtn.Click += new System.EventHandler(this.loadfsh_Click);
             // 
@@ -223,7 +229,7 @@ namespace loaddatfsh
             this.fshTypeBox.Name = "fshTypeBox";
             this.fshTypeBox.Size = new System.Drawing.Size(164, 21);
             this.fshTypeBox.TabIndex = 46;
-            this.toolTip1.SetToolTip(this.fshTypeBox, "Change the fsh type of the selected bitmap");
+            this.toolTip1.SetToolTip(this.fshTypeBox, Resources.fshTypeBox_ToolTip);
             this.fshTypeBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FshtypeBox_DrawItem);
             this.fshTypeBox.SelectedIndexChanged += new System.EventHandler(this.FshtypeBox_SelectedIndexChanged);
             // 
@@ -239,14 +245,14 @@ namespace loaddatfsh
             this.blendList1.ImageSize = new System.Drawing.Size(96, 96);
             this.blendList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // Sizelbl
+            // sizeLbl
             // 
-            this.Sizelbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Sizelbl.AutoSize = true;
-            this.Sizelbl.Location = new System.Drawing.Point(142, 318);
-            this.Sizelbl.Name = "Sizelbl";
-            this.Sizelbl.Size = new System.Drawing.Size(0, 13);
-            this.Sizelbl.TabIndex = 48;
+            this.sizeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.sizeLbl.AutoSize = true;
+            this.sizeLbl.Location = new System.Drawing.Point(142, 318);
+            this.sizeLbl.Name = "sizeLbl";
+            this.sizeLbl.Size = new System.Drawing.Size(0, 13);
+            this.sizeLbl.TabIndex = 48;
             // 
             // imgSizeLbl
             // 
@@ -279,23 +285,23 @@ namespace loaddatfsh
             this.remBtn.Size = new System.Drawing.Size(75, 23);
             this.remBtn.TabIndex = 54;
             this.remBtn.Text = "Remove";
-            this.toolTip1.SetToolTip(this.remBtn, "Remove the selected bitmap from the image");
+            this.toolTip1.SetToolTip(this.remBtn, Resources.remBtn_ToolTip);
             this.remBtn.UseVisualStyleBackColor = true;
             this.remBtn.Click += new System.EventHandler(this.remBtn_Click);
             // 
-            // addbtn
+            // addBtn
             // 
-            this.addbtn.AllowDrop = true;
-            this.addbtn.Location = new System.Drawing.Point(7, 20);
-            this.addbtn.Name = "addbtn";
-            this.addbtn.Size = new System.Drawing.Size(75, 23);
-            this.addbtn.TabIndex = 53;
-            this.addbtn.Text = "Add";
-            this.toolTip1.SetToolTip(this.addbtn, "Add new bitmaps to the image");
-            this.addbtn.UseVisualStyleBackColor = true;
-            this.addbtn.Click += new System.EventHandler(this.addbtn_Click);
-            this.addbtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.addbtn_DragDrop);
-            this.addbtn.DragEnter += new System.Windows.Forms.DragEventHandler(this.addbtn_DragEnter);
+            this.addBtn.AllowDrop = true;
+            this.addBtn.Location = new System.Drawing.Point(7, 20);
+            this.addBtn.Name = "addBtn";
+            this.addBtn.Size = new System.Drawing.Size(75, 23);
+            this.addBtn.TabIndex = 53;
+            this.addBtn.Text = "Add";
+            this.toolTip1.SetToolTip(this.addBtn, Resources.addBtn_ToolTip);
+            this.addBtn.UseVisualStyleBackColor = true;
+            this.addBtn.Click += new System.EventHandler(this.addbtn_Click);
+            this.addBtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.addbtn_DragDrop);
+            this.addBtn.DragEnter += new System.Windows.Forms.DragEventHandler(this.addbtn_DragEnter);
             // 
             // openAlphaDialog1
             // 
@@ -309,7 +315,7 @@ namespace loaddatfsh
             this.dirTxt.Name = "dirTxt";
             this.dirTxt.Size = new System.Drawing.Size(45, 20);
             this.dirTxt.TabIndex = 57;
-            this.toolTip1.SetToolTip(this.dirTxt, "Change the directory name for the selected image");
+            this.toolTip1.SetToolTip(this.dirTxt, Resources.dirTxt_ToolTip);
             this.dirTxt.TextChanged += new System.EventHandler(this.dirTxt_TextChanged);
             // 
             // repBtn
@@ -319,7 +325,7 @@ namespace loaddatfsh
             this.repBtn.Size = new System.Drawing.Size(75, 23);
             this.repBtn.TabIndex = 58;
             this.repBtn.Text = "Replace";
-            this.toolTip1.SetToolTip(this.repBtn, "Replace the selected bitmap");
+            this.toolTip1.SetToolTip(this.repBtn, Resources.repBtn_ToolTip);
             this.repBtn.UseVisualStyleBackColor = true;
             this.repBtn.Click += new System.EventHandler(this.repBtn_Click);
             // 
@@ -343,7 +349,7 @@ namespace loaddatfsh
             this.saveFshBtn.Size = new System.Drawing.Size(75, 23);
             this.saveFshBtn.TabIndex = 62;
             this.saveFshBtn.Text = "Save fsh";
-            this.toolTip1.SetToolTip(this.saveFshBtn, "Save the current fsh");
+            this.toolTip1.SetToolTip(this.saveFshBtn, Resources.saveFshBtn_ToolTip);
             this.saveFshBtn.UseVisualStyleBackColor = true;
             this.saveFshBtn.Click += new System.EventHandler(this.saveFshBtn_Click);
             // 
@@ -361,7 +367,7 @@ namespace loaddatfsh
             this.newFshBtn.Size = new System.Drawing.Size(75, 23);
             this.newFshBtn.TabIndex = 66;
             this.newFshBtn.Text = "New fsh";
-            this.toolTip1.SetToolTip(this.newFshBtn, "Create a new fsh");
+            this.toolTip1.SetToolTip(this.newFshBtn, Resources.newFshBtn_ToolTip);
             this.newFshBtn.UseVisualStyleBackColor = true;
             this.newFshBtn.Click += new System.EventHandler(this.newFshBtn_Click);
             this.newFshBtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.newfshbtn_DragDrop);
@@ -370,7 +376,7 @@ namespace loaddatfsh
             // bmpmanBox1
             // 
             this.bmpmanBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bmpmanBox1.Controls.Add(this.addbtn);
+            this.bmpmanBox1.Controls.Add(this.addBtn);
             this.bmpmanBox1.Controls.Add(this.remBtn);
             this.bmpmanBox1.Controls.Add(this.repBtn);
             this.bmpmanBox1.Location = new System.Drawing.Point(261, 385);
@@ -383,9 +389,9 @@ namespace loaddatfsh
             // fshDefbox
             // 
             this.fshDefbox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.fshDefbox.Controls.Add(this.regFshrdo);
-            this.fshDefbox.Controls.Add(this.hdBasetexrdo);
-            this.fshDefbox.Controls.Add(this.hdfshRadio);
+            this.fshDefbox.Controls.Add(this.regFshRadio);
+            this.fshDefbox.Controls.Add(this.hdBaseFshRadio);
+            this.fshDefbox.Controls.Add(this.hdFshRadio);
             this.fshDefbox.Location = new System.Drawing.Point(3, 402);
             this.fshDefbox.Name = "fshDefbox";
             this.fshDefbox.Size = new System.Drawing.Size(130, 93);
@@ -393,40 +399,40 @@ namespace loaddatfsh
             this.fshDefbox.TabStop = false;
             this.fshDefbox.Text = "Fsh Definition";
             // 
-            // regFshrdo
+            // regFshRadio
             // 
-            this.regFshrdo.AutoSize = true;
-            this.regFshrdo.Checked = true;
-            this.regFshrdo.Location = new System.Drawing.Point(7, 20);
-            this.regFshrdo.Name = "regFshrdo";
-            this.regFshrdo.Size = new System.Drawing.Size(82, 17);
-            this.regFshrdo.TabIndex = 39;
-            this.regFshrdo.TabStop = true;
-            this.regFshrdo.Text = "Regular Fsh";
-            this.regFshrdo.UseVisualStyleBackColor = true;
-            this.regFshrdo.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
+            this.regFshRadio.AutoSize = true;
+            this.regFshRadio.Checked = true;
+            this.regFshRadio.Location = new System.Drawing.Point(7, 20);
+            this.regFshRadio.Name = "regFshRadio";
+            this.regFshRadio.Size = new System.Drawing.Size(82, 17);
+            this.regFshRadio.TabIndex = 39;
+            this.regFshRadio.TabStop = true;
+            this.regFshRadio.Text = "Regular Fsh";
+            this.regFshRadio.UseVisualStyleBackColor = true;
+            this.regFshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
             // 
-            // hdBasetexrdo
+            // hdBaseFshRadio
             // 
-            this.hdBasetexrdo.AutoSize = true;
-            this.hdBasetexrdo.Location = new System.Drawing.Point(6, 66);
-            this.hdBasetexrdo.Name = "hdBasetexrdo";
-            this.hdBasetexrdo.Size = new System.Drawing.Size(103, 17);
-            this.hdBasetexrdo.TabIndex = 38;
-            this.hdBasetexrdo.Text = "HD Base texture";
-            this.hdBasetexrdo.UseVisualStyleBackColor = true;
-            this.hdBasetexrdo.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
+            this.hdBaseFshRadio.AutoSize = true;
+            this.hdBaseFshRadio.Location = new System.Drawing.Point(6, 66);
+            this.hdBaseFshRadio.Name = "hdBaseFshRadio";
+            this.hdBaseFshRadio.Size = new System.Drawing.Size(103, 17);
+            this.hdBaseFshRadio.TabIndex = 38;
+            this.hdBaseFshRadio.Text = "HD Base texture";
+            this.hdBaseFshRadio.UseVisualStyleBackColor = true;
+            this.hdBaseFshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
             // 
-            // hdfshRadio
+            // hdFshRadio
             // 
-            this.hdfshRadio.AutoSize = true;
-            this.hdfshRadio.Location = new System.Drawing.Point(6, 42);
-            this.hdfshRadio.Name = "hdfshRadio";
-            this.hdfshRadio.Size = new System.Drawing.Size(117, 17);
-            this.hdfshRadio.TabIndex = 37;
-            this.hdfshRadio.Text = "High  Definition Fsh";
-            this.hdfshRadio.UseVisualStyleBackColor = true;
-            this.hdfshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
+            this.hdFshRadio.AutoSize = true;
+            this.hdFshRadio.Location = new System.Drawing.Point(6, 42);
+            this.hdFshRadio.Name = "hdFshRadio";
+            this.hdFshRadio.Size = new System.Drawing.Size(117, 17);
+            this.hdFshRadio.TabIndex = 37;
+            this.hdFshRadio.Text = "High  Definition Fsh";
+            this.hdFshRadio.UseVisualStyleBackColor = true;
+            this.hdFshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
             // 
             // tabControl1
             // 
@@ -646,7 +652,7 @@ namespace loaddatfsh
             this.tgiGroupTxt.Name = "tgiGroupTxt";
             this.tgiGroupTxt.Size = new System.Drawing.Size(82, 20);
             this.tgiGroupTxt.TabIndex = 71;
-            this.toolTip1.SetToolTip(this.tgiGroupTxt, "Change the group id of the image");
+            this.toolTip1.SetToolTip(this.tgiGroupTxt, Resources.tgiGroupTxt_ToolTip);
             this.tgiGroupTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
             // 
             // tgiInstanceTxt
@@ -657,7 +663,7 @@ namespace loaddatfsh
             this.tgiInstanceTxt.Name = "tgiInstanceTxt";
             this.tgiInstanceTxt.Size = new System.Drawing.Size(82, 20);
             this.tgiInstanceTxt.TabIndex = 72;
-            this.toolTip1.SetToolTip(this.tgiInstanceTxt, "Change the instance id of the image");
+            this.toolTip1.SetToolTip(this.tgiInstanceTxt, Resources.tgiInstanceTxt_ToolTip);
             this.tgiInstanceTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
             // 
             // tgiGroupLbl
@@ -702,7 +708,7 @@ namespace loaddatfsh
             this.instA_ERdo.Size = new System.Drawing.Size(42, 17);
             this.instA_ERdo.TabIndex = 2;
             this.instA_ERdo.Text = "A-E";
-            this.toolTip1.SetToolTip(this.instA_ERdo, "Change the end diget of the instance id");
+            this.toolTip1.SetToolTip(this.instA_ERdo, Resources.InstanceIDRadioButtons_ToolTip);
             this.instA_ERdo.UseVisualStyleBackColor = true;
             this.instA_ERdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
             // 
@@ -714,7 +720,7 @@ namespace loaddatfsh
             this.inst5_9Rdo.Size = new System.Drawing.Size(40, 17);
             this.inst5_9Rdo.TabIndex = 1;
             this.inst5_9Rdo.Text = "5-9";
-            this.toolTip1.SetToolTip(this.inst5_9Rdo, "Change the end diget of the instance id");
+            this.toolTip1.SetToolTip(this.inst5_9Rdo, Resources.InstanceIDRadioButtons_ToolTip);
             this.inst5_9Rdo.UseVisualStyleBackColor = true;
             // 
             // inst0_4Rdo
@@ -727,31 +733,31 @@ namespace loaddatfsh
             this.inst0_4Rdo.TabIndex = 0;
             this.inst0_4Rdo.TabStop = true;
             this.inst0_4Rdo.Text = "0-4";
-            this.toolTip1.SetToolTip(this.inst0_4Rdo, "Change the end diget of the instance id");
+            this.toolTip1.SetToolTip(this.inst0_4Rdo, Resources.InstanceIDRadioButtons_ToolTip);
             this.inst0_4Rdo.UseVisualStyleBackColor = true;
             this.inst0_4Rdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
             // 
-            // DatlistView1
+            // datListView
             // 
-            this.DatlistView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.datListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.DatlistView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.datListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.NameHeader1,
             this.GroupHeader,
             this.InstanceHeader});
-            this.DatlistView1.FullRowSelect = true;
-            this.DatlistView1.HideSelection = false;
-            this.DatlistView1.Location = new System.Drawing.Point(15, 12);
-            this.DatlistView1.MultiSelect = false;
-            this.DatlistView1.Name = "DatlistView1";
-            this.DatlistView1.Size = new System.Drawing.Size(523, 99);
-            this.DatlistView1.TabIndex = 76;
-            this.toolTip1.SetToolTip(this.DatlistView1, "The list of images in the loaded dat");
-            this.DatlistView1.UseCompatibleStateImageBehavior = false;
-            this.DatlistView1.View = System.Windows.Forms.View.Details;
-            this.DatlistView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView1_ColumnClick);
-            this.DatlistView1.SelectedIndexChanged += new System.EventHandler(this.DatlistView1_SelectedIndexChanged);
+            this.datListView.FullRowSelect = true;
+            this.datListView.HideSelection = false;
+            this.datListView.Location = new System.Drawing.Point(15, 12);
+            this.datListView.MultiSelect = false;
+            this.datListView.Name = "datListView";
+            this.datListView.Size = new System.Drawing.Size(523, 99);
+            this.datListView.TabIndex = 76;
+            this.toolTip1.SetToolTip(this.datListView, Resources.datListView_ToolTip);
+            this.datListView.UseCompatibleStateImageBehavior = false;
+            this.datListView.View = System.Windows.Forms.View.Details;
+            this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView1_ColumnClick);
+            this.datListView.SelectedIndexChanged += new System.EventHandler(this.DatlistView1_SelectedIndexChanged);
             // 
             // NameHeader1
             // 
@@ -775,19 +781,18 @@ namespace loaddatfsh
             this.loadDatBtn.Size = new System.Drawing.Size(75, 23);
             this.loadDatBtn.TabIndex = 77;
             this.loadDatBtn.Text = "Load dat";
-            this.toolTip1.SetToolTip(this.loadDatBtn, "Load a dat to modify its images");
+            this.toolTip1.SetToolTip(this.loadDatBtn, Resources.loadDatBtn_ToolTip);
             this.loadDatBtn.UseVisualStyleBackColor = true;
             this.loadDatBtn.Click += new System.EventHandler(this.loadDatbtn_Click);
             // 
             // openDatDialog1
             // 
-            this.openDatDialog1.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
+            this.openDatDialog1.Filter = Resources.DatFiles_Filter;
             // 
             // saveDatDialog1
             // 
             this.saveDatDialog1.DefaultExt = "dat";
-            this.saveDatDialog1.FileName = "test";
-            this.saveDatDialog1.Filter = "Dat files (*.dat)|*.dat|All files (*.*)|*.*";
+            this.saveDatDialog1.Filter = Resources.DatFiles_Filter;
             // 
             // saveDatBtn
             // 
@@ -796,7 +801,7 @@ namespace loaddatfsh
             this.saveDatBtn.Size = new System.Drawing.Size(75, 23);
             this.saveDatBtn.TabIndex = 78;
             this.saveDatBtn.Text = "Save dat";
-            this.toolTip1.SetToolTip(this.saveDatBtn, "Save a new or modified dat");
+            this.toolTip1.SetToolTip(this.saveDatBtn, Resources.saveDatBtn_ToolTip);
             this.saveDatBtn.UseVisualStyleBackColor = true;
             this.saveDatBtn.Click += new System.EventHandler(this.saveDatbtn_Click);
             // 
@@ -807,7 +812,7 @@ namespace loaddatfsh
             this.newDatBtn.Size = new System.Drawing.Size(75, 23);
             this.newDatBtn.TabIndex = 81;
             this.newDatBtn.Text = "New dat";
-            this.toolTip1.SetToolTip(this.newDatBtn, "Create a new dat");
+            this.toolTip1.SetToolTip(this.newDatBtn, Resources.newDatBtn_ToolTip);
             this.newDatBtn.UseVisualStyleBackColor = true;
             this.newDatBtn.Click += new System.EventHandler(this.newDatbtn_Click);
             // 
@@ -834,7 +839,7 @@ namespace loaddatfsh
             this.closeDatBtn.Size = new System.Drawing.Size(75, 23);
             this.closeDatBtn.TabIndex = 84;
             this.closeDatBtn.Text = "Close dat";
-            this.toolTip1.SetToolTip(this.closeDatBtn, "Close the loaded dat");
+            this.toolTip1.SetToolTip(this.closeDatBtn, Resources.closeDatBtn_ToolTip);
             this.closeDatBtn.UseVisualStyleBackColor = true;
             this.closeDatBtn.Click += new System.EventHandler(this.closeDatbtn_Click);
             // 
@@ -865,7 +870,7 @@ namespace loaddatfsh
             this.genNewInstCb.Size = new System.Drawing.Size(142, 17);
             this.genNewInstCb.TabIndex = 80;
             this.genNewInstCb.Text = "Generate new Instances";
-            this.toolTip1.SetToolTip(this.genNewInstCb, "Generate new instance ids when saving into an existing dat");
+            this.toolTip1.SetToolTip(this.genNewInstCb, Resources.genNewInstCb_ToolTip);
             this.genNewInstCb.UseVisualStyleBackColor = true;
             this.genNewInstCb.CheckedChanged += new System.EventHandler(this.genNewInstcb_CheckedChanged);
             // 
@@ -880,7 +885,7 @@ namespace loaddatfsh
             this.compDatCb.Size = new System.Drawing.Size(120, 17);
             this.compDatCb.TabIndex = 84;
             this.compDatCb.Text = "Compress dat items ";
-            this.toolTip1.SetToolTip(this.compDatCb, "Compress the items in the saved dat");
+            this.toolTip1.SetToolTip(this.compDatCb, Resources.compDatCb_ToolTip);
             this.compDatCb.UseVisualStyleBackColor = true;
             this.compDatCb.CheckedChanged += new System.EventHandler(this.compDatcb_CheckedChanged);
             // 
@@ -893,7 +898,7 @@ namespace loaddatfsh
             this.fshWriteCompCb.Size = new System.Drawing.Size(127, 17);
             this.fshWriteCompCb.TabIndex = 91;
             this.fshWriteCompCb.Text = "Fshwrite compression";
-            this.toolTip1.SetToolTip(this.fshWriteCompCb, "Use Fshwrite compression when saving DXT1 and DXT3 fsh images");
+            this.toolTip1.SetToolTip(this.fshWriteCompCb, Resources.fshWriteCompCb_ToolTip);
             this.fshWriteCompCb.UseVisualStyleBackColor = true;
             this.fshWriteCompCb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
             // 
@@ -1015,7 +1020,7 @@ namespace loaddatfsh
             this.Controls.Add(this.compDatCb);
             this.Controls.Add(this.DatfuncBox1);
             this.Controls.Add(this.genNewInstCb);
-            this.Controls.Add(this.DatlistView1);
+            this.Controls.Add(this.datListView);
             this.Controls.Add(this.InstendBox1);
             this.Controls.Add(this.tgiInstLbl);
             this.Controls.Add(this.tgiGroupLbl);
@@ -1029,7 +1034,7 @@ namespace loaddatfsh
             this.Controls.Add(this.saveFshBtn);
             this.Controls.Add(this.dirTxt);
             this.Controls.Add(this.dirNameLbl);
-            this.Controls.Add(this.Sizelbl);
+            this.Controls.Add(this.sizeLbl);
             this.Controls.Add(this.imgSizeLbl);
             this.Controls.Add(this.fshTypeBox);
             this.Controls.Add(this.blendRadio);
@@ -1074,12 +1079,12 @@ namespace loaddatfsh
         private System.Windows.Forms.ComboBox fshTypeBox;
         private System.Windows.Forms.ImageList alphaList1;
         private System.Windows.Forms.ImageList blendList1;
-        private System.Windows.Forms.Label Sizelbl;
+        private System.Windows.Forms.Label sizeLbl;
         private System.Windows.Forms.Label imgSizeLbl;
         private System.Windows.Forms.Label dirNameLbl;
         private System.Windows.Forms.OpenFileDialog openBitmapDialog1;
         private System.Windows.Forms.Button remBtn;
-        private System.Windows.Forms.Button addbtn;
+        private System.Windows.Forms.Button addBtn;
         private System.Windows.Forms.OpenFileDialog openAlphaDialog1;
         private System.Windows.Forms.TextBox dirTxt;
         private System.Windows.Forms.Button repBtn;
@@ -1089,9 +1094,9 @@ namespace loaddatfsh
         private System.Windows.Forms.Button newFshBtn;
         private System.Windows.Forms.GroupBox bmpmanBox1;
         private System.Windows.Forms.GroupBox fshDefbox;
-        private System.Windows.Forms.RadioButton regFshrdo;
-        private System.Windows.Forms.RadioButton hdBasetexrdo;
-        private System.Windows.Forms.RadioButton hdfshRadio;
+        private System.Windows.Forms.RadioButton regFshRadio;
+        private System.Windows.Forms.RadioButton hdBaseFshRadio;
+        private System.Windows.Forms.RadioButton hdFshRadio;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage Maintab;
         private System.Windows.Forms.TabPage mip64tab;
@@ -1122,7 +1127,7 @@ namespace loaddatfsh
         private System.Windows.Forms.RadioButton inst5_9Rdo;
         private System.Windows.Forms.RadioButton inst0_4Rdo;
         private System.Windows.Forms.RadioButton instA_ERdo;
-        private System.Windows.Forms.ListView DatlistView1;
+        private System.Windows.Forms.ListView datListView;
         private System.Windows.Forms.Button loadDatBtn;
         private System.Windows.Forms.OpenFileDialog openDatDialog1;
         private System.Windows.Forms.ColumnHeader GroupHeader;
