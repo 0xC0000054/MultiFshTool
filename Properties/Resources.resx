@@ -121,10 +121,10 @@
     <value>Fsh files (*.fsh;*.qfs)|*.fsh;*.qfs|All files (*.*)|*.*</value>
     <comment>Fsh File Type filter</comment>
   </data>
-  <data name="repbmp_NewFileSelect_Error" xml:space="preserve">
+  <data name="repBmp_NewFileSelect_Error" xml:space="preserve">
     <value>You must select a Bitmap to replace the selected image.</value>
   </data>
-  <data name="repbmp_NoImageSelected_Error" xml:space="preserve">
+  <data name="repBmp_NoImageSelected_Error" xml:space="preserve">
     <value>You must select an image to replace.</value>
   </data>
   <data name="saveBitmap_Alpha_Prefix" xml:space="preserve">
@@ -139,5 +139,95 @@
   <data name="ImageFiles_Filter" xml:space="preserve">
     <value>Bitmap files (*.png;*.bmp)|*.png;*.bmp|All files (*.*)|*.*</value>
     <comment>Image File Type Filter</comment>
+  </data>
+  <data name="addBtn_ToolTip" xml:space="preserve">
+    <value>Add new bitmaps to the image</value>
+  </data>
+  <data name="AlphaNumberText" xml:space="preserve">
+    <value>alpha # :</value>
+  </data>
+  <data name="BitmapNumberText" xml:space="preserve">
+    <value>bitmap # :</value>
+  </data>
+  <data name="BlendNumberText" xml:space="preserve">
+    <value>blend # :</value>
+  </data>
+  <data name="CheckReplaceBitmapSizeError" xml:space="preserve">
+    <value>The bitmap must be at least 128 x 128</value>
+  </data>
+  <data name="closeDatBtn_ToolTip" xml:space="preserve">
+    <value>Close the loaded dat</value>
+  </data>
+  <data name="compDatCb_ToolTip" xml:space="preserve">
+    <value>Compress the items in the saved dat</value>
+  </data>
+  <data name="DatFiles_Filter" xml:space="preserve">
+    <value>Dat files (*.dat)|*.dat|All files (*.*)|*.*</value>
+  </data>
+  <data name="DatInMemoryText" xml:space="preserve">
+    <value>Dat in Memory</value>
+  </data>
+  <data name="datListView_ToolTip" xml:space="preserve">
+    <value>The list of images in the loaded dat</value>
+  </data>
+  <data name="dirTxt_ToolTip" xml:space="preserve">
+    <value>Change the directory name for the selected image</value>
+  </data>
+  <data name="FshNumberText" xml:space="preserve">
+    <value>Fsh # </value>
+  </data>
+  <data name="fshTypeBox_ToolTip" xml:space="preserve">
+    <value>Change the fsh type of the selected bitmap</value>
+  </data>
+  <data name="fshWriteCompCb_ToolTip" xml:space="preserve">
+    <value>Use Fshwrite compression when saving DXT1 and DXT3 fsh images</value>
+  </data>
+  <data name="genNewInstCb_ToolTip" xml:space="preserve">
+    <value>Generate new instance ids when saving into an existing dat</value>
+  </data>
+  <data name="InstanceIDRadioButtons_ToolTip" xml:space="preserve">
+    <value>Change the end diget of the instance id</value>
+  </data>
+  <data name="loadDatBtn_ToolTip" xml:space="preserve">
+    <value>Load a dat to modify its images</value>
+  </data>
+  <data name="loadFshBtn_ToolTip" xml:space="preserve">
+    <value>Load an existing fsh</value>
+  </data>
+  <data name="newDatBtn_ToolTip" xml:space="preserve">
+    <value>Create a new dat</value>
+  </data>
+  <data name="newFshBtn_ToolTip" xml:space="preserve">
+    <value>Create a new fsh</value>
+  </data>
+  <data name="NoDatLoadedText" xml:space="preserve">
+    <value>No dat loaded</value>
+  </data>
+  <data name="NoImagesInDatFileError_Format" xml:space="preserve">
+    <value>No images loaded from {0}</value>
+  </data>
+  <data name="remBtn_ToolTip" xml:space="preserve">
+    <value>Remove the selected bitmap from the image</value>
+  </data>
+  <data name="repBtn_ToolTip" xml:space="preserve">
+    <value>Replace the selected bitmap</value>
+  </data>
+  <data name="saveDatBtn_ToolTip" xml:space="preserve">
+    <value>Save a new or modified dat</value>
+  </data>
+  <data name="SaveDatChangesText" xml:space="preserve">
+    <value>Save changes to Dat?</value>
+  </data>
+  <data name="saveFshBtn_ToolTip" xml:space="preserve">
+    <value>Save the current fsh</value>
+  </data>
+  <data name="tgiGroupTxt_ToolTip" xml:space="preserve">
+    <value>Change the group id of the image</value>
+  </data>
+  <data name="tgiInstanceTxt_ToolTip" xml:space="preserve">
+    <value>Change the instance id of the image</value>
+  </data>
+  <data name="UnableToLoadSettings" xml:space="preserve">
+    <value>Unable to load settings:</value>
   </data>
 </root>
