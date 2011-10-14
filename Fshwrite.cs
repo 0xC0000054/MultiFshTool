@@ -136,12 +136,11 @@ namespace loaddatfsh
                 BitmapData colordata = colorbmp.LockBits(new Rectangle(0, 0, colorbmp.Width, colorbmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                 BitmapData alphadata = bmpalpha.LockBits(new Rectangle(0, 0, bmpalpha.Width, bmpalpha.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                 BitmapData bdata = temp.LockBits(tempRect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-                IntPtr scan0 = bdata.Scan0;
                 unsafe
                 {
                     byte* clrdata = (byte*)(void*)colordata.Scan0;
                     byte* aldata = (byte*)(void*)alphadata.Scan0;
-                    byte* destdata = (byte*)(void*)scan0;
+                    byte* destdata = (byte*)(void*)bdata.Scan0;
                     int offset = bdata.Stride - temp.Width * 4;
                     int clroffset = colordata.Stride - temp.Width * 4;
                     int aloffset = alphadata.Stride - temp.Width * 4;
@@ -192,7 +191,7 @@ namespace loaddatfsh
             switch (code)
             {
                 case 0x60:
-                    ret = (bmp.Width * bmp.Height / 2); //Dxt1
+                    ret = (bmp.Width * bmp.Height) / 2; //Dxt1
                     break;
                 case 0x61:
                     ret = (bmp.Width * bmp.Height); //Dxt3
