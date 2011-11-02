@@ -54,17 +54,21 @@ namespace loaddatfsh
 
             unsafe
             {
+                byte* scan0 = (byte*)data.Scan0.ToPointer();
+                int stride = data.Stride;
                 for (int y = 0; y < image.Height; y++)
                 {
+                    byte* p = scan0 + (y * stride);
                     for (int x = 0; x < image.Width; x++)
                     {
-                        int offset = (y * data.Stride) + (x * 4);
-                        byte* p = (byte*)(void*)data.Scan0 + offset;
-                        
-                        pixelData[offset] = p[2]; // red 
-                        pixelData[offset + 1] = p[1]; // green
-                        pixelData[offset + 2] = p[0]; // blue 
-                        pixelData[offset + 3] = p[3]; // alpha
+                        int index = (y * image.Width * 4) + (x * 4);
+
+                        pixelData[index] = p[2];
+                        pixelData[index + 1] = p[1];
+                        pixelData[index + 2] = p[0];
+                        pixelData[index + 3] = p[3];
+
+                        p += 4;
                     }
                 }
             }
