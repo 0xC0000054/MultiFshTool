@@ -2866,11 +2866,11 @@ namespace loaddatfsh
 
         }
         
-        private void DatlistView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void DatlistView_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (datListView.SelectedItems.Count > 0)
             {
-                try 
+                try
                 {
                     string group = datListView.SelectedItems[0].SubItems[1].Text;
                     string instance = datListView.SelectedItems[0].SubItems[2].Text;
@@ -2878,7 +2878,7 @@ namespace loaddatfsh
                     tgiGroupTxt.Text = group;
                     inststr = instance;
                     EndFormat_Refresh();
-                    originst = instance.Substring(0,7);
+                    originst = instance.Substring(0, 7);
 
 
                     FshWrapper fshitem = datListView.SelectedItems[0].Tag as FshWrapper;
@@ -2939,11 +2939,15 @@ namespace loaddatfsh
                             }
                         }
                     }
-                   
+
+                }
+                catch (DatFileException dfex)
+                {
+                    MessageBox.Show(this, dfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text);
+                    MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

@@ -797,7 +797,7 @@ namespace loaddatfsh
             this.datListView.UseCompatibleStateImageBehavior = false;
             this.datListView.View = System.Windows.Forms.View.Details;
             this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView1_ColumnClick);
-            this.datListView.SelectedIndexChanged += new System.EventHandler(this.DatlistView1_SelectedIndexChanged);
+            this.datListView.SelectedIndexChanged += new System.EventHandler(this.DatlistView_SelectedIndexChanged);
             // 
             // NameHeader1
             // 
