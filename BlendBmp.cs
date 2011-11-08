@@ -7,14 +7,14 @@ using FSHLib;
 
 namespace loaddatfsh
 {
-    public class BlendBitmap
+    internal static class BlendBitmap
     {
        /// <summary>
        /// Blends the fsh bitmap and alpha images
        /// </summary>
        /// <param name="bmpitem">The bitmap item to blend</param>
        /// <returns>The blended bitmap or null</returns>
-       public static Bitmap BlendBmp(BitmapItem bmpitem)
+       public static Bitmap BlendBmp(FshDatIO.BitmapEntry bmpitem)
        {
             if (bmpitem.Bitmap != null && bmpitem.Alpha != null)
             {            
@@ -23,8 +23,8 @@ namespace loaddatfsh
                 {
                    
 
-                    using (Bitmap bmpalpha = new Bitmap(bmpitem.Bitmap))
-                    using (Bitmap colorbmp = new Bitmap(bmpitem.Alpha))
+                    using (Bitmap colorbmp = new Bitmap(bmpitem.Bitmap))
+                    using (Bitmap bmpalpha = new Bitmap(bmpitem.Alpha))
                     {
                         BitmapData colordata = colorbmp.LockBits(new Rectangle(0, 0, temp.Width, temp.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                         BitmapData alphadata = bmpalpha.LockBits(new Rectangle(0, 0, temp.Width, temp.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
