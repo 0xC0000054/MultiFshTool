@@ -18,10 +18,50 @@ namespace loaddatfsh
             {
                 components.Dispose();
             }
-            if (disposing && dat != null)
+            if (disposing)
             {
-                dat.Dispose();
-                dat = null;
+                if (dat != null)
+                {
+                    dat.Dispose();
+                    dat = null; 
+                }
+
+                if (curImage != null)
+                {
+                    curImage.Dispose();
+                    curImage = null;
+                }
+
+                if (mip64Fsh != null)
+                {
+                    mip64Fsh.Dispose();
+                    mip64Fsh = null;
+                }
+                
+                if (mip32Fsh != null)
+                {
+                    mip32Fsh.Dispose();
+                    mip32Fsh = null;
+                }
+
+                if (mip16Fsh != null)
+                {
+                    mip16Fsh.Dispose();
+                    mip16Fsh = null;
+                }
+
+                if (mip8Fsh != null)
+                {
+                    mip8Fsh.Dispose();
+                    mip8Fsh = null;
+                }
+
+                if (bmpEntry != null)
+                {
+                    bmpEntry.Dispose();
+                    bmpEntry = null;
+                }
+
             }
 
             base.Dispose(disposing);
