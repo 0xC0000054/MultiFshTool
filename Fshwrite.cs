@@ -118,27 +118,26 @@ namespace loaddatfsh
             }
         }
 
-        private Bitmap BlendDXTBmp(Bitmap colorbmp, Bitmap bmpalpha)
+        private Bitmap BlendDXTBitmap(Bitmap color, Bitmap alpha)
         {
-            if (colorbmp == null)
-                throw new ArgumentNullException("colorbmp", "colorbmp is null.");
-            if (bmpalpha == null)
-                throw new ArgumentNullException("bmpalpha", "bmpalpha is null.");
-            if (colorbmp.Size != bmpalpha.Size)
-                throw new ArgumentException("The bitmap and alpha must be equal size");
+            if (color == null)
+                throw new ArgumentNullException("color", "color is null.");
+            if (alpha == null)
+                throw new ArgumentNullException("alpha", "alpha is null.");
+            if (color.Size != alpha.Size)
+                throw new ArgumentException("The color and alpha bitmaps must be equal size");
 
             Bitmap image = null;
             Bitmap temp = null;
             try
             {
-                if (colorbmp != null && bmpalpha != null)
-                {
-                    temp = new Bitmap(colorbmp.Width, colorbmp.Height, PixelFormat.Format32bppArgb);
-                }
+
+                temp = new Bitmap(color.Width, color.Height, PixelFormat.Format32bppArgb);
+
                 
                 Rectangle tempRect = new Rectangle(0, 0, temp.Width, temp.Height);
-                BitmapData colordata = colorbmp.LockBits(new Rectangle(0, 0, colorbmp.Width, colorbmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-                BitmapData alphadata = bmpalpha.LockBits(new Rectangle(0, 0, bmpalpha.Width, bmpalpha.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                BitmapData colordata = color.LockBits(new Rectangle(0, 0, color.Width, color.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                BitmapData alphadata = alpha.LockBits(new Rectangle(0, 0, alpha.Width, alpha.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                 BitmapData bdata = temp.LockBits(tempRect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
                 unsafe
                 {
@@ -168,8 +167,8 @@ namespace loaddatfsh
                     }
 
                 }
-                colorbmp.UnlockBits(colordata);
-                bmpalpha.UnlockBits(alphadata);
+                color.UnlockBits(colordata);
+                alpha.UnlockBits(alphadata);
                 temp.UnlockBits(bdata);
 
                 image = temp.Clone(tempRect, temp.PixelFormat);
@@ -283,17 +282,17 @@ namespace loaddatfsh
                         int code = codelist[b];
                         // write entry header
                         ms.Write(BitConverter.GetBytes(code), 0, 4); // write the Entry bitmap code
-                        ms.Write(BitConverter.GetBytes((short)bmp.Width), 0, 2); // write width
-                        ms.Write(BitConverter.GetBytes((short)bmp.Height), 0, 2); //write height
+                        ms.Write(BitConverter.GetBytes((ushort)bmp.Width), 0, 2); // write width
+                        ms.Write(BitConverter.GetBytes((ushort)bmp.Height), 0, 2); //write height
                         for (int m = 0; m < 4; m++)
                         {
-                            ms.Write(BitConverter.GetBytes((short)0), 0, 2);// write misc data
+                            ms.Write(BitConverter.GetBytes((ushort)0), 0, 2);// write misc data
                         }
 
                         if (code == 0x60) //DXT1
                         {
                             
-                            Bitmap temp = BlendDXTBmp(bmp, alpha);
+                            Bitmap temp = BlendDXTBitmap(bmp, alpha);
                             byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt1;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
@@ -304,7 +303,7 @@ namespace loaddatfsh
                         }
                         else if (code == 0x61) // DXT3
                         {
-                            Bitmap temp = BlendDXTBmp(bmp, alpha);
+                            Bitmap temp = BlendDXTBitmap(bmp, alpha);
                             byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt3;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
