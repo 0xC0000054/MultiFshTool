@@ -159,7 +159,7 @@ namespace loaddatfsh
             this.alphaLbl = new System.Windows.Forms.Label();
             this.bmpLbl = new System.Windows.Forms.Label();
             this.Alphabtn = new System.Windows.Forms.Button();
-            this.Alphabox = new System.Windows.Forms.TextBox();
+            this.alphaBox = new System.Windows.Forms.TextBox();
             this.bmpbtn = new System.Windows.Forms.Button();
             this.bmpBox = new System.Windows.Forms.TextBox();
             this.bmpmanBox1.SuspendLayout();
@@ -183,8 +183,8 @@ namespace loaddatfsh
             // 
             // listViewMain
             // 
-            this.listViewMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMain.BackgroundImageTiled = true;
             this.listViewMain.HideSelection = false;
             this.listViewMain.LargeImageList = this.BitmapList1;
@@ -207,7 +207,7 @@ namespace loaddatfsh
             this.loadFshBtn.Size = new System.Drawing.Size(75, 23);
             this.loadFshBtn.TabIndex = 1;
             this.loadFshBtn.Text = "Load Fsh";
-            this.toolTip1.SetToolTip(this.loadFshBtn, Resources.loadFshBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.loadFshBtn, global::loaddatfsh.Properties.Resources.loadFshBtn_ToolTip);
             this.loadFshBtn.UseVisualStyleBackColor = true;
             this.loadFshBtn.Click += new System.EventHandler(this.loadfsh_Click);
             // 
@@ -269,7 +269,7 @@ namespace loaddatfsh
             this.fshTypeBox.Name = "fshTypeBox";
             this.fshTypeBox.Size = new System.Drawing.Size(164, 21);
             this.fshTypeBox.TabIndex = 46;
-            this.toolTip1.SetToolTip(this.fshTypeBox, Resources.fshTypeBox_ToolTip);
+            this.toolTip1.SetToolTip(this.fshTypeBox, global::loaddatfsh.Properties.Resources.fshTypeBox_ToolTip);
             this.fshTypeBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FshtypeBox_DrawItem);
             this.fshTypeBox.SelectedIndexChanged += new System.EventHandler(this.FshtypeBox_SelectedIndexChanged);
             // 
@@ -325,7 +325,7 @@ namespace loaddatfsh
             this.remBtn.Size = new System.Drawing.Size(75, 23);
             this.remBtn.TabIndex = 54;
             this.remBtn.Text = "Remove";
-            this.toolTip1.SetToolTip(this.remBtn, Resources.remBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.remBtn, global::loaddatfsh.Properties.Resources.remBtn_ToolTip);
             this.remBtn.UseVisualStyleBackColor = true;
             this.remBtn.Click += new System.EventHandler(this.remBtn_Click);
             // 
@@ -337,7 +337,7 @@ namespace loaddatfsh
             this.addBtn.Size = new System.Drawing.Size(75, 23);
             this.addBtn.TabIndex = 53;
             this.addBtn.Text = "Add";
-            this.toolTip1.SetToolTip(this.addBtn, Resources.addBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.addBtn, global::loaddatfsh.Properties.Resources.addBtn_ToolTip);
             this.addBtn.UseVisualStyleBackColor = true;
             this.addBtn.Click += new System.EventHandler(this.addbtn_Click);
             this.addBtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.addbtn_DragDrop);
@@ -355,7 +355,7 @@ namespace loaddatfsh
             this.dirTxt.Name = "dirTxt";
             this.dirTxt.Size = new System.Drawing.Size(45, 20);
             this.dirTxt.TabIndex = 57;
-            this.toolTip1.SetToolTip(this.dirTxt, Resources.dirTxt_ToolTip);
+            this.toolTip1.SetToolTip(this.dirTxt, global::loaddatfsh.Properties.Resources.dirTxt_ToolTip);
             this.dirTxt.TextChanged += new System.EventHandler(this.dirTxt_TextChanged);
             // 
             // repBtn
@@ -365,7 +365,7 @@ namespace loaddatfsh
             this.repBtn.Size = new System.Drawing.Size(75, 23);
             this.repBtn.TabIndex = 58;
             this.repBtn.Text = "Replace";
-            this.toolTip1.SetToolTip(this.repBtn, Resources.repBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.repBtn, global::loaddatfsh.Properties.Resources.repBtn_ToolTip);
             this.repBtn.UseVisualStyleBackColor = true;
             this.repBtn.Click += new System.EventHandler(this.repBtn_Click);
             // 
@@ -389,7 +389,7 @@ namespace loaddatfsh
             this.saveFshBtn.Size = new System.Drawing.Size(75, 23);
             this.saveFshBtn.TabIndex = 62;
             this.saveFshBtn.Text = "Save fsh";
-            this.toolTip1.SetToolTip(this.saveFshBtn, Resources.saveFshBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.saveFshBtn, global::loaddatfsh.Properties.Resources.saveFshBtn_ToolTip);
             this.saveFshBtn.UseVisualStyleBackColor = true;
             this.saveFshBtn.Click += new System.EventHandler(this.saveFshBtn_Click);
             // 
@@ -407,7 +407,7 @@ namespace loaddatfsh
             this.newFshBtn.Size = new System.Drawing.Size(75, 23);
             this.newFshBtn.TabIndex = 66;
             this.newFshBtn.Text = "New fsh";
-            this.toolTip1.SetToolTip(this.newFshBtn, Resources.newFshBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.newFshBtn, global::loaddatfsh.Properties.Resources.newFshBtn_ToolTip);
             this.newFshBtn.UseVisualStyleBackColor = true;
             this.newFshBtn.Click += new System.EventHandler(this.newFshBtn_Click);
             this.newFshBtn.DragDrop += new System.Windows.Forms.DragEventHandler(this.newfshbtn_DragDrop);
@@ -476,8 +476,8 @@ namespace loaddatfsh
             // 
             // tabControl1
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.Maintab);
             this.tabControl1.Controls.Add(this.mip64tab);
             this.tabControl1.Controls.Add(this.mip32tab);
@@ -516,8 +516,8 @@ namespace loaddatfsh
             // 
             // listViewMip64
             // 
-            this.listViewMip64.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip64.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMip64.BackgroundImageTiled = true;
             this.listViewMip64.HideSelection = false;
             this.listViewMip64.LargeImageList = this.BitmapList1;
@@ -543,8 +543,8 @@ namespace loaddatfsh
             // 
             // listViewMip32
             // 
-            this.listViewMip32.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip32.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMip32.BackgroundImageTiled = true;
             this.listViewMip32.HideSelection = false;
             this.listViewMip32.LargeImageList = this.BitmapList1;
@@ -570,8 +570,8 @@ namespace loaddatfsh
             // 
             // listViewMip16
             // 
-            this.listViewMip16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMip16.BackgroundImageTiled = true;
             this.listViewMip16.HideSelection = false;
             this.listViewMip16.LargeImageList = this.bmp16Mip;
@@ -603,8 +603,8 @@ namespace loaddatfsh
             // 
             // listViewMip8
             // 
-            this.listViewMip8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMip8.BackgroundImageTiled = true;
             this.listViewMip8.HideSelection = false;
             this.listViewMip8.LargeImageList = this.bmp8Mip;
@@ -692,7 +692,7 @@ namespace loaddatfsh
             this.tgiGroupTxt.Name = "tgiGroupTxt";
             this.tgiGroupTxt.Size = new System.Drawing.Size(82, 20);
             this.tgiGroupTxt.TabIndex = 71;
-            this.toolTip1.SetToolTip(this.tgiGroupTxt, Resources.tgiGroupTxt_ToolTip);
+            this.toolTip1.SetToolTip(this.tgiGroupTxt, global::loaddatfsh.Properties.Resources.tgiGroupTxt_ToolTip);
             this.tgiGroupTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
             // 
             // tgiInstanceTxt
@@ -703,7 +703,7 @@ namespace loaddatfsh
             this.tgiInstanceTxt.Name = "tgiInstanceTxt";
             this.tgiInstanceTxt.Size = new System.Drawing.Size(82, 20);
             this.tgiInstanceTxt.TabIndex = 72;
-            this.toolTip1.SetToolTip(this.tgiInstanceTxt, Resources.tgiInstanceTxt_ToolTip);
+            this.toolTip1.SetToolTip(this.tgiInstanceTxt, global::loaddatfsh.Properties.Resources.tgiInstanceTxt_ToolTip);
             this.tgiInstanceTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
             // 
             // tgiGroupLbl
@@ -748,7 +748,7 @@ namespace loaddatfsh
             this.instA_ERdo.Size = new System.Drawing.Size(42, 17);
             this.instA_ERdo.TabIndex = 2;
             this.instA_ERdo.Text = "A-E";
-            this.toolTip1.SetToolTip(this.instA_ERdo, Resources.InstanceIDRadioButtons_ToolTip);
+            this.toolTip1.SetToolTip(this.instA_ERdo, global::loaddatfsh.Properties.Resources.InstanceIDRadioButtons_ToolTip);
             this.instA_ERdo.UseVisualStyleBackColor = true;
             this.instA_ERdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
             // 
@@ -760,7 +760,7 @@ namespace loaddatfsh
             this.inst5_9Rdo.Size = new System.Drawing.Size(40, 17);
             this.inst5_9Rdo.TabIndex = 1;
             this.inst5_9Rdo.Text = "5-9";
-            this.toolTip1.SetToolTip(this.inst5_9Rdo, Resources.InstanceIDRadioButtons_ToolTip);
+            this.toolTip1.SetToolTip(this.inst5_9Rdo, global::loaddatfsh.Properties.Resources.InstanceIDRadioButtons_ToolTip);
             this.inst5_9Rdo.UseVisualStyleBackColor = true;
             // 
             // inst0_4Rdo
@@ -773,15 +773,15 @@ namespace loaddatfsh
             this.inst0_4Rdo.TabIndex = 0;
             this.inst0_4Rdo.TabStop = true;
             this.inst0_4Rdo.Text = "0-4";
-            this.toolTip1.SetToolTip(this.inst0_4Rdo, Resources.InstanceIDRadioButtons_ToolTip);
+            this.toolTip1.SetToolTip(this.inst0_4Rdo, global::loaddatfsh.Properties.Resources.InstanceIDRadioButtons_ToolTip);
             this.inst0_4Rdo.UseVisualStyleBackColor = true;
             this.inst0_4Rdo.CheckedChanged += new System.EventHandler(this.EndFormat_CheckedChanged);
             // 
             // datListView
             // 
-            this.datListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.datListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.datListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.NameHeader1,
             this.GroupHeader,
@@ -793,10 +793,10 @@ namespace loaddatfsh
             this.datListView.Name = "datListView";
             this.datListView.Size = new System.Drawing.Size(523, 99);
             this.datListView.TabIndex = 76;
-            this.toolTip1.SetToolTip(this.datListView, Resources.datListView_ToolTip);
+            this.toolTip1.SetToolTip(this.datListView, global::loaddatfsh.Properties.Resources.datListView_ToolTip);
             this.datListView.UseCompatibleStateImageBehavior = false;
             this.datListView.View = System.Windows.Forms.View.Details;
-            this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView1_ColumnClick);
+            this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView_ColumnClick);
             this.datListView.SelectedIndexChanged += new System.EventHandler(this.DatlistView_SelectedIndexChanged);
             // 
             // NameHeader1
@@ -821,18 +821,18 @@ namespace loaddatfsh
             this.loadDatBtn.Size = new System.Drawing.Size(75, 23);
             this.loadDatBtn.TabIndex = 77;
             this.loadDatBtn.Text = "Load dat";
-            this.toolTip1.SetToolTip(this.loadDatBtn, Resources.loadDatBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.loadDatBtn, global::loaddatfsh.Properties.Resources.loadDatBtn_ToolTip);
             this.loadDatBtn.UseVisualStyleBackColor = true;
             this.loadDatBtn.Click += new System.EventHandler(this.loadDatbtn_Click);
             // 
             // openDatDialog1
             // 
-            this.openDatDialog1.Filter = Resources.DatFiles_Filter;
+            this.openDatDialog1.Filter = global::loaddatfsh.Properties.Resources.DatFiles_Filter;
             // 
             // saveDatDialog1
             // 
             this.saveDatDialog1.DefaultExt = "dat";
-            this.saveDatDialog1.Filter = Resources.DatFiles_Filter;
+            this.saveDatDialog1.Filter = global::loaddatfsh.Properties.Resources.DatFiles_Filter;
             // 
             // saveDatBtn
             // 
@@ -841,7 +841,7 @@ namespace loaddatfsh
             this.saveDatBtn.Size = new System.Drawing.Size(75, 23);
             this.saveDatBtn.TabIndex = 78;
             this.saveDatBtn.Text = "Save dat";
-            this.toolTip1.SetToolTip(this.saveDatBtn, Resources.saveDatBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.saveDatBtn, global::loaddatfsh.Properties.Resources.saveDatBtn_ToolTip);
             this.saveDatBtn.UseVisualStyleBackColor = true;
             this.saveDatBtn.Click += new System.EventHandler(this.saveDatbtn_Click);
             // 
@@ -852,7 +852,7 @@ namespace loaddatfsh
             this.newDatBtn.Size = new System.Drawing.Size(75, 23);
             this.newDatBtn.TabIndex = 81;
             this.newDatBtn.Text = "New dat";
-            this.toolTip1.SetToolTip(this.newDatBtn, Resources.newDatBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.newDatBtn, global::loaddatfsh.Properties.Resources.newDatBtn_ToolTip);
             this.newDatBtn.UseVisualStyleBackColor = true;
             this.newDatBtn.Click += new System.EventHandler(this.newDatbtn_Click);
             // 
@@ -879,7 +879,7 @@ namespace loaddatfsh
             this.closeDatBtn.Size = new System.Drawing.Size(75, 23);
             this.closeDatBtn.TabIndex = 84;
             this.closeDatBtn.Text = "Close dat";
-            this.toolTip1.SetToolTip(this.closeDatBtn, Resources.closeDatBtn_ToolTip);
+            this.toolTip1.SetToolTip(this.closeDatBtn, global::loaddatfsh.Properties.Resources.closeDatBtn_ToolTip);
             this.closeDatBtn.UseVisualStyleBackColor = true;
             this.closeDatBtn.Click += new System.EventHandler(this.closeDatbtn_Click);
             // 
@@ -910,7 +910,7 @@ namespace loaddatfsh
             this.genNewInstCb.Size = new System.Drawing.Size(142, 17);
             this.genNewInstCb.TabIndex = 80;
             this.genNewInstCb.Text = "Generate new Instances";
-            this.toolTip1.SetToolTip(this.genNewInstCb, Resources.genNewInstCb_ToolTip);
+            this.toolTip1.SetToolTip(this.genNewInstCb, global::loaddatfsh.Properties.Resources.genNewInstCb_ToolTip);
             this.genNewInstCb.UseVisualStyleBackColor = true;
             this.genNewInstCb.CheckedChanged += new System.EventHandler(this.genNewInstcb_CheckedChanged);
             // 
@@ -925,7 +925,7 @@ namespace loaddatfsh
             this.compDatCb.Size = new System.Drawing.Size(120, 17);
             this.compDatCb.TabIndex = 84;
             this.compDatCb.Text = "Compress dat items ";
-            this.toolTip1.SetToolTip(this.compDatCb, Resources.compDatCb_ToolTip);
+            this.toolTip1.SetToolTip(this.compDatCb, global::loaddatfsh.Properties.Resources.compDatCb_ToolTip);
             this.compDatCb.UseVisualStyleBackColor = true;
             this.compDatCb.CheckedChanged += new System.EventHandler(this.compDatcb_CheckedChanged);
             // 
@@ -938,7 +938,7 @@ namespace loaddatfsh
             this.fshWriteCompCb.Size = new System.Drawing.Size(127, 17);
             this.fshWriteCompCb.TabIndex = 91;
             this.fshWriteCompCb.Text = "Fshwrite compression";
-            this.toolTip1.SetToolTip(this.fshWriteCompCb, Resources.fshWriteCompCb_ToolTip);
+            this.toolTip1.SetToolTip(this.fshWriteCompCb, global::loaddatfsh.Properties.Resources.fshWriteCompCb_ToolTip);
             this.fshWriteCompCb.UseVisualStyleBackColor = true;
             this.fshWriteCompCb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
             // 
@@ -1017,14 +1017,14 @@ namespace loaddatfsh
             this.Alphabtn.UseVisualStyleBackColor = true;
             this.Alphabtn.Click += new System.EventHandler(this.alphaBtn_Click);
             // 
-            // Alphabox
+            // alphaBox
             // 
-            this.Alphabox.AllowDrop = true;
-            this.Alphabox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Alphabox.Location = new System.Drawing.Point(282, 309);
-            this.Alphabox.Name = "Alphabox";
-            this.Alphabox.Size = new System.Drawing.Size(223, 20);
-            this.Alphabox.TabIndex = 87;
+            this.alphaBox.AllowDrop = true;
+            this.alphaBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.alphaBox.Location = new System.Drawing.Point(282, 309);
+            this.alphaBox.Name = "alphaBox";
+            this.alphaBox.Size = new System.Drawing.Size(223, 20);
+            this.alphaBox.TabIndex = 87;
             // 
             // bmpbtn
             // 
@@ -1054,7 +1054,7 @@ namespace loaddatfsh
             this.Controls.Add(this.alphaLbl);
             this.Controls.Add(this.bmpLbl);
             this.Controls.Add(this.Alphabtn);
-            this.Controls.Add(this.Alphabox);
+            this.Controls.Add(this.alphaBox);
             this.Controls.Add(this.bmpbtn);
             this.Controls.Add(this.bmpBox);
             this.Controls.Add(this.compDatCb);
@@ -1189,7 +1189,7 @@ namespace loaddatfsh
         private System.Windows.Forms.Label alphaLbl;
         private System.Windows.Forms.Label bmpLbl;
         private System.Windows.Forms.Button Alphabtn;
-        private System.Windows.Forms.TextBox Alphabox;
+        private System.Windows.Forms.TextBox alphaBox;
         private System.Windows.Forms.Button bmpbtn;
         private System.Windows.Forms.TextBox bmpBox;
         private System.Windows.Forms.CheckBox fshWriteCompCb;
