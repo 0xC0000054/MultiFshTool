@@ -79,7 +79,7 @@ namespace loaddatfsh
                                 BitmapEntry tempitem = tempimg.Bitmaps[0];
 
                                 fshFileName = filename;
-                                ClearFshlists();
+                                ClearandReset(true);
                                 if (origbmplist == null)
                                 {
                                     origbmplist = new List<Bitmap>();
@@ -870,9 +870,9 @@ namespace loaddatfsh
             for (int i = 0; i < image.Bitmaps.Count; i++)
             {
                 FSHDirEntry dir = image.GetDirectoryEntry(i);
-                FSHEntryHeader entryhead = image.GetEntryHeader(dir.offset);
+                EntryHeader entryhead = image.GetEntryHeader(dir.offset);
                 dirName[i] = Encoding.ASCII.GetString(dir.name);
-                fshSize[i] = entryhead.width.ToString(CultureInfo.CurrentCulture) + "x" + entryhead.height.ToString(CultureInfo.CurrentCulture);
+                fshSize[i] = entryhead.Width.ToString(CultureInfo.CurrentCulture) + "x" + entryhead.Height.ToString(CultureInfo.CurrentCulture);
             }
         }
         private void dirTxt_TextChanged(object sender, EventArgs e)
@@ -916,7 +916,7 @@ namespace loaddatfsh
 
                     try
                     {
-                        BitmapItem repBmp = new BitmapItem();
+                        BitmapEntry repBmp = new BitmapEntry();
                         Bitmap bmp = null;
                         bool bmploaded = false;
                         openBitmapDialog1.Multiselect = false;
@@ -1019,11 +1019,11 @@ namespace loaddatfsh
                             }
                             if ((dirTxt.Text.Length > 0) && dirTxt.Text.Length == 4)
                             {
-                                repBmp.SetDirName(dirTxt.Text);
+                                repBmp.DirName = dirTxt.Text;
                             }
                             else
                             {
-                                repBmp.SetDirName("FiSH");
+                                repBmp.DirName = "FiSH";
                             }
                             
                             curImage.Bitmaps.RemoveAt(listViewMain.SelectedItems[0].Index);
@@ -1203,17 +1203,17 @@ namespace loaddatfsh
                 {
                     if (bmps[i] != null && alphas[i] != null)
                     {
-                        BitmapItem mipitm = new BitmapItem();
+                        BitmapEntry mipitm = new BitmapEntry();
                         mipitm.Bitmap = bmps[i].Clone<Bitmap>();
                         mipitm.Alpha = alphas[i].Clone<Bitmap>();
 
                         if (!string.IsNullOrEmpty(item.DirName))
                         {
-                            mipitm.SetDirName(item.DirName);
+                            mipitm.DirName = item.DirName;
                         }
                         else
                         {
-                            mipitm.SetDirName("FiSH");
+                            mipitm.DirName = "FiSH";
                         }
                         
                         if (item.BmpType == FSHBmpType.DXT3 || item.BmpType == FSHBmpType.ThirtyTwoBit)
@@ -1760,7 +1760,6 @@ namespace loaddatfsh
 
                              if (alphaBox.Text.Length > 0 && File.Exists(alphaBox.Text))
                              {
-                                 ;
                                  bmpEntry.Alpha = new Bitmap(alphaBox.Text);
                                  if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                                  {
@@ -2179,10 +2178,6 @@ namespace loaddatfsh
             {
                 hdFshRadio.Enabled = hdBaseFshRadio.Enabled = false;
             }
-            else
-            {
-                hdFshRadio.Enabled = hdBaseFshRadio.Enabled = true;
-            }
         }
         private bool savedFshWriteCbValue;
         private void DisableFshWriteCheckBox(TabPage page)
@@ -2255,6 +2250,7 @@ namespace loaddatfsh
                 {
                     RefreshImageLists(); 
                     bmpEntry = curImage.Bitmaps[0];
+                    SetHdRadiosEnabled(bmpEntry);
                     listViewMain.Items[0].Selected = true;
                     tgiInstanceTxt.Text = string.Concat(instStr, endreg);
                     RefreshBmpType();
