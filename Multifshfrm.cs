@@ -918,10 +918,10 @@ namespace loaddatfsh
                     {
                         BitmapEntry repBmp = new BitmapEntry();
                         Bitmap bmp = null;
-                        bool bmploaded = false;
+                        bool bmpLoaded = false;
                         openBitmapDialog1.Multiselect = false;
-                        string alphamap = string.Empty;
-                        string bmpfilename = string.Empty; // holds the filename from the bmpBox TextBox or the OpenBitmapDialog 
+                        string alphaMap = string.Empty;
+                        string bmpFileName = string.Empty; // holds the filneame from the bmpBox TextBox or the OpenBitmapDialog 
 
                         if (bmpBox.Text.Length > 0 && File.Exists(bmpBox.Text))
                         {
@@ -929,8 +929,8 @@ namespace loaddatfsh
                                 if (CheckReplaceBitmapSize(bmp))
                                 {
                                     repBmp.Bitmap = bmp;
-                                    bmpfilename = bmpBox.Text;
-                                    bmploaded = true;
+                                    bmpFileName = bmpBox.Text;
+                                    bmpLoaded = true;
                                 }
                         }
                         else if (openBitmapDialog1.ShowDialog() == DialogResult.OK)
@@ -938,12 +938,12 @@ namespace loaddatfsh
                             if (!Path.GetFileNameWithoutExtension(openBitmapDialog1.FileName).Contains("_a"))
                             {
                                 bmp = new Bitmap(openBitmapDialog1.FileName);
-                                alphamap = Path.Combine(Path.GetDirectoryName(openBitmapDialog1.FileName), Path.GetFileNameWithoutExtension(openBitmapDialog1.FileName) + "_a" + Path.GetExtension(openBitmapDialog1.FileName));
+                                alphaMap = Path.Combine(Path.GetDirectoryName(openBitmapDialog1.FileName), Path.GetFileNameWithoutExtension(openBitmapDialog1.FileName) + "_a" + Path.GetExtension(openBitmapDialog1.FileName));
                                 if (CheckReplaceBitmapSize(bmp))
                                 {
                                     repBmp.Bitmap = bmp;
-                                    bmpfilename = openBitmapDialog1.FileName;
-                                    bmploaded = true;
+                                    bmpFileName = openBitmapDialog1.FileName;
+                                    bmpLoaded = true;
                                 }
                             }
                         }
@@ -952,14 +952,14 @@ namespace loaddatfsh
                             MessageBox.Show(this, Resources.repBmp_NewFileSelect_Error, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
-                        if (bmploaded)
+                        if (bmpLoaded)
                         {
 
                             if (alphaBox.Text.Length > 0 && File.Exists(alphaBox.Text))
                             {
                                 Bitmap alpha = new Bitmap(alphaBox.Text);
                                 repBmp.Alpha = alpha;
-                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpfilename).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                                 {
                                     repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
                                     fshTypeBox.SelectedIndex = 1;
@@ -970,11 +970,11 @@ namespace loaddatfsh
                                     fshTypeBox.SelectedIndex = 3;
                                 }
                             }
-                            else if (!string.IsNullOrEmpty(alphamap) && File.Exists(alphamap))
+                            else if (!string.IsNullOrEmpty(alphaMap) && File.Exists(alphaMap))
                             {
-                                Bitmap alpha = new Bitmap(alphamap);
+                                Bitmap alpha = new Bitmap(alphaMap);
                                 repBmp.Alpha = alpha;
-                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpfilename).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                                 {
                                     repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
                                     fshTypeBox.SelectedIndex = 1;
@@ -985,10 +985,10 @@ namespace loaddatfsh
                                     fshTypeBox.SelectedIndex = 3;
                                 }
                             }
-                            else if (Path.GetExtension(bmpfilename).Equals(".png", StringComparison.OrdinalIgnoreCase) && bmp.PixelFormat == PixelFormat.Format32bppArgb)
+                            else if (Path.GetExtension(bmpFileName).Equals(".png", StringComparison.OrdinalIgnoreCase) && bmp.PixelFormat == PixelFormat.Format32bppArgb)
                             {
                                 repBmp.Alpha = GetAlphafromPng(bmp);
-                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpfilename).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+                                if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                                 {
                                     repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
                                     fshTypeBox.SelectedIndex = 1;
@@ -1005,7 +1005,7 @@ namespace loaddatfsh
                                 {
                                     
                                     repBmp.Alpha = GenerateAlpha(bmp);
-                                    if (Checkhdimgsize(bmp) && Path.GetFileName(bmpfilename).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+                                    if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
                                     {
                                         repBmp.BmpType = FSHBmpType.TwentyFourBit;
                                         fshTypeBox.SelectedIndex = 0;
@@ -2584,40 +2584,57 @@ namespace loaddatfsh
         private string origInst = null;
         private bool loadedDat = false;
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Fsh")]
-        private void Load_Dat(string filename)
+        private void Load_Dat(string fileName)
         {
             try
             {
-                dat = new DatFile(filename);
+                dat = new DatFile(fileName);
                 datListView.Items.Clear();
                 ClearFshlists();
                 int fshnum = 0;
+                this.Cursor = Cursors.WaitCursor;
                 datListView.BeginUpdate();
-                for (int i = 0; i < dat.Indexes.Count; i++)
+                try
                 {
-                    DatIndex index = dat.Indexes[i]; 
-                    if (index.Type == fshTypeID)
+                    for (int i = 0; i < dat.Indexes.Count; i++)
                     {
-
-                        string istr = index.Instance.ToString("X8");
-                        if (istr.EndsWith("4") || istr.EndsWith("9") || istr.EndsWith("E"))
+                        DatIndex index = dat.Indexes[i];
+                        if (index.Type == fshTypeID)
                         {
-                            FshWrapper wrap = dat.LoadFile(index.Group, index.Instance);
 
-                            if (wrap.Image != null && wrap.Image.Bitmaps[0].Bitmap.Width >= 128 && wrap.Image.Bitmaps[0].Bitmap.Width >= 128)
+                            string istr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
+                            if (istr.EndsWith("4", StringComparison.Ordinal) || istr.EndsWith("9", StringComparison.Ordinal)
+                                || istr.EndsWith("E", StringComparison.Ordinal))
                             {
-                                fshnum++;
-                                ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString());
+                                try
+                                {
+                                    FshWrapper wrap = dat.LoadFile(index.Group, index.Instance);
 
-                                item1.SubItems.Add(index.Group.ToString("X8"));
-                                item1.SubItems.Add(index.Instance.ToString("X8"));
-                                item1.Tag = wrap;
-                                datListView.Items.Add(item1);
+                                    if (wrap.Image != null && wrap.Image.Bitmaps[0].Bitmap.Width >= 128 && wrap.Image.Bitmaps[0].Bitmap.Width >= 128)
+                                    {
+                                        fshnum++;
+                                        ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString(CultureInfo.CurrentCulture));
+
+                                        item1.SubItems.Add(index.Group.ToString("X8"));
+                                        item1.SubItems.Add(index.Instance.ToString("X8"));
+                                        item1.Tag = wrap;
+                                        datListView.Items.Add(item1);
+                                    }
+                                }
+                                catch (FormatException)
+                                {
+                                    // Invalid or unsupported file, skip it
+                                    continue;
+                                }
                             }
                         }
                     }
                 }
-                datListView.EndUpdate();
+                finally
+                {                    
+                    datListView.EndUpdate();
+                    this.Cursor = Cursors.Default;
+                }
 
                 if (datListView.Items.Count > 0)
                 {
@@ -2629,7 +2646,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(filename));
+                    string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(fileName));
                     MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     loadedDat = false;
                     ClearandReset(true);
@@ -2698,7 +2715,7 @@ namespace loaddatfsh
             for (int n = 0; n < checkdat.Indexes.Count; n++)
             {
                 DatIndex chkindex = checkdat.Indexes[n];
-                if (chkindex.Type == fshTypeID && chkindex.Group == group && chkindex.Flags != DatIndexFlags.New)
+                if (chkindex.Type == fshTypeID && chkindex.Group == group && chkindex.IndexState != DatIndexState.New)
                 {
                     if (chkindex.Instance == instance)
                     { 
@@ -2710,7 +2727,7 @@ namespace loaddatfsh
         /// <summary>
         /// Saves the new or modified dat
         /// </summary>
-        /// <param name="filename">The filename to save as</param>
+        /// <param name="fileName">The fileName to save as</param>
         private void SaveDat(string filename)
         {
             try
