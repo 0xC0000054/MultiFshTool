@@ -133,12 +133,10 @@ namespace loaddatfsh
             {
 
                 temp = new Bitmap(color.Width, color.Height, PixelFormat.Format32bppArgb);
-
                 
-                Rectangle tempRect = new Rectangle(0, 0, temp.Width, temp.Height);
                 BitmapData colordata = color.LockBits(new Rectangle(0, 0, color.Width, color.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
                 BitmapData alphadata = alpha.LockBits(new Rectangle(0, 0, alpha.Width, alpha.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-                BitmapData bdata = temp.LockBits(tempRect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+                BitmapData bdata = temp.LockBits(new Rectangle(0, 0, temp.Width, temp.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
                 unsafe
                 {
                     byte* clrdata = (byte*)(void*)colordata.Scan0;
@@ -171,7 +169,7 @@ namespace loaddatfsh
                 alpha.UnlockBits(alphadata);
                 temp.UnlockBits(bdata);
 
-                image = temp.Clone(tempRect, temp.PixelFormat);
+                image = temp.Clone<Bitmap>();
             }
             finally
             {
