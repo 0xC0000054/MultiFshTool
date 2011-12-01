@@ -2600,7 +2600,7 @@ namespace loaddatfsh
                 ClearFshlists();
                 int fshnum = 0;
                 this.Cursor = Cursors.WaitCursor;
-                datListView.BeginUpdate();
+                List<ListViewItem> items = new List<ListViewItem>(dat.Indexes.Count);
                 try
                 {
                     for (int i = 0; i < dat.Indexes.Count; i++)
@@ -2616,20 +2616,15 @@ namespace loaddatfsh
                             {
                                 try
                                 {
-                                    if (dat.CheckImageSize(index.Group, index.Instance))
+                                    if (dat.CheckImageSize(index))
                                     {
-                                        FshWrapper wrap = dat.LoadFile(index.Group, index.Instance);
+                                        fshnum++;
+                                        ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString(CultureInfo.CurrentCulture));
 
-                                        if (wrap.Image != null)
-                                        {
-                                            fshnum++;
-                                            ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString(CultureInfo.CurrentCulture));
+                                        item1.SubItems.Add(index.Group.ToString("X8"));
+                                        item1.SubItems.Add(index.Instance.ToString("X8"));
 
-                                            item1.SubItems.Add(index.Group.ToString("X8"));
-                                            item1.SubItems.Add(index.Instance.ToString("X8"));
-                                            item1.Tag = wrap;
-                                            datListView.Items.Add(item1);
-                                        } 
+                                        items.Add(item1);
                                     }
                                     else
                                     {
@@ -2647,9 +2642,14 @@ namespace loaddatfsh
                 }
                 finally
                 {                    
-                    datListView.EndUpdate();
                     this.Cursor = Cursors.Default;
                 }
+
+                items.TrimExcess();
+
+                datListView.Items.AddRange(items.ToArray());
+
+
 
                 if (datListView.Items.Count > 0)
                 {
@@ -2928,6 +2928,13 @@ namespace loaddatfsh
                     EndFormat_Refresh();
                     origInst = instance.Substring(0, 7);
 
+                    if (datListView.SelectedItems[0].Tag == null)
+                    {
+                        uint grp = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                        uint inst = uint.Parse(instance, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                        FshWrapper item = dat.LoadFile(grp, inst);
+                        datListView.SelectedItems[0].Tag  = item;
+                    }
 
                     FshWrapper fshitem = datListView.SelectedItems[0].Tag as FshWrapper;
                     if (fshitem.Compressed)
@@ -2996,6 +3003,7 @@ namespace loaddatfsh
             if (datListView.Items.Count > 0)
             {
                 datListView.Items.Clear();
+                fshWriteCompCb.Enabled = true;
             }
             if (clearLoadedFshFiles)
             {
