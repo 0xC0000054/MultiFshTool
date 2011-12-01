@@ -1918,7 +1918,7 @@ namespace loaddatfsh
 
         private void newfshbtn_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, false) == true)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
             {
                 e.Effect = DragDropEffects.Copy;
             }
@@ -2594,10 +2594,10 @@ namespace loaddatfsh
         private void Load_Dat(string fileName)
         {
             try
-            {
+            {                
+                ClearandReset(true);
                 dat = new DatFile(fileName);
                 datListView.Items.Clear();
-                ClearFshlists();
                 int fshnum = 0;
                 this.Cursor = Cursors.WaitCursor;
                 List<ListViewItem> items = new List<ListViewItem>(dat.Indexes.Count);
@@ -3187,8 +3187,6 @@ namespace loaddatfsh
                     datListView.Sorting = SortOrder.Ascending;
             }
 
-            // Call the sort method to manually sort.
-            datListView.Sort();
             // Set the ListViewItemSorter property to a new ListViewItemComparer
             // object.
             this.datListView.ListViewItemSorter = new ListViewItemComparer(e.Column,
@@ -3277,6 +3275,16 @@ namespace loaddatfsh
                 SetLoadedDatEnables();
 
             }
+        }
+
+        private void listViewMain_DragEnter(object sender, DragEventArgs e)
+        {
+            newfshbtn_DragEnter(sender, e);
+        }
+
+        private void listViewMain_DragDrop(object sender, DragEventArgs e)
+        {
+            newfshbtn_DragDrop(sender, e);
         }
 
     }
