@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace loaddatfsh
 {
@@ -31,13 +32,13 @@ namespace loaddatfsh
                 xsub = xsub.Substring(6, (xsub.Length - 6));
                 ysub = ysub.Substring(6, (ysub.Length - 6));
 
-                int numx = int.Parse(xsub);
-                returnVal = numx.CompareTo(int.Parse(ysub));
+                int numx = int.Parse(xsub, CultureInfo.InvariantCulture);
+                returnVal = numx.CompareTo(int.Parse(ysub, CultureInfo.InvariantCulture));
             }
             else
             {
                 returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
-                                       ((ListViewItem)y).SubItems[col].Text);
+                                       ((ListViewItem)y).SubItems[col].Text, StringComparison.OrdinalIgnoreCase);
             }
 
             // Determine whether the sort order is descending.
