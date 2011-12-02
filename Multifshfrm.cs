@@ -1,20 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
-using System.Text;
-using System.IO;
-using System.Windows.Forms;
-using System.Diagnostics;
-using FSHLib;
+using System.Drawing.Imaging;
 using System.Globalization;
-using loaddatfsh.Properties;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using FshDatIO;
+using FSHLib;
+using loaddatfsh.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace loaddatfsh
 {
@@ -34,6 +31,15 @@ namespace loaddatfsh
             this.mip8Fsh = null;
             this.bmpEntry = null;
             this.loadIsMip = false;
+
+            if (Type.GetType("Mono.Runtime") == null) // skip the Windows 7 code if we are on mono 
+            {
+                if (TaskbarManager.IsPlatformSupported)
+                {
+                    manager = TaskbarManager.Instance;
+                    manager.ApplicationId = "MultiFshTool";
+                } 
+            }
         }
         private string[] dirName;
         private string[] fshSize;
@@ -45,6 +51,8 @@ namespace loaddatfsh
         private FSHImageWrapper mip8Fsh;
         private BitmapEntry bmpEntry;
         private const uint fshTypeID = 0x7ab50e44U;
+        private TaskbarManager manager;
+        private JumpList jumpList;
 
         private void loadfsh_Click(object sender, EventArgs e)
         {
@@ -2600,10 +2608,16 @@ namespace loaddatfsh
                 datListView.Items.Clear();
                 int fshnum = 0;
                 this.Cursor = Cursors.WaitCursor;
-                List<ListViewItem> items = new List<ListViewItem>(dat.Indexes.Count);
+                if (manager != null)
+                {
+                    this.manager.SetProgressState(TaskbarProgressBarState.Normal);
+                } 
+                
+                int count = dat.Indexes.Count;
+                List<ListViewItem> items = new List<ListViewItem>(count);
                 try
                 {
-                    for (int i = 0; i < dat.Indexes.Count; i++)
+                    for (int i = 0; i < count; i++)
                     {
                         DatIndex index = dat.Indexes[i];
                         if (index.Type == fshTypeID)
@@ -2612,7 +2626,7 @@ namespace loaddatfsh
                             string istr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
                             if (istr.EndsWith("4", StringComparison.Ordinal) || istr.EndsWith("9", StringComparison.Ordinal)
                                 || istr.EndsWith("E", StringComparison.Ordinal) || istr.EndsWith("0", StringComparison.Ordinal) ||
-                                istr.EndsWith("5", StringComparison.Ordinal)  || istr.EndsWith("A", StringComparison.Ordinal))
+                                istr.EndsWith("5", StringComparison.Ordinal) || istr.EndsWith("A", StringComparison.Ordinal))
                             {
                                 try
                                 {
@@ -2638,11 +2652,20 @@ namespace loaddatfsh
                                 }
                             }
                         }
+
+                        if (manager != null)
+                        {
+                            manager.SetProgressValue(i, count);
+                        }
                     }
                 }
                 finally
-                {                    
+                {
                     this.Cursor = Cursors.Default;
+                    if (manager != null)
+                    {
+                        this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
+                    }
                 }
 
                 items.TrimExcess();
@@ -2670,6 +2693,7 @@ namespace loaddatfsh
             catch (Exception ex)
             {
                 MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClearandReset(true);
             }
         }
         private void loadDatbtn_Click(object sender, EventArgs e)
@@ -2679,6 +2703,7 @@ namespace loaddatfsh
                 if (openDatDialog1.ShowDialog() == DialogResult.OK)
                 {
                     Load_Dat(openDatDialog1.FileName);
+                    AddRecentFile(openDatDialog1.FileName);
                 }
             }
         }
@@ -2688,20 +2713,21 @@ namespace loaddatfsh
         /// </summary>
         /// <param name="inputdat">The dat file to build</param>
         private void RebuildDat(DatFile inputdat)
-        {
+        {                
+            uint group = uint.Parse(tgiGroupTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+
             if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null)
             {
-                uint group = uint.Parse(tgiGroupTxt.Text,NumberStyles.HexNumber);
                 uint[] instanceid = new uint[5];
                 FshWrapper[] fshwrap = new FshWrapper[5];
                 FSHImageWrapper[] fshimg = new FSHImageWrapper[5];
                 fshimg[0] = mip8Fsh; fshimg[1] = mip16Fsh; fshimg[2] = mip32Fsh;
                 fshimg[3] = mip64Fsh; fshimg[4] = curImage;
-                instanceid[0] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end8,NumberStyles.HexNumber);
-                instanceid[1] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber);
-                instanceid[2] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber);
-                instanceid[3] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber);
-                instanceid[4] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber);
+                instanceid[0] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                instanceid[1] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                instanceid[2] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                instanceid[3] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                instanceid[4] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                 if (inputdat == null)
                 {
                     dat = new DatFile();
@@ -2711,12 +2737,59 @@ namespace loaddatfsh
                 {
                     
                     fshwrap[i] = new FshWrapper(fshimg[i]);
-                    CheckInstance(inputdat, group, instanceid[i]);
-                        
-                    inputdat.Add(fshwrap[i], group, instanceid[i], compress_datmips);
+                    int index = CheckInstance(inputdat, group, instanceid[i]);
+
+                    if (index > 0)
+                    {
+                        inputdat.Insert(fshwrap[i], index, group, instanceid[i], compress_datmips);
+                    }
+                    else
+                    {
+                        inputdat.Add(fshwrap[i], group, instanceid[i], compress_datmips);
+                    }
                 }
                 DatRebuilt = true;
             }
+            else if (curImage != null) // the dat does not contain mipmaps
+            {
+                uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber);
+
+                FshWrapper wrap = new FshWrapper(curImage);
+
+                int index = CheckInstance(inputdat, group, instance);
+
+                if (index >= 0)
+                {
+                    inputdat.Insert(wrap, index, group, instance, compress_datmips);
+                }
+                else
+                {
+                    inputdat.Add(wrap, group, instance, compress_datmips);
+                }
+                DatRebuilt = true;
+            }
+        }
+
+        private bool CheckDatForMipMaps(string group, string instance)
+        {
+            uint groupID = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            uint instanceID = uint.Parse(instance.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+
+            try
+            {
+                return !dat.CheckImageSize(groupID, instanceID); // check if the next file is a mipmap
+            }
+            catch (DatFileException)
+            {
+            } 
+            
+            if (instance.EndsWith("0", StringComparison.Ordinal) || instance.EndsWith("5", StringComparison.Ordinal) || 
+                instance.EndsWith("A", StringComparison.OrdinalIgnoreCase))
+	        {
+                return false; // if the instance ends with 0, 5 or A there should not be mipmaps
+	        }
+
+            return true; 
         }
 
         /// <summary>
@@ -2725,7 +2798,7 @@ namespace loaddatfsh
         /// <param name="checkdat">The Dat to check</param>
         /// <param name="group">The group id to check</param>
         /// <param name="instance">The instance id to check</param>
-        private void CheckInstance(DatFile checkdat,uint group, uint instance)
+        private int CheckInstance(DatFile checkdat,uint group, uint instance)
         {
             for (int n = 0; n < checkdat.Indexes.Count; n++)
             {
@@ -2734,25 +2807,26 @@ namespace loaddatfsh
                 {
                     if (chkindex.Instance == instance)
                     { 
-                        checkdat.Remove(group, instance);
+                        return checkdat.Remove(group, instance); 
                     }
                 }
             }
+
+            return -1;
         }
         /// <summary>
         /// Saves the new or modified dat
         /// </summary>
         /// <param name="fileName">The fileName to save as</param>
-        private void SaveDat(string filename)
+        private void SaveDat(string fileName)
         {
             try
             {
-                dat.Save(filename);   
+                dat.Save(fileName);   
                 
                 datNameTxt.Text = Path.GetFileName(dat.FileName);
 
                 dat.Close();
-                dat = null;
             }
             catch (Exception ex)
             {
@@ -2760,6 +2834,7 @@ namespace loaddatfsh
             }
             finally
             {
+
                 if (!loadedDat && datListView.Items.Count == 0)
                 {
                     ClearandReset(true);
@@ -2770,6 +2845,7 @@ namespace loaddatfsh
                 }
             }
         }
+
         private void saveDatbtn_Click(object sender, EventArgs e)
         {
             if (dat == null)
@@ -2781,15 +2857,51 @@ namespace loaddatfsh
             {
                 compress_datmips = true; // compress the dat items
             }
-            if (!mipsbtn_clicked)
-            {
-                mipbtn_Click(sender, e);
-                RebuildDat(dat);
-            }
 
-            if (!genNewInstCb.Checked && !DatRebuilt)
+            if ((datListView.Items.Count > 0 && dat.IsDirty) || dat.Indexes.Count == 0)
             {
-                RebuildDat(dat);
+                if (!mipsbtn_clicked)
+                {
+                    if ((loadedDat && datListView.Items.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                    {
+                        RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
+                    }
+                    else
+                    {
+                        mipbtn_Click(sender, e);
+                        RebuildDat(dat);
+                    }
+                }
+
+                if (!genNewInstCb.Checked && !DatRebuilt)
+                {
+                    if ((loadedDat && datListView.Items.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                    {
+                        if (mip64Fsh != null)
+                        {
+                            mip64Fsh.Dispose();
+                            mip64Fsh = null;
+                        }
+                        if (mip32Fsh != null)
+                        {
+                            mip32Fsh.Dispose();
+                            mip32Fsh = null;
+                        }
+                        if (mip16Fsh != null)
+                        {
+                            mip16Fsh.Dispose();
+                            mip16Fsh = null;
+                        }
+                        if (mip8Fsh != null)
+                        {
+                            mip8Fsh.Dispose();
+                            mip8Fsh = null;
+                        }
+                        mipsbtn_clicked = false;
+                    }
+
+                    RebuildDat(dat);
+                } 
             }
            
             if (dat.Indexes.Count > 0)
@@ -2924,9 +3036,7 @@ namespace loaddatfsh
                     string instance = datListView.SelectedItems[0].SubItems[2].Text;
                     ClearFshlists();
                     tgiGroupTxt.Text = group;
-                    instStr = instance;
-                    EndFormat_Refresh();
-                    origInst = instance.Substring(0, 7);
+                    tgiInstanceTxt.Text = instance;
 
                     if (datListView.SelectedItems[0].Tag == null)
                     {
@@ -3287,5 +3397,28 @@ namespace loaddatfsh
             newfshbtn_DragDrop(sender, e);
         }
 
+        private void Multifshfrm_Shown(object sender, EventArgs e)
+        {
+            if (manager != null)
+            {
+                jumpList = JumpList.CreateJumpList();
+            }
+        }
+
+        private void AddRecentFile(string path)
+        {
+            if (jumpList != null)
+            {
+                using (JumpListLink link = new JumpListLink(System.Reflection.Assembly.GetExecutingAssembly().Location, Path.GetFileName(path)))
+                {
+                    link.Arguments = path;
+                    link.IconReference = new Microsoft.WindowsAPICodePack.Shell.IconReference("shell32.dll", 0);
+
+                    JumpListHelper.AddToRecent(link, manager.ApplicationId);
+                }
+
+                jumpList.Refresh();
+            } 
+        }
     }
 }

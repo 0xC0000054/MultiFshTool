@@ -1091,6 +1091,7 @@ namespace loaddatfsh
             this.Text = "Multi Fsh tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Multifshfrm_FormClosing);
             this.Load += new System.EventHandler(this.Multifshfrm_Load);
+            this.Shown += new System.EventHandler(this.Multifshfrm_Shown);
             this.bmpmanBox1.ResumeLayout(false);
             this.fshDefbox.ResumeLayout(false);
             this.fshDefbox.PerformLayout();
