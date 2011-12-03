@@ -457,17 +457,18 @@ namespace loaddatfsh
                 listview.Items.Add(blend);
             }
         }
-        private Bitmap Alphablend(BitmapEntry item)
+        private Bitmap Alphablend(BitmapEntry item, Size displaySize)
         { 
-            Bitmap blendbmp = new Bitmap(bmpEntry.Bitmap.Width, bmpEntry.Bitmap.Height);
+            Bitmap blendbmp = new Bitmap(displaySize.Width, displaySize.Height);
             using(Graphics g = Graphics.FromImage(blendbmp))
 	        {
                 using (HatchBrush brush = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.White, Color.FromArgb(192, 192, 192)))
                 {
 		            g.FillRectangle(brush, new Rectangle(0, 0, blendbmp.Width, blendbmp.Height));
                 }
-
-                g.DrawImageUnscaled(BlendBitmap.BlendBmp(bmpEntry), new Rectangle(0, 0, blendbmp.Width, blendbmp.Height)); 
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.DrawImage(BlendBitmap.BlendBmp(bmpEntry), new Rectangle(0, 0, blendbmp.Width, blendbmp.Height)); 
 	        }
             return blendbmp;
         }
@@ -760,7 +761,7 @@ namespace loaddatfsh
                     Reset24bitAlpha(bmpEntry);
                     bmplist.Images.Add(bmpEntry.Bitmap);
                     alphalist.Images.Add(bmpEntry.Alpha);
-                    blendlist.Images.Add(Alphablend(bmpEntry));
+                    blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
 
                 }
 
@@ -772,7 +773,7 @@ namespace loaddatfsh
                 Reset24bitAlpha(bmpEntry);
                 bmplist.Images.Add(bmpEntry.Bitmap);
                 alphalist.Images.Add(bmpEntry.Alpha);
-                blendlist.Images.Add(Alphablend(bmpEntry));
+                blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
             }
             RefreshDirectory(image);
             
@@ -834,7 +835,7 @@ namespace loaddatfsh
                     Reset24bitAlpha(bmpEntry);
                     BitmapList1.Images.Add(bmpEntry.Bitmap);
                     alphaList1.Images.Add(bmpEntry.Alpha);
-                    blendList1.Images.Add(Alphablend(bmpEntry));
+                    blendList1.Images.Add(Alphablend(bmpEntry, blendList1.ImageSize));
 
                 }
                   
@@ -846,7 +847,7 @@ namespace loaddatfsh
                 Reset24bitAlpha(bmpEntry);
                 BitmapList1.Images.Add(bmpEntry.Bitmap);
                 alphaList1.Images.Add(bmpEntry.Alpha);
-                blendList1.Images.Add(Alphablend(bmpEntry));
+                blendList1.Images.Add(Alphablend(bmpEntry, blendList1.ImageSize));
 
             } 
             
@@ -2594,9 +2595,8 @@ namespace loaddatfsh
         {
             try
             {                
-                ClearandReset(true);
+                ClearandReset(true);           
                 dat = new DatFile(fileName);
-                datListView.Items.Clear();
                 int fshnum = 0;
                 this.Cursor = Cursors.WaitCursor;
                 if (manager != null)
@@ -3109,6 +3109,11 @@ namespace loaddatfsh
             if (clearLoadedFshFiles)
             {
                 ClearFshlists();
+                listViewMain.Refresh();
+                listViewMip64.Refresh();
+                listViewMip32.Refresh();
+                listViewMip16.Refresh();
+                listViewMip8.Refresh();
                 mipsbtn_clicked = false;
                 if (curImage != null)
                 {
@@ -3158,6 +3163,8 @@ namespace loaddatfsh
                 hdBaseFshRadio.Enabled = true;
             }
         }
+
+
 
         private void Multifshfrm_FormClosing(object sender, FormClosingEventArgs e)
         {
