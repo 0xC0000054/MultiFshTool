@@ -1043,7 +1043,7 @@ namespace loaddatfsh
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally
                     {
@@ -1125,57 +1125,48 @@ namespace loaddatfsh
         /// <param name="mipsize">The size of the image</param>
         private void Temp_Mips(int mipsize)
         {
-            try
+            using (MemoryStream mstream = new MemoryStream())
             {
-                
-                using (MemoryStream mstream = new MemoryStream())
-                {
-                    switch (mipsize)
-                    {
-                        case 64:
-                            SaveFsh(mstream, mip64Fsh);
-                            mip64Fsh = new FSHImageWrapper(mstream);
-                            break;
-                        case 32:
-                            SaveFsh(mstream, mip32Fsh);
-                            mip32Fsh = new FSHImageWrapper(mstream);
-                            break;
-                        case 16:
-                            SaveFsh(mstream, mip16Fsh);
-                            mip16Fsh = new FSHImageWrapper(mstream);
-                            break;
-                        case 8:
-                            SaveFsh(mstream, mip8Fsh);
-                            mip8Fsh = new FSHImageWrapper(mstream);
-                            break;
-                    }
-                }
-
                 switch (mipsize)
-                { 
+                {
                     case 64:
-                        RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+                        SaveFsh(mstream, mip64Fsh);
+                        mip64Fsh = new FSHImageWrapper(mstream);
                         break;
                     case 32:
-                        RefreshMipImageList(mip32Fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+                        SaveFsh(mstream, mip32Fsh);
+                        mip32Fsh = new FSHImageWrapper(mstream);
                         break;
                     case 16:
-                        RefreshMipImageList(mip16Fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+                        SaveFsh(mstream, mip16Fsh);
+                        mip16Fsh = new FSHImageWrapper(mstream);
                         break;
                     case 8:
-                        RefreshMipImageList(mip8Fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+                        SaveFsh(mstream, mip8Fsh);
+                        mip8Fsh = new FSHImageWrapper(mstream);
                         break;
                 }
-                if (tabControl1.SelectedTab != Maintab)
-                {
-                    RefreshBmpType();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, this.Text);
             }
 
+            switch (mipsize)
+            { 
+                case 64:
+                    RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+                    break;
+                case 32:
+                    RefreshMipImageList(mip32Fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+                    break;
+                case 16:
+                    RefreshMipImageList(mip16Fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+                    break;
+                case 8:
+                    RefreshMipImageList(mip8Fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+                    break;
+            }
+            if (tabControl1.SelectedTab != Maintab)
+            {
+                RefreshBmpType();
+            }
         }
         /// <summary>
         /// Creates the mip thumbnail using Graphics.DrawImage
