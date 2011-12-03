@@ -708,6 +708,7 @@ namespace loaddatfsh
                                     {
                                         Temp_fsh();
                                         mipbtn_Click(null, null);
+                                        listViewMain.Items[0].Selected = true;
                                     }
                                 } 
                             }
@@ -1895,6 +1896,7 @@ namespace loaddatfsh
                                  {
                                      Temp_fsh();
                                      mipbtn_Click(null, null);
+                                     listViewMain.Items[0].Selected = true;
                                  }
                              } 
                          }
