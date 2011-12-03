@@ -3051,7 +3051,10 @@ namespace loaddatfsh
  
                         curImage = fshitem.Image.Clone();
                         RefreshImageLists();
-                        tabControl1.SelectedTab = Maintab;
+                        if (tabControl1.SelectedTab != Maintab)
+                        {
+                            tabControl1.SelectedTab = Maintab;
+                        }
                         
                         switch (tempEntry.BmpType)
                         {
@@ -3069,8 +3072,8 @@ namespace loaddatfsh
                                 break;
                         }
                         SetHdRadiosEnabled(tempEntry);
-                           
-                        
+
+                        listViewMain.Items[0].Selected = true;
                     }
 
                 }
