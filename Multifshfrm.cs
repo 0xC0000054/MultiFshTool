@@ -2602,7 +2602,8 @@ namespace loaddatfsh
             }
             finally
             {
-                BeginInvoke((SetDatImageList)delegate(ListViewItem[] itemArray)
+                // Add the items to the list on the UI thread.
+                base.BeginInvoke((SetDatImageList)delegate(ListViewItem[] itemArray)
                 {
                     datListView.Items.AddRange(itemArray);
 
