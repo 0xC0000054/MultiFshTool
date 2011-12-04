@@ -3391,7 +3391,7 @@ namespace loaddatfsh
                 string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
                 using (JumpListLink link = new JumpListLink(exePath, Path.GetFileName(path)))
                 {
-                    link.Arguments = "\"" + path + "\"";
+                    link.Arguments = "\"" + path + "\""; // encase the path with quotes so it will work with spaces in the path
                     link.IconReference = new Microsoft.WindowsAPICodePack.Shell.IconReference("shell32.dll", 0);
                     link.WorkingDirectory = Path.GetDirectoryName(exePath);
 
