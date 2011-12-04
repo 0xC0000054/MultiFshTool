@@ -12,6 +12,7 @@ using FshDatIO;
 using FSHLib;
 using loaddatfsh.Properties;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Threading;
 
 namespace loaddatfsh
 {
@@ -2085,49 +2086,6 @@ namespace loaddatfsh
             }
             //this.Text += string.Concat(" ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
             datNameTxt.Text = Resources.NoDatLoadedText;
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length > 0)
-            {
-                try
-                {          
-                    int pngcnt = CountPngArgs(args);
-                    List<string> pnglist = null;
-
-                    for (int i = 0; i < args.Length; i++)
-                    {
-                        FileInfo fi = new FileInfo(args[i]);
-                        if (fi.Exists)
-                        {
-                            if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
-                            {
-                                Load_Fsh(fi.FullName);
-                                break; // exit the loop if a fsh or dat file has been loaded
-                            }
-                            else if (fi.Extension.Equals(".png", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (pnglist == null)
-                                {
-                                    pnglist = new List<string>();
-                                }
-                                pnglist.Add(fi.FullName);
-                                if (pnglist.Count == pngcnt)
-                                {
-                                    NewFsh(pnglist);
-                                }
-                            }
-                            else if (fi.Extension.Equals(".dat", StringComparison.OrdinalIgnoreCase))
-                            {
-                                Load_Dat(fi.FullName);
-                                break;
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
         }
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
@@ -2588,6 +2546,93 @@ namespace loaddatfsh
             blend16Mip.Images.Clear();
             blend8Mip.Images.Clear();
         }
+
+        delegate void SetDatImageList(ListViewItem[] items);
+        /// <summary>
+        /// Loads the images from the DatFile, this is run on a background thread.
+        /// </summary>
+        private void LoadDatImpl()
+        {
+            int fshnum = 0;
+            int count = dat.Indexes.Count;
+            List<ListViewItem> items = new List<ListViewItem>(count);
+            try
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    DatIndex index = dat.Indexes[i];
+                    if (index.Type == fshTypeID)
+                    {
+
+                        string istr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
+                        if (istr.EndsWith("4", StringComparison.Ordinal) || istr.EndsWith("9", StringComparison.Ordinal)
+                            || istr.EndsWith("E", StringComparison.Ordinal) || istr.EndsWith("0", StringComparison.Ordinal) ||
+                            istr.EndsWith("5", StringComparison.Ordinal) || istr.EndsWith("A", StringComparison.Ordinal))
+                        {
+                            try
+                            {
+                                if (dat.CheckImageSize(index))
+                                {
+                                    fshnum++;
+                                    ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString(CultureInfo.CurrentCulture));
+
+                                    item1.SubItems.Add(index.Group.ToString("X8"));
+                                    item1.SubItems.Add(index.Instance.ToString("X8"));
+
+                                    items.Add(item1);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                            catch (FormatException)
+                            {
+                                // Invalid or unsupported file, skip it
+                                continue;
+                            }
+                        }
+                    }
+
+                    if (manager != null)
+                    {
+                        manager.SetProgressValue(i, count);
+                    }
+                }
+            }
+            finally
+            {
+                BeginInvoke((SetDatImageList)delegate(ListViewItem[] itemArray)
+                {
+                    datListView.Items.AddRange(itemArray);
+
+                    if (datListView.Items.Count > 0)
+                    {
+                        loadedDat = true;
+                        DatRebuilt = false;
+                        SetLoadedDatEnables();
+                        datListView.Items[0].Selected = true;
+                        datNameTxt.Text = Path.GetFileName(dat.FileName);
+                    }
+                    else
+                    {
+                        string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
+                        MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        loadedDat = false;
+                        ClearandReset(true);
+                    }
+                    this.Cursor = Cursors.Default;
+                    if (manager != null)
+                    {
+                        this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
+                    }
+                }, new object[] { items.ToArray() });
+
+            }
+           
+        }
+
+        private Thread datLoadThread;
         private DatFile dat = null;
         private bool compress_datmips = false;
         private string origInst = null;
@@ -2599,89 +2644,18 @@ namespace loaddatfsh
             {                
                 ClearandReset(true);           
                 dat = new DatFile(fileName);
-                int fshnum = 0;
                 this.Cursor = Cursors.WaitCursor;
                 if (manager != null)
                 {
                     this.manager.SetProgressState(TaskbarProgressBarState.Normal);
-                } 
+                }
+                datLoadThread = new Thread(new ThreadStart(LoadDatImpl)) { IsBackground = true, Priority = ThreadPriority.AboveNormal };
+                datLoadThread.Start();
+                while (!datLoadThread.IsAlive) ; 
+
+                datLoadThread.Join();
+                datLoadThread = null;
                 
-                int count = dat.Indexes.Count;
-                List<ListViewItem> items = new List<ListViewItem>(count);
-                try
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        DatIndex index = dat.Indexes[i];
-                        if (index.Type == fshTypeID)
-                        {
-
-                            string istr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
-                            if (istr.EndsWith("4", StringComparison.Ordinal) || istr.EndsWith("9", StringComparison.Ordinal)
-                                || istr.EndsWith("E", StringComparison.Ordinal) || istr.EndsWith("0", StringComparison.Ordinal) ||
-                                istr.EndsWith("5", StringComparison.Ordinal) || istr.EndsWith("A", StringComparison.Ordinal))
-                            {
-                                try
-                                {
-                                    if (dat.CheckImageSize(index))
-                                    {
-                                        fshnum++;
-                                        ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString(CultureInfo.CurrentCulture));
-
-                                        item1.SubItems.Add(index.Group.ToString("X8"));
-                                        item1.SubItems.Add(index.Instance.ToString("X8"));
-
-                                        items.Add(item1);
-                                    }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                }
-                                catch (FormatException)
-                                {
-                                    // Invalid or unsupported file, skip it
-                                    continue;
-                                }
-                            }
-                        }
-
-                        if (manager != null)
-                        {
-                            manager.SetProgressValue(i, count);
-                        }
-                    }
-                }
-                finally
-                {
-                    this.Cursor = Cursors.Default;
-                    if (manager != null)
-                    {
-                        this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
-                    }
-                }
-
-                items.TrimExcess();
-
-                datListView.Items.AddRange(items.ToArray());
-
-
-
-                if (datListView.Items.Count > 0)
-                {
-                    loadedDat = true;
-                    DatRebuilt = false;
-                    SetLoadedDatEnables();
-                    datListView.Items[0].Selected = true;
-                    datNameTxt.Text = Path.GetFileName(dat.FileName);
-                }
-                else
-                {
-                    string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(fileName));
-                    MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    loadedDat = false;
-                    ClearandReset(true);
-                }
             }
             catch (Exception ex)
             {
@@ -3406,22 +3380,74 @@ namespace loaddatfsh
             {
                 jumpList = JumpList.CreateJumpList();
             }
+
+            ProcessCommandLineArguments();
         }
 
         private void AddRecentFile(string path)
         {
             if (jumpList != null)
             {
-                using (JumpListLink link = new JumpListLink(System.Reflection.Assembly.GetExecutingAssembly().Location, Path.GetFileName(path)))
+                string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                using (JumpListLink link = new JumpListLink(exePath, Path.GetFileName(path)))
                 {
-                    link.Arguments = path;
+                    link.Arguments = "\"" + path + "\"";
                     link.IconReference = new Microsoft.WindowsAPICodePack.Shell.IconReference("shell32.dll", 0);
+                    link.WorkingDirectory = Path.GetDirectoryName(exePath);
 
                     JumpListHelper.AddToRecent(link, manager.ApplicationId);
                 }
 
                 jumpList.Refresh();
             } 
+        }
+
+        private void ProcessCommandLineArguments()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 0)
+            {
+                try
+                {                    
+                    Application.DoEvents(); // finish loading the form before we read the command line arguments
+
+                    int pngcnt = CountPngArgs(args);
+                    List<string> pnglist = null;
+                    for (int i = 0; i < args.Length; i++)
+                    {
+                        FileInfo fi = new FileInfo(args[i]);
+                        if (fi.Exists)
+                        {
+                            if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                            {
+                                Load_Fsh(fi.FullName);
+                                break; // exit the loop if a fsh or dat file has been loaded
+                            }
+                            else if (fi.Extension.Equals(".png", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (pnglist == null)
+                                {
+                                    pnglist = new List<string>();
+                                }
+                                pnglist.Add(fi.FullName);
+                                if (pnglist.Count == pngcnt)
+                                {
+                                    NewFsh(pnglist);
+                                }
+                            }
+                            else if (fi.Extension.Equals(".dat", StringComparison.OrdinalIgnoreCase))
+                            {
+                                Load_Dat(fi.FullName);
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
