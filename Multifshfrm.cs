@@ -2547,7 +2547,6 @@ namespace loaddatfsh
             blend8Mip.Images.Clear();
         }
 
-        private Thread datLoadThread;
         private DatFile dat = null;
         private bool compress_datmips = false;
         private string origInst = null;
@@ -2575,10 +2574,10 @@ namespace loaddatfsh
                         if (index.Type == fshTypeID)
                         {
 
-                            string istr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
-                            if (istr.EndsWith("4", StringComparison.Ordinal) || istr.EndsWith("9", StringComparison.Ordinal)
-                                || istr.EndsWith("E", StringComparison.Ordinal) || istr.EndsWith("0", StringComparison.Ordinal) ||
-                                istr.EndsWith("5", StringComparison.Ordinal) || istr.EndsWith("A", StringComparison.Ordinal))
+                            string iStr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
+                            if (iStr.EndsWith("4", StringComparison.Ordinal) || iStr.EndsWith("9", StringComparison.Ordinal)
+                                || iStr.EndsWith("E", StringComparison.Ordinal) || iStr.EndsWith("0", StringComparison.Ordinal) ||
+                                iStr.EndsWith("5", StringComparison.Ordinal) || iStr.EndsWith("A", StringComparison.Ordinal))
                             {
                                 try
                                 {
@@ -2587,14 +2586,14 @@ namespace loaddatfsh
                                         fshnum++;
                                         ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshnum.ToString(CultureInfo.CurrentCulture));
 
-                                        item1.SubItems.Add(index.Group.ToString("X8"));
-                                        item1.SubItems.Add(index.Instance.ToString("X8"));
+                                        item1.SubItems.Add(index.Group.ToString("X8", CultureInfo.InvariantCulture));
+                                        item1.SubItems.Add(iStr);
 
                                         items.Add(item1);
                                     }
                                     else
                                     {
-                                        continue;
+                                        continue; // skip the images that are 64x64 or smaller
                                     }
                                 }
                                 catch (FormatException)
