@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Windows.Forms;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace loaddatfsh
 {
     // Implements the manual sorting of items by columns.
-    class ListViewItemComparer : IComparer
+    class ListViewItemComparer : IComparer<ListViewItem>
     {
         private int col;
         private SortOrder order;
@@ -22,13 +23,14 @@ namespace loaddatfsh
             numsort = (column == 0); // is the column number zero
             this.order = order;
         }
-        public int Compare(object x, object y)
+
+        public int Compare(ListViewItem x, ListViewItem y)
         {
             int returnVal = -1;
             if (numsort)
             {
-                string xsub = ((ListViewItem)x).Text;
-                string ysub = ((ListViewItem)y).Text;
+                string xsub = x.Text;
+                string ysub = y.Text;
                 xsub = xsub.Substring(6, (xsub.Length - 6));
                 ysub = ysub.Substring(6, (ysub.Length - 6));
 
@@ -37,8 +39,8 @@ namespace loaddatfsh
             }
             else
             {
-                returnVal = String.Compare(((ListViewItem)x).SubItems[col].Text,
-                                       ((ListViewItem)y).SubItems[col].Text, StringComparison.OrdinalIgnoreCase);
+                returnVal = String.Compare(x.SubItems[col].Text,
+                                       y.SubItems[col].Text, StringComparison.OrdinalIgnoreCase);
             }
 
             // Determine whether the sort order is descending.
