@@ -273,7 +273,7 @@ namespace loaddatfsh
         /// </summary>
         private void SetLoadedDatIsDirty()
         {
-            if (dat != null && datListView.SelectedItems.Count > 0)
+            if (dat != null && datListView.SelectedIndices.Count > 0)
             {
                 if (!dat.IsDirty)
                 {
@@ -1438,7 +1438,7 @@ namespace loaddatfsh
                         curImage.IsCompressed = false;
                     }
 
-                    if (!loadedDat && datListView.Items.Count == 0)
+                    if (!loadedDat && datListViewItems.Count == 0)
                     {
                         if (!mipsbtn_clicked)
                         {
@@ -1610,11 +1610,12 @@ namespace loaddatfsh
                         }
 
                     }
-                    else if (loadedDat && datListView.SelectedItems.Count > 0)
+                    else if (loadedDat && datListView.SelectedIndices.Count > 0)
                     {
                         if (!string.IsNullOrEmpty(dat.FileName))
                         {
-                            ListViewItem item = datListView.SelectedItems[0];
+                            int index = datListView.SelectedIndices[0];
+                            ListViewItem item = datListViewItems[index];
                             string fshname = Path.Combine(Path.GetDirectoryName(dat.FileName), "0x" + item.SubItems[2].Text);
 
                             string name = string.Concat(fshname, bitmapnum, addtofilename, ".png");
@@ -2551,6 +2552,7 @@ namespace loaddatfsh
         private bool compress_datmips = false;
         private string origInst = null;
         private bool loadedDat = false;
+        private List<ListViewItem> datListViewItems = new List<ListViewItem>(); 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Fsh")]
         private void Load_Dat(string fileName)
         {
@@ -2565,7 +2567,7 @@ namespace loaddatfsh
                 }
                 int fshnum = 0;
                 int count = dat.Indexes.Count;
-                List<ListViewItem> items = new List<ListViewItem>(count);
+                datListViewItems = new List<ListViewItem>(count);
                 try
                 {
                     for (int i = 0; i < count; i++)
@@ -2589,7 +2591,7 @@ namespace loaddatfsh
                                         item1.SubItems.Add(index.Group.ToString("X8", CultureInfo.InvariantCulture));
                                         item1.SubItems.Add(iStr);
 
-                                        items.Add(item1);
+                                        datListViewItems.Add(item1);
                                     }
                                     else
                                     {
@@ -2619,14 +2621,15 @@ namespace loaddatfsh
                     }
                 }
 
-                datListView.Items.AddRange(items.ToArray());
 
-                if (datListView.Items.Count > 0)
-                {
+                if (datListViewItems.Count > 0)
+                {               
+                    datListView.VirtualListSize = datListViewItems.Count;
+
                     loadedDat = true;
                     DatRebuilt = false;
                     SetLoadedDatEnables();
-                    datListView.Items[0].Selected = true;
+                    datListView.SelectedIndices.Add(0);
                     datNameTxt.Text = Path.GetFileName(dat.FileName);
                 }
                 else
@@ -2782,7 +2785,7 @@ namespace loaddatfsh
             finally
             {
 
-                if (!loadedDat && datListView.Items.Count == 0)
+                if (!loadedDat && datListViewItems.Count == 0)
                 {
                     ClearandReset(true);
                 }
@@ -2805,11 +2808,11 @@ namespace loaddatfsh
                 compress_datmips = true; // compress the dat items
             }
 
-            if ((datListView.Items.Count > 0 && dat.IsDirty) || dat.Indexes.Count == 0)
+            if ((datListViewItems.Count > 0 && dat.IsDirty) || dat.Indexes.Count == 0)
             {
                 if (!mipsbtn_clicked)
                 {
-                    if ((loadedDat && datListView.Items.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                    if ((loadedDat && datListViewItems.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
                     {
                         RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
                     }
@@ -2822,7 +2825,7 @@ namespace loaddatfsh
 
                 if (!genNewInstCb.Checked && !DatRebuilt)
                 {
-                    if ((loadedDat && datListView.Items.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                    if ((loadedDat && datListViewItems.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
                     {
                         if (mip64Fsh != null)
                         {
@@ -2853,7 +2856,7 @@ namespace loaddatfsh
            
             if (dat.Indexes.Count > 0)
             {
-                if (!loadedDat && datListView.Items.Count == 0)
+                if (!loadedDat && datListViewItems.Count == 0)
                 {
                     if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
                     {
@@ -2932,7 +2935,7 @@ namespace loaddatfsh
 
         private void newDatbtn_Click(object sender, EventArgs e)
         {
-           if (loadedDat && datListView.Items.Count > 0)
+           if (loadedDat && datListViewItems.Count > 0)
            {
                ClearandReset(true);
                loadedDat = false;
@@ -2975,25 +2978,26 @@ namespace loaddatfsh
         
         private void DatlistView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (datListView.SelectedItems.Count > 0)
+            if (datListView.SelectedIndices.Count > 0)
             {
                 try
                 {
-                    string group = datListView.SelectedItems[0].SubItems[1].Text;
-                    string instance = datListView.SelectedItems[0].SubItems[2].Text;
+                    ListViewItem listItem =  datListViewItems[datListView.SelectedIndices[0]];
+                    string group = listItem.SubItems[1].Text;
+                    string instance = listItem.SubItems[2].Text;
                     ClearFshlists();
                     tgiGroupTxt.Text = group;
                     tgiInstanceTxt.Text = instance;
 
-                    if (datListView.SelectedItems[0].Tag == null)
+                    if (listItem.Tag == null)
                     {
                         uint grp = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                         uint inst = uint.Parse(instance, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
                         FshWrapper item = dat.LoadFile(grp, inst);
-                        datListView.SelectedItems[0].Tag  = item;
+                        listItem.Tag  = item;
                     }
 
-                    FshWrapper fshitem = datListView.SelectedItems[0].Tag as FshWrapper;
+                    FshWrapper fshitem = listItem.Tag as FshWrapper;
                     if (fshitem.Compressed)
                     {
                         compress_datmips = true;
@@ -3060,9 +3064,10 @@ namespace loaddatfsh
                 dat = null;
                 datNameTxt.Text = Resources.NoDatLoadedText;
             }
-            if (datListView.Items.Count > 0)
-            {
-                datListView.Items.Clear();
+            if (datListViewItems.Count > 0)
+            {               
+                datListView.SelectedIndices.Clear();
+                datListViewItems.Clear();
                 fshWriteCompCb.Enabled = true;
             }
             if (clearLoadedFshFiles)
@@ -3235,6 +3240,13 @@ namespace loaddatfsh
                 e.DrawFocusRectangle();
             }
         }
+
+        private void SortVirtualItems(int column, SortOrder order)
+        {
+            
+        }
+
+
         private int sortColumn = -1;
         private void DatlistView_ColumnClick(object sender, ColumnClickEventArgs e)
         {
@@ -3256,8 +3268,7 @@ namespace loaddatfsh
 
             // Set the ListViewItemSorter property to a new ListViewItemComparer
             // object.
-            this.datListView.ListViewItemSorter = new ListViewItemComparer(e.Column,
-                                                              datListView.Sorting);
+            datListViewItems.Sort(new ListViewItemComparer(e.Column, datListView.Sorting));
         }
         private bool useorigimage = false;
         private bool fshWriteCbGenMips; // generate mips when the checkbox is changed.
@@ -3265,7 +3276,7 @@ namespace loaddatfsh
         {
             try
             {
-                if (curImage != null && curImage.Bitmaps.Count > 0 && origbmplist != null && !loadedDat && datListView.Items.Count == 0)
+                if (curImage != null && curImage.Bitmaps.Count > 0 && origbmplist != null && !loadedDat && datListViewItems.Count == 0)
                 {
                     useorigimage = true;
 
@@ -3427,6 +3438,14 @@ namespace loaddatfsh
                 {
                     MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+        }
+
+        private void datListView_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
+        {
+            if (datListViewItems.Count > 0)
+            {
+                e.Item = datListViewItems[e.ItemIndex];
             }
         }
     }

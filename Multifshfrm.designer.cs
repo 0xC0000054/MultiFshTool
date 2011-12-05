@@ -799,7 +799,9 @@ namespace loaddatfsh
             this.toolTip1.SetToolTip(this.datListView, global::loaddatfsh.Properties.Resources.datListView_ToolTip);
             this.datListView.UseCompatibleStateImageBehavior = false;
             this.datListView.View = System.Windows.Forms.View.Details;
+            this.datListView.VirtualMode = true;
             this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView_ColumnClick);
+            this.datListView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.datListView_RetrieveVirtualItem);
             this.datListView.SelectedIndexChanged += new System.EventHandler(this.DatlistView_SelectedIndexChanged);
             // 
             // NameHeader1
