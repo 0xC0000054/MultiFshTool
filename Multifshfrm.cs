@@ -3269,6 +3269,7 @@ namespace loaddatfsh
             // Set the ListViewItemSorter property to a new ListViewItemComparer
             // object.
             datListViewItems.Sort(new ListViewItemComparer(e.Column, datListView.Sorting));
+            this.datListView.Refresh();
         }
         private bool useorigimage = false;
         private bool fshWriteCbGenMips; // generate mips when the checkbox is changed.
