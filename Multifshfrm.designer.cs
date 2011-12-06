@@ -209,7 +209,7 @@ namespace loaddatfsh
             this.loadFshBtn.Name = "loadFshBtn";
             this.loadFshBtn.Size = new System.Drawing.Size(75, 23);
             this.loadFshBtn.TabIndex = 1;
-            this.loadFshBtn.Text = "Load Fsh...";
+            this.loadFshBtn.Text = "Load fsh...";
             this.toolTip1.SetToolTip(this.loadFshBtn, global::loaddatfsh.Properties.Resources.loadFshBtn_ToolTip);
             this.loadFshBtn.UseVisualStyleBackColor = true;
             this.loadFshBtn.Click += new System.EventHandler(this.loadfsh_Click);
@@ -448,10 +448,10 @@ namespace loaddatfsh
             this.regFshRadio.Checked = true;
             this.regFshRadio.Location = new System.Drawing.Point(7, 20);
             this.regFshRadio.Name = "regFshRadio";
-            this.regFshRadio.Size = new System.Drawing.Size(82, 17);
+            this.regFshRadio.Size = new System.Drawing.Size(79, 17);
             this.regFshRadio.TabIndex = 39;
             this.regFshRadio.TabStop = true;
-            this.regFshRadio.Text = "Regular Fsh";
+            this.regFshRadio.Text = "Regular fsh";
             this.regFshRadio.UseVisualStyleBackColor = true;
             this.regFshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
             // 
@@ -471,9 +471,9 @@ namespace loaddatfsh
             this.hdFshRadio.AutoSize = true;
             this.hdFshRadio.Location = new System.Drawing.Point(6, 42);
             this.hdFshRadio.Name = "hdFshRadio";
-            this.hdFshRadio.Size = new System.Drawing.Size(117, 17);
+            this.hdFshRadio.Size = new System.Drawing.Size(111, 17);
             this.hdFshRadio.TabIndex = 37;
-            this.hdFshRadio.Text = "High  Definition Fsh";
+            this.hdFshRadio.Text = "High Definition fsh";
             this.hdFshRadio.UseVisualStyleBackColor = true;
             this.hdFshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
             // 
@@ -912,9 +912,9 @@ namespace loaddatfsh
             this.genNewInstCb.AutoSize = true;
             this.genNewInstCb.Location = new System.Drawing.Point(3, 501);
             this.genNewInstCb.Name = "genNewInstCb";
-            this.genNewInstCb.Size = new System.Drawing.Size(142, 17);
+            this.genNewInstCb.Size = new System.Drawing.Size(141, 17);
             this.genNewInstCb.TabIndex = 80;
-            this.genNewInstCb.Text = "Generate new Instances";
+            this.genNewInstCb.Text = "Generate new instances";
             this.toolTip1.SetToolTip(this.genNewInstCb, global::loaddatfsh.Properties.Resources.genNewInstCb_ToolTip);
             this.genNewInstCb.UseVisualStyleBackColor = true;
             this.genNewInstCb.CheckedChanged += new System.EventHandler(this.genNewInstcb_CheckedChanged);
