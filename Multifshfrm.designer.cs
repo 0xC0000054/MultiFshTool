@@ -879,6 +879,7 @@ namespace loaddatfsh
             // 
             // closeDatBtn
             // 
+            this.closeDatBtn.Enabled = false;
             this.closeDatBtn.Location = new System.Drawing.Point(174, 13);
             this.closeDatBtn.Name = "closeDatBtn";
             this.closeDatBtn.Size = new System.Drawing.Size(75, 23);
