@@ -323,6 +323,7 @@ namespace loaddatfsh
             // 
             // remBtn
             // 
+            this.remBtn.Enabled = false;
             this.remBtn.Location = new System.Drawing.Point(169, 20);
             this.remBtn.Name = "remBtn";
             this.remBtn.Size = new System.Drawing.Size(75, 23);

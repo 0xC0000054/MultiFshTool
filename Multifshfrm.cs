@@ -2633,7 +2633,6 @@ namespace loaddatfsh
                 {
                     string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
                     MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    loadedDat = false;
                     ClearandReset(true);
                 }
             }
@@ -2935,7 +2934,6 @@ namespace loaddatfsh
            if (loadedDat && datListViewItems.Count > 0)
            {
                ClearandReset(true);
-               loadedDat = false;
            }
            else
            {
@@ -3066,7 +3064,8 @@ namespace loaddatfsh
                 datListView.SelectedIndices.Clear();          
                 datListView.VirtualListSize = 0;
                 datListViewItems.Clear();
-                fshWriteCompCb.Enabled = true;
+                loadedDat = false;
+                SetLoadedDatEnables();
             }
             if (clearLoadedFshFiles)
             {
@@ -3298,7 +3297,7 @@ namespace loaddatfsh
         /// </summary>
         private void SetLoadedDatEnables()
         { 
-            if (!loadedDat && datListView.Items.Count == 0)
+            if (!loadedDat && datListViewItems.Count == 0)
             {
                 if (!fshWriteCompCb.Enabled)
                 {
@@ -3348,9 +3347,6 @@ namespace loaddatfsh
                     dat.Close();
                 }
                 ClearandReset(true);
-                loadedDat = false;
-                SetLoadedDatEnables();
-
             }
         }
 
