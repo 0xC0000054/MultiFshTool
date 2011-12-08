@@ -409,7 +409,7 @@ namespace loaddatfsh
             this.newFshBtn.Name = "newFshBtn";
             this.newFshBtn.Size = new System.Drawing.Size(75, 23);
             this.newFshBtn.TabIndex = 66;
-            this.newFshBtn.Text = "New fsh";
+            this.newFshBtn.Text = "New fsh...";
             this.toolTip1.SetToolTip(this.newFshBtn, global::loaddatfsh.Properties.Resources.newFshBtn_ToolTip);
             this.newFshBtn.UseVisualStyleBackColor = true;
             this.newFshBtn.Click += new System.EventHandler(this.newFshBtn_Click);
