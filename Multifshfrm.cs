@@ -540,13 +540,17 @@ namespace loaddatfsh
 
                 if (Path.GetExtension(list[i]).Equals(".png", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(list[i]).Equals(".bmp", StringComparison.OrdinalIgnoreCase))
                 {
-                    using (Bitmap b = new Bitmap(list[i]))
+                    using (FileStream fs = new FileStream(list[i],FileMode.Open, FileAccess.Read, FileShare.None))
                     {
-                        if (b.Width < 128 && b.Height < 128)
+                        using (Bitmap b = new Bitmap(fs))
                         {
-                            list.Remove(list[i]);
+                            if (b.Width < 128 && b.Height < 128)
+                            {
+                                list.Remove(list[i]);
+                            }
                         }
                     }
+                    
                 }
                 else
                 {
@@ -1188,7 +1192,7 @@ namespace loaddatfsh
         /// Generates the mimmaps for the zoom levels
         /// </summary>
         /// <param name="index">the index of the bitmap to scale</param>
-        private void GenerateMips(int index)
+        private void GenerateMips(BitmapEntry item)
         {
             
             Bitmap[] bmps = new Bitmap[4];
@@ -1196,9 +1200,7 @@ namespace loaddatfsh
 
             try
             {
-                BitmapEntry item = curImage.Bitmaps[index];
                 // 0 = 8, 1 = 16, 2 = 32, 3 = 64
-
                 bmps[0] = GetBitmapThumbnail(item.Bitmap, 8, 8);
                 bmps[1] = GetBitmapThumbnail(item.Bitmap, 16, 16);
                 bmps[2] = GetBitmapThumbnail(item.Bitmap, 32, 32);
@@ -1241,10 +1243,6 @@ namespace loaddatfsh
                                 mip64Fsh = new FSHImageWrapper();
                             }
                             mip64Fsh.Bitmaps.Add(mipitm);
-                            if (index == (curImage.Bitmaps.Count - 1))
-                            {
-                                Temp_Mips(64);
-                            }
                         }
                         else if (mipitm.Bitmap.Width == 32 && mipitm.Bitmap.Height == 32)
                         {
@@ -1253,10 +1251,6 @@ namespace loaddatfsh
                                 mip32Fsh = new FSHImageWrapper();
                             }
                             mip32Fsh.Bitmaps.Add(mipitm);
-                            if (index == (curImage.Bitmaps.Count - 1))
-                            {
-                                Temp_Mips(32);
-                            }
                         }
                         else if (mipitm.Bitmap.Width == 16 && mipitm.Bitmap.Height == 16)
                         {
@@ -1265,10 +1259,6 @@ namespace loaddatfsh
                                 mip16Fsh = new FSHImageWrapper();
                             }
                             mip16Fsh.Bitmaps.Add(mipitm);
-                            if (index == (curImage.Bitmaps.Count - 1))
-                            {
-                                Temp_Mips(16);
-                            }
                         }
                         else if (mipitm.Bitmap.Width == 8 && mipitm.Bitmap.Height == 8)
                         {
@@ -1277,10 +1267,6 @@ namespace loaddatfsh
                                 mip8Fsh = new FSHImageWrapper();
                             }
                             mip8Fsh.Bitmaps.Add(mipitm);
-                            if (index == (curImage.Bitmaps.Count - 1))
-                            {
-                                Temp_Mips(8);
-                            }
                         }
                     }
                 }
@@ -1307,6 +1293,15 @@ namespace loaddatfsh
                 }
             }
         }
+
+        private void ReloadMips()
+        {
+            Temp_Mips(64);
+            Temp_Mips(32);
+            Temp_Mips(16);
+            Temp_Mips(8);
+        }
+
         private void mipbtn_Click(object sender, EventArgs e)
         {
             if ((curImage != null) && curImage.Bitmaps.Count >= 1)
@@ -1317,10 +1312,12 @@ namespace loaddatfsh
                     mip32Fsh = null;
                     mip16Fsh = null;
                     mip8Fsh = null;
-                    for (int b = 0; b < curImage.Bitmaps.Count; b++)
+                    foreach (BitmapEntry entry in curImage.Bitmaps)
                     {
-                        GenerateMips(b);
+                        GenerateMips(entry);
                     }
+                    ReloadMips();
+
                     RefreshDirectory(curImage);
                     mipsbtn_clicked = true;
                 }
