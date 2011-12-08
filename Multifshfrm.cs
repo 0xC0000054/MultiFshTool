@@ -3066,7 +3066,8 @@ namespace loaddatfsh
             }
             if (datListViewItems.Count > 0)
             {               
-                datListView.SelectedIndices.Clear();
+                datListView.SelectedIndices.Clear();          
+                datListView.VirtualListSize = 0;
                 datListViewItems.Clear();
                 fshWriteCompCb.Enabled = true;
             }
