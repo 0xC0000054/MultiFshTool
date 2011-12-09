@@ -162,6 +162,7 @@ namespace loaddatfsh
             this.alphaBox = new System.Windows.Forms.TextBox();
             this.bmpbtn = new System.Windows.Forms.Button();
             this.bmpBox = new System.Windows.Forms.TextBox();
+            this.loadDatWorker = new System.ComponentModel.BackgroundWorker();
             this.bmpmanBox1.SuspendLayout();
             this.fshDefbox.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -1052,6 +1053,14 @@ namespace loaddatfsh
             this.bmpBox.Size = new System.Drawing.Size(223, 20);
             this.bmpBox.TabIndex = 85;
             // 
+            // loadDatWorker
+            // 
+            this.loadDatWorker.WorkerReportsProgress = true;
+            this.loadDatWorker.WorkerSupportsCancellation = true;
+            this.loadDatWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.loadDatWorker_DoWork);
+            this.loadDatWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.loadDatWorker_ProgressChanged);
+            this.loadDatWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadDatWorker_RunWorkerCompleted);
+            // 
             // Multifshfrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1202,6 +1211,7 @@ namespace loaddatfsh
         private System.Windows.Forms.TextBox bmpBox;
         private System.Windows.Forms.CheckBox fshWriteCompCb;
         private System.Windows.Forms.Button closeDatBtn;
+        private System.ComponentModel.BackgroundWorker loadDatWorker;
     }
 }
 
