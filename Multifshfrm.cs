@@ -2904,6 +2904,8 @@ namespace loaddatfsh
 				regFshRadio.Checked = true;
 			}
 		}
+
+
 		
 		private void DatlistView_SelectedIndexChanged(object sender, EventArgs e)
 		{
@@ -2917,6 +2919,26 @@ namespace loaddatfsh
 					ClearFshlists();
 					tgiGroupTxt.Text = group;
 					tgiInstanceTxt.Text = instance;
+
+                      if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) ||
+                        !instance.EndsWith("A", StringComparison.Ordinal))
+                    {
+                        instStr = instance.Substring(0, 7);
+                        if (instance.EndsWith("4", StringComparison.Ordinal))
+                        {
+                            inst0_4Rdo.Checked = true;
+                        }
+                        else if (instance.EndsWith("9", StringComparison.Ordinal))
+                        {
+                            inst5_9Rdo.Checked = true;
+                        }
+                        else if (instance.EndsWith("E", StringComparison.Ordinal))
+                        {
+                            instA_ERdo.Checked = true;
+                        }
+                    }
+
+
 
 					if (listItem.Tag == null)
 					{
