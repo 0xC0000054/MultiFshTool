@@ -618,8 +618,10 @@ namespace loaddatfsh
 								{
 									origbmplist = new List<Bitmap>();
 								}
+
 								origbmplist.Add(bmp.Clone<Bitmap>());
-								addbmp.Bitmap = bmp.Clone<Bitmap>();
+								addbmp.Bitmap = bmp.Clone(PixelFormat.Format24bppRgb);
+
 								this.fshWriteCbGenMips = true;
 
 								if (File.Exists(alphaPath))
@@ -1763,7 +1765,7 @@ namespace loaddatfsh
 							 {
 								 alphaMap = Path.Combine(Path.GetDirectoryName(files[0]), Path.GetFileNameWithoutExtension(files[0]) + "_a" + Path.GetExtension(files[0]));
 							 }
-							 bmpEntry.Bitmap = bmp.Clone<Bitmap>();
+							 bmpEntry.Bitmap = bmp.Clone(PixelFormat.Format24bppRgb);
 
 							 if (alphaBox.Text.Length > 0 && File.Exists(alphaBox.Text))
 							 {
