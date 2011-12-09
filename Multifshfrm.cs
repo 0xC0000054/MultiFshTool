@@ -3076,6 +3076,7 @@ namespace loaddatfsh
 						origbmplist.Clear();
 					}
 				}
+                remBtn.Enabled = false;
 				hdFshRadio.Enabled = true;
 				hdBaseFshRadio.Enabled = true;
 			}
