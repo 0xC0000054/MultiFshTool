@@ -53,7 +53,7 @@
     </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>none</DebugType>
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -65,18 +65,26 @@
     <CodeAnalysisRuleSet>GlobalizationRules.ruleset</CodeAnalysisRuleSet>
     <NoWarn>
     </NoWarn>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FshDatIO">
+    <Reference Include="FshDatIO, Version=1.2.0.5, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\readfshdat\FshDatIO\bin\Release\FshDatIO.dll</HintPath>
     </Reference>
     <Reference Include="FSHLib, Version=0.3.1.32186, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Fshlib_vista\Fshlib_vista\FSHLib.dll</HintPath>
     </Reference>
-    <Reference Include="SuperSample, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Documents and Settings\Nicholas\My Documents\Visual Studio 2008\Projects\SuperSample\bin\Release\SuperSample.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAPICodePack">
+      <HintPath>..\..\..\Users\Nicholas\Desktop\Windows API Code Pack Self Extractor\Windows API Code Pack 1.1\binaries\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>..\..\..\Users\Nicholas\Desktop\Windows API Code Pack Self Extractor\Windows API Code Pack 1.1\binaries\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SuperSample">
+      <HintPath>..\..\..\Users\Nicholas\Documents\Visual Studio 2010\Projects\SuperSample\bin\Release\SuperSample.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -84,11 +92,14 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BlendBmp.cs" />
     <Compile Include="Fshwrite.cs" />
     <Compile Include="ICloneableExtensions.cs" />
+    <Compile Include="JumpListHelper.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="Multifshfrm.cs">
       <SubType>Form</SubType>
