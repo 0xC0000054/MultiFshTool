@@ -1738,8 +1738,8 @@ namespace loaddatfsh
 			{
 				curImage = new FSHImageWrapper();
 				tabControl1.SelectedTab = Maintab; 
-				ClearandReset(true);
 			}
+			ClearandReset(true);
 
 			if (bmpEntry != null)
 			{
@@ -2619,7 +2619,7 @@ namespace loaddatfsh
 					fshwrap[i] = new FshWrapper(fshimg[i]);
 					int index = CheckInstance(inputdat, group, instanceid[i]);
 
-					if (index > 0)
+					if (index >= 0)
 					{
 						inputdat.Insert(fshwrap[i], index, group, instanceid[i], compress_datmips);
 					}
@@ -3293,9 +3293,17 @@ namespace loaddatfsh
 		}
 
 		private void listViewMain_DragDrop(object sender, DragEventArgs e)
-		{
-			newfshbtn_DragDrop(sender, e);
-		}
+		{               
+            List<string> files = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop));
+            if (loadedDat && datListViewItems.Count > 0)
+            {
+                AddbtnFiles(files, false);
+            }
+            else
+            {
+                NewFsh(files);
+            }
+        }
 
 		private void Multifshfrm_Shown(object sender, EventArgs e)
 		{
