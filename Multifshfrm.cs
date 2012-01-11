@@ -3206,12 +3206,6 @@ namespace loaddatfsh
 			}
 		}
 
-		private void SortVirtualItems(int column, SortOrder order)
-		{
-			
-		}
-
-
 		private int sortColumn = -1;
 		private void DatlistView_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
