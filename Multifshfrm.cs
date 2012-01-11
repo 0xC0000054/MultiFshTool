@@ -2685,9 +2685,10 @@ namespace loaddatfsh
 		/// <param name="checkdat">The Dat to check</param>
 		/// <param name="group">The group id to check</param>
 		/// <param name="instance">The instance id to check</param>
-		private int CheckInstance(DatFile checkdat,uint group, uint instance)
+		private int CheckInstance(DatFile checkdat, uint group, uint instance)
 		{
-			for (int n = 0; n < checkdat.Indexes.Count; n++)
+            int count = checkdat.Indexes.Count;
+			for (int n = 0; n < count; n++)
 			{
 				DatIndex chkindex = checkdat.Indexes[n];
 				if (chkindex.Type == fshTypeID && chkindex.Group == group && chkindex.IndexState != DatIndexState.New)
