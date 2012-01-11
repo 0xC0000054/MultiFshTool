@@ -260,24 +260,24 @@ namespace loaddatfsh
                     ms.Write(BitConverter.GetBytes(bmplist.Count), 0, 4); // write the number of bitmaps in the list
 
                     ms.Write(Encoding.ASCII.GetBytes("G264"), 0, 4); // header directory id
-
-                    int fshlen = 16 + (8 * bmplist.Count); // fsh length
-                    for (int c = 0; c < bmplist.Count; c++)
+                    int count = bmplist.Count;
+                    int fshlen = 16 + (8 * count); // fsh length
+                    for (int i = 0; i < count; i++)
                     {
                         //write directory
                        // Debug.WriteLine("bmp = " + c.ToString() + " offset = " + fshlen.ToString());
-                        ms.Write(dir[c], 0, 4); // directory id
+                        ms.Write(dir[i], 0, 4); // directory id
                         ms.Write(BitConverter.GetBytes(fshlen), 0, 4); // Write the Entry offset 
 
                         fshlen += 16; // skip the entry header length
-                        int bmplen = GetBmpDataSize(bmplist[c], codelist[c]);
+                        int bmplen = GetBmpDataSize(bmplist[i], codelist[i]);
                         fshlen += bmplen; // skip the bitmap length
                     }
-                    for (int b = 0; b < bmplist.Count; b++)
+                    for (int i = 0; i < count; i++)
                     {
-                        Bitmap bmp = bmplist[b];
-                        Bitmap alpha = alphalist[b];
-                        int code = codelist[b];
+                        Bitmap bmp = bmplist[i];
+                        Bitmap alpha = alphalist[i];
+                        int code = codelist[i];
                         // write entry header
                         ms.Write(BitConverter.GetBytes(code), 0, 4); // write the Entry bitmap code
                         ms.Write(BitConverter.GetBytes((ushort)bmp.Width), 0, 2); // write width
@@ -289,24 +289,21 @@ namespace loaddatfsh
 
                         if (code == 0x60) //DXT1
                         {
-                            
                             Bitmap temp = BlendDXTBitmap(bmp, alpha);
-                            byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt1;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
                             flags |= (int)SquishCompFlags.kColourMetricPerceptual;
 
-                            data = CompressImage(temp, flags);
+                            byte[] data = CompressImage(temp, flags);
                             ms.Write(data, 0, data.Length);
                         }
                         else if (code == 0x61) // DXT3
                         {
                             Bitmap temp = BlendDXTBitmap(bmp, alpha);
-                            byte[] data = new byte[temp.Width * temp.Height * 4];
                             int flags = (int)SquishCompFlags.kDxt3;
                             flags |= (int)SquishCompFlags.kColourIterativeClusterFit;
                             flags |= (int)SquishCompFlags.kColourMetricPerceptual;
-                            data = CompressImage(temp, flags);
+                            byte[] data = CompressImage(temp, flags);
                             ms.Write(data, 0, data.Length);
                         }
 
