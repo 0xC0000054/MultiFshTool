@@ -222,7 +222,8 @@ namespace loaddatfsh
 				if (IsDXTFsh(image) && fshWriteCompCb.Checked)
 				{
 					Fshwrite fw = new Fshwrite();
-					for (int i = 0; i < image.Bitmaps.Count; i++)
+                    int count = image.Bitmaps.Count;
+					for (int i = 0; i < count; i++)
 					{
 						BitmapEntry bi = image.Bitmaps[i];
 						if ((bi.Bitmap != null && bi.Alpha != null) && bi.BmpType == FSHBmpType.DXT1 || bi.BmpType == FSHBmpType.DXT3)
@@ -408,10 +409,10 @@ namespace loaddatfsh
 			}
 			listview.LargeImageList = imglist;
 			listview.SmallImageList = imglist;
-
-			for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
+            int count = image.Bitmaps.Count;
+			for (int i = 0; i < count; i++)
 			{
-				ListViewItem alpha = new ListViewItem(Resources.BitmapNumberText + cnt.ToString(), cnt);
+				ListViewItem alpha = new ListViewItem(Resources.BitmapNumberText + i.ToString(), i);
 				listview.Items.Add(alpha);
 			}
 		}
@@ -430,10 +431,11 @@ namespace loaddatfsh
 			}
 			listview.LargeImageList = imglist;
 			listview.SmallImageList = imglist;
-		  
-			for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
-			{
-				ListViewItem alpha = new ListViewItem(Resources.AlphaNumberText + cnt.ToString(), cnt);
+
+            int count = image.Bitmaps.Count;
+            for (int i = 0; i < count; i++)
+            {
+				ListViewItem alpha = new ListViewItem(Resources.AlphaNumberText + i.ToString(), i);
 				listview.Items.Add(alpha);
 			}
 		}
@@ -450,11 +452,12 @@ namespace loaddatfsh
 				listview.Items.Clear();
 			}
 			listview.LargeImageList = imglist;
-			listview.SmallImageList = imglist; 
-		 
-			for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
+			listview.SmallImageList = imglist;
+            
+            int count = image.Bitmaps.Count;
+			for (int i = 0; i < count; i++)
 			{
-				ListViewItem blend = new ListViewItem(Resources.BlendNumberText + cnt.ToString(), cnt);
+				ListViewItem blend = new ListViewItem(Resources.BlendNumberText + i.ToString(), i);
 				listview.Items.Add(blend);
 			}
 		}
@@ -758,31 +761,32 @@ namespace loaddatfsh
 		{
 			bmplist.Images.Clear();
 			alphalist.Images.Clear();
-			blendlist.Images.Clear(); 
-			
-			if (image.Bitmaps.Count > 1)
-			{
+			blendlist.Images.Clear();
 
-				for (int cnt = 0; cnt < image.Bitmaps.Count; cnt++)
-				{
-					bmpEntry = image.Bitmaps[cnt];
-					Reset24bitAlpha(bmpEntry);
-					bmplist.Images.Add(bmpEntry.Bitmap);
-					alphalist.Images.Add(bmpEntry.Alpha);
-					blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
+            if (image.Bitmaps.Count > 1)
+            {
 
-				}
+                int count = image.Bitmaps.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    bmpEntry = image.Bitmaps[i];
+                    Reset24bitAlpha(bmpEntry);
+                    bmplist.Images.Add(bmpEntry.Bitmap);
+                    alphalist.Images.Add(bmpEntry.Alpha);
+                    blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
 
-			}
-			else
-			{
+                }
 
-				bmpEntry = image.Bitmaps[0];
-				Reset24bitAlpha(bmpEntry);
-				bmplist.Images.Add(bmpEntry.Bitmap);
-				alphalist.Images.Add(bmpEntry.Alpha);
-				blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
-			}
+            }
+            else
+            {
+
+                bmpEntry = image.Bitmaps[0];
+                Reset24bitAlpha(bmpEntry);
+                bmplist.Images.Add(bmpEntry.Bitmap);
+                alphalist.Images.Add(bmpEntry.Alpha);
+                blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
+            }
 			RefreshDirectory(image);
 			
 			list.BeginUpdate();
@@ -836,15 +840,15 @@ namespace loaddatfsh
 			{
 
 				remBtn.Enabled = true;
-				for (int cnt = 0; cnt < curImage.Bitmaps.Count; cnt++)
-				{
-					bmpEntry = curImage.Bitmaps[cnt];
+                int count = curImage.Bitmaps.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    bmpEntry = curImage.Bitmaps[i];
 
 					Reset24bitAlpha(bmpEntry);
 					BitmapList1.Images.Add(bmpEntry.Bitmap);
 					alphaList1.Images.Add(bmpEntry.Alpha);
 					blendList1.Images.Add(Alphablend(bmpEntry, blendList1.ImageSize));
-
 				}
 				  
 			}
@@ -882,9 +886,10 @@ namespace loaddatfsh
 		/// <param name="image">The input image</param>
 		private void RefreshDirectory(FSHImageWrapper image)
 		{
-			dirName = new string[image.Bitmaps.Count];
-			fshSize = new string[image.Bitmaps.Count];
-			for (int i = 0; i < image.Bitmaps.Count; i++)
+            int count = image.Bitmaps.Count;
+			dirName = new string[count];
+			fshSize = new string[count];
+			for (int i = 0; i < count; i++)
 			{
 				FSHDirEntry dir = image.GetDirectoryEntry(i);
 				EntryHeader entryhead = image.GetEntryHeader(dir.offset);
