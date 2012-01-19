@@ -219,35 +219,36 @@ namespace loaddatfsh
 		{
 			try
 			{
-				if (IsDXTFsh(image) && fshWriteCompCb.Checked)
-				{
-					Fshwrite fw = new Fshwrite();
-                    int count = image.Bitmaps.Count;
-					for (int i = 0; i < count; i++)
-					{
-						BitmapEntry bi = image.Bitmaps[i];
-						if ((bi.Bitmap != null && bi.Alpha != null) && bi.BmpType == FSHBmpType.DXT1 || bi.BmpType == FSHBmpType.DXT3)
-						{
-							if (useorigimage && origbmplist[i].Size == bi.Bitmap.Size)
-							{
-								fw.bmp.Add(origbmplist[i]);
-							}
-							else
-							{
-								fw.bmp.Add(bi.Bitmap);
-							}
-							fw.alpha.Add(bi.Alpha);
-							fw.dir.Add(Encoding.ASCII.GetBytes(bi.DirName));
-							fw.code.Add((int)bi.BmpType);
-						}
-					}
-					fw.WriteFsh(fs);
-				}
-				else
-				{
-					image.Save(fs);
-				}
-			}
+
+                bool fshWriteCompression = fshWriteCompCb.Checked;
+
+                if (IsDXTFsh(image) && fshWriteCompression && useOriginalImage)
+                {
+                    BitmapEntryCollection entries = image.Bitmaps;
+                    int count = entries.Count;
+                    using (FSHImageWrapper fsh = new FSHImageWrapper())
+                    {
+                        for (int i = 0; i < count; i++)
+                        {
+                            BitmapEntry item = entries[i];
+
+                            BitmapEntry entry = new BitmapEntry();
+                            entry.Bitmap = origbmplist[i].Clone(PixelFormat.Format24bppRgb);
+                            entry.Alpha = item.Alpha.Clone<Bitmap>();
+                            entry.BmpType = item.BmpType;
+                            entry.DirName = item.DirName;
+
+                            fsh.Bitmaps.Add(entry);
+                        }
+
+                        fsh.Save(fs, true);
+                    }
+                }
+                else
+                {
+                    image.Save(fs, fshWriteCompression);
+                }
+            }
 			catch (Exception)
 			{
 				throw;
@@ -258,7 +259,7 @@ namespace loaddatfsh
 		/// </summary>
 		/// <param name="image">The image to test</param>
 		/// <returns>True if successful otherwise false</returns>
-		private bool IsDXTFsh(FSHImageWrapper image)
+		private static bool IsDXTFsh(FSHImageWrapper image)
 		{
 			foreach (BitmapEntry item in image.Bitmaps)
 			{
@@ -466,13 +467,17 @@ namespace loaddatfsh
 			Bitmap blendbmp = new Bitmap(displaySize.Width, displaySize.Height);
 			using(Graphics g = Graphics.FromImage(blendbmp))
 			{
+                Rectangle rect = new Rectangle(0, 0, blendbmp.Width, blendbmp.Height);
 				using (HatchBrush brush = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.White, Color.FromArgb(192, 192, 192)))
 				{
-					g.FillRectangle(brush, new Rectangle(0, 0, blendbmp.Width, blendbmp.Height));
+					g.FillRectangle(brush, rect);
 				}
 				g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 				g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-				g.DrawImage(BlendBitmap.BlendBmp(bmpEntry), new Rectangle(0, 0, blendbmp.Width, blendbmp.Height)); 
+                using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
+                { 
+                    g.DrawImage(blended, rect);
+                }
 			}
 			return blendbmp;
 		}
@@ -1450,7 +1455,7 @@ namespace loaddatfsh
 						}
 						if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null)
 						{
-							string filepath = Path.Combine(Path.GetDirectoryName(saveFshDialog1.FileName) + Path.DirectorySeparatorChar, Path.GetFileName(saveFshDialog1.FileName));
+							string filepath = Path.Combine(Path.GetDirectoryName(saveFshDialog1.FileName), Path.GetFileName(saveFshDialog1.FileName));
 							if (curImage.IsCompressed)
 							{
 								mip64Fsh.IsCompressed = true;
@@ -1568,10 +1573,16 @@ namespace loaddatfsh
 				}
 			}
 		}
-		private void saveBitmap(Bitmap bmp, PixelFormat format, string addtofilename)
+        /// <summary>
+        /// Saves the bitmap.
+        /// </summary>
+        /// <param name="bmp">The Bitmap  to save.</param>
+        /// <param name="format">The format to save in.</param>
+        /// <param name="append">The suffix to append to the file name.</param>
+		private void SaveBitmap(Bitmap bmp, PixelFormat format, string append)
 		{
-			ListView listv = new ListView();
-			FSHImageWrapper image = new FSHImageWrapper();
+			ListView listv = null;
+			FSHImageWrapper image = null;
 			switch (tabControl1.SelectedIndex)
 			{
 				case 0:
@@ -1604,7 +1615,7 @@ namespace loaddatfsh
 
 					if (!string.IsNullOrEmpty(fshFileName))
 					{
-						string name = string.Concat(fshFileName, bitmapnum, addtofilename, ".png");
+						string name = string.Concat(fshFileName, bitmapnum, append, ".png");
 						using (FileStream fs = new FileStream(name, FileMode.OpenOrCreate, FileAccess.Write))
 						{
 							using (Bitmap tempbmp = bmp.Clone(format))
@@ -1622,7 +1633,7 @@ namespace loaddatfsh
 							ListViewItem item = datListViewItems[index];
 							string fshname = Path.Combine(Path.GetDirectoryName(dat.FileName), "0x" + item.SubItems[2].Text);
 
-							string name = string.Concat(fshname, bitmapnum, addtofilename, ".png");
+							string name = string.Concat(fshname, bitmapnum, append, ".png");
 
 							using (FileStream fs = new FileStream(name, FileMode.OpenOrCreate, FileAccess.Write))
 							{
@@ -1644,19 +1655,21 @@ namespace loaddatfsh
 			{
 				if (image != null && image.Bitmaps.Count > 0)
 				{
-					string prefix = string.Empty;
-					switch (addtofilename)
+					string suffix = string.Empty;
+					switch (append)
 					{
 						case "_a":
-							prefix = Resources.saveBitmap_Alpha_Prefix;
+							suffix = Resources.SaveBitmap_Alpha_Suffix;
 							break;
 						case "_blend":
-							prefix = Resources.saveBitmap_Blended_Prefix;
+							suffix = Resources.SaveBitmap_Blended_Suffix;
 							break;
+                        default:
+                            suffix = Resources.SaveBitmap_Bitmap_Suffix;
+                            break;
 					}
-					// use the prefix if it exists
 
-					string message = string.Format(Resources.saveBitmap_Error_Format, !string.IsNullOrEmpty(prefix) ? string.Concat(prefix," bitmap") : "bitmap");
+					string message = string.Format(Resources.SaveBitmap_Error_Format, suffix);
 					MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
@@ -1665,7 +1678,10 @@ namespace loaddatfsh
 		{
 			if (bmpEntry != null && bmpEntry.Bitmap != null && bmpEntry.Alpha != null)
 			{
-				saveBitmap(BlendBitmap.BlendBmp(bmpEntry), PixelFormat.Format32bppArgb, "_blend");
+                using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
+                {
+                	SaveBitmap(blended, PixelFormat.Format32bppArgb, "_blend");
+                }
 			}
 		}
 
@@ -1673,7 +1689,7 @@ namespace loaddatfsh
 		{
 			if (bmpEntry != null && bmpEntry.Bitmap != null)
 			{
-				saveBitmap(bmpEntry.Bitmap, PixelFormat.Format24bppRgb, string.Empty);
+				SaveBitmap(bmpEntry.Bitmap, PixelFormat.Format24bppRgb, string.Empty);
 			}
 		}
 
@@ -1681,7 +1697,7 @@ namespace loaddatfsh
 		{
 			if (bmpEntry != null && bmpEntry.Alpha != null)
 			{
-				saveBitmap(bmpEntry.Alpha, PixelFormat.Format24bppRgb, "_a");
+				SaveBitmap(bmpEntry.Alpha, PixelFormat.Format24bppRgb, "_a");
 			}
 		}
 		private void newFshBtn_Click(object sender, EventArgs e)
@@ -1714,7 +1730,7 @@ namespace loaddatfsh
 				bmpBox.Text = openBitmapDialog1.FileName;
 				string dirpath = Path.GetDirectoryName(openBitmapDialog1.FileName);
 				string filename = Path.GetFileNameWithoutExtension(openBitmapDialog1.FileName);
-				string alpha = Path.Combine(dirpath + Path.DirectorySeparatorChar, filename + "_a" + Path.GetExtension(openBitmapDialog1.FileName));
+				string alpha = Path.Combine(dirpath, filename + "_a" + Path.GetExtension(openBitmapDialog1.FileName));
 				if (File.Exists(alpha))
 				{
 					alphaBox.Text = alpha;
@@ -2002,16 +2018,27 @@ namespace loaddatfsh
 			Bitmap alpha = new Bitmap(temp.Width, temp.Height, PixelFormat.Format24bppRgb);
 			BitmapData data = alpha.LockBits(new Rectangle(0, 0, alpha.Width, alpha.Height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
 
-			int len = data.Stride * alpha.Height;
-			byte[] pixelData = new byte[len];
-			for (int i = 0; i < len; i++)
-			{
-				pixelData[i] = 255;
-			}
+            try
+            {
+                void* scan0 = data.Scan0.ToPointer();
+                int stride = data.Stride;
+                int height = data.Height;
+                int width = data.Width;
 
-			System.Runtime.InteropServices.Marshal.Copy(pixelData, 0, data.Scan0, len);
-
-			alpha.UnlockBits(data);
+                for (int y = 0; y < height; y++)
+                {
+                    byte* p = (byte*)scan0 + (y * stride);
+                    for (int x = 0; x < width; x++)
+                    {
+                        p[0] = p[1] = p[2] = 255;
+                        p += 3;
+                    }
+                }
+            }
+            finally
+            {
+			    alpha.UnlockBits(data);
+            }
 
 			return alpha;
 		}
@@ -2023,35 +2050,40 @@ namespace loaddatfsh
 		/// <returns>The resulting alpha map</returns>
 		private unsafe static Bitmap GetAlphafromPng(Bitmap source)
 		{
-			Bitmap dest = new Bitmap(source.Width, source.Height, PixelFormat.Format24bppRgb);
-			Rectangle rect = new Rectangle(0, 0, source.Width, source.Height);
+            int width = source.Width;
+            int height = source.Height;
+			Bitmap dest = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+			Rectangle rect = new Rectangle(0, 0, width, height);
 
 			BitmapData src = source.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 			BitmapData dst = dest.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
 
-			byte* srcpxl = (byte*)src.Scan0.ToPointer();
-			byte* dstpxl = (byte*)dst.Scan0.ToPointer();
+            try
+            {
+                byte* srcScan0 = (byte*)src.Scan0.ToPointer();
+                byte* dstScan0 = (byte*)dst.Scan0.ToPointer();
 
-			int srcofs = src.Stride - source.Width * 4;
-			int dstofs = dst.Stride - dest.Width * 3;
+                int srcStride = src.Stride;
+                int dstStride = dst.Stride;
 
-			for (int y = 0; y < dest.Height; y++)
-			{
-				for (int x = 0; x < dest.Width; x++)
-				{
-					dstpxl[0] = srcpxl[3];
-					dstpxl[1] = srcpxl[3];
-					dstpxl[2] = srcpxl[3];
-
-					srcpxl += 4; 
-					dstpxl += 3; 
-				}
-				srcpxl += srcofs;
-				dstpxl += dstofs;
-			}
-
-			dest.UnlockBits(dst);
-			source.UnlockBits(src);
+                for (int y = 0; y < height; y++)
+                {
+                    byte* p = srcScan0 + (y * srcStride);
+                    byte* q = dstScan0 + (y * dstStride);
+                    for (int x = 0; x < width; x++)
+                    {
+                        q[0] = q[1] = q[2] = p[3];
+                        
+                        p += 4;
+                        q += 3;
+                    }
+                }
+            }
+            finally
+            {
+			    dest.UnlockBits(dst);
+			    source.UnlockBits(src);
+            }
 
 			return dest;
 		}
@@ -3230,7 +3262,7 @@ namespace loaddatfsh
 			datListViewItems.Sort(new ListViewItemComparer(e.Column, datListView.Sorting));
 			this.datListView.Refresh();
 		}
-		private bool useorigimage = false;
+		private bool useOriginalImage = false;
 		private bool fshWriteCbGenMips; // generate mips when the checkbox is changed.
 		private void Fshwritecompcb_CheckedChanged(object sender, EventArgs e)
 		{
@@ -3238,14 +3270,16 @@ namespace loaddatfsh
 			{
 				if (curImage != null && curImage.Bitmaps.Count > 0 && origbmplist != null && !loadedDat && datListViewItems.Count == 0)
 				{
-					useorigimage = true;
+					useOriginalImage = true;
 
-					Temp_fsh();
+					Temp_fsh();					
+                    
+                    useOriginalImage = false; // reset it to false
+
 					if (fshWriteCbGenMips)
 					{
 						mipbtn_Click(null, null);
 					}
-					useorigimage = false; // reset it to false
 
 				}
 			}
@@ -3372,14 +3406,15 @@ namespace loaddatfsh
 					for (int i = 0; i < args.Length; i++)
 					{
 						FileInfo fi = new FileInfo(args[i]);
+                        string ext = fi.Extension;
 						if (fi.Exists)
 						{
-							if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+							if (ext.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || ext.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
 							{
 								Load_Fsh(fi.FullName);
 								break; // exit the loop if a fsh or dat file has been loaded
 							}
-							else if (fi.Extension.Equals(".png", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+							else if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) || ext.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
 							{
 								if (pnglist == null)
 								{
@@ -3391,7 +3426,7 @@ namespace loaddatfsh
 									NewFsh(pnglist);
 								}
 							}
-							else if (fi.Extension.Equals(".dat", StringComparison.OrdinalIgnoreCase))
+							else if (ext.Equals(".dat", StringComparison.OrdinalIgnoreCase))
 							{
 								Load_Dat(fi.FullName);
 								break;
