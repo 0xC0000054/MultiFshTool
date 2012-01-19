@@ -127,13 +127,13 @@
   <data name="repBmp_NoImageSelected_Error" xml:space="preserve">
     <value>You must select an image to replace.</value>
   </data>
-  <data name="saveBitmap_Alpha_Prefix" xml:space="preserve">
-    <value>alpha</value>
+  <data name="SaveBitmap_Alpha_Suffix" xml:space="preserve">
+    <value>alpha bitmap</value>
   </data>
-  <data name="saveBitmap_Blended_Prefix" xml:space="preserve">
-    <value>blended</value>
+  <data name="SaveBitmap_Blended_Suffix" xml:space="preserve">
+    <value>blended bitmap</value>
   </data>
-  <data name="saveBitmap_Error_Format" xml:space="preserve">
+  <data name="SaveBitmap_Error_Format" xml:space="preserve">
     <value>An image must be selected to save the {0}</value>
   </data>
   <data name="ImageFiles_Filter" xml:space="preserve">
@@ -229,5 +229,8 @@
   </data>
   <data name="UnableToLoadSettings" xml:space="preserve">
     <value>Unable to load settings:</value>
+  </data>
+  <data name="SaveBitmap_Bitmap_Suffix" xml:space="preserve">
+    <value>bitmap</value>
   </data>
 </root>

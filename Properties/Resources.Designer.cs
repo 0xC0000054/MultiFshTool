@@ -313,29 +313,38 @@ namespace loaddatfsh.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to alpha.
+        ///   Looks up a localized string similar to alpha bitmap.
         /// </summary>
-        internal static string saveBitmap_Alpha_Prefix {
+        internal static string SaveBitmap_Alpha_Suffix {
             get {
-                return ResourceManager.GetString("saveBitmap_Alpha_Prefix", resourceCulture);
+                return ResourceManager.GetString("SaveBitmap_Alpha_Suffix", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to blended.
+        ///   Looks up a localized string similar to bitmap.
         /// </summary>
-        internal static string saveBitmap_Blended_Prefix {
+        internal static string SaveBitmap_Bitmap_Suffix {
             get {
-                return ResourceManager.GetString("saveBitmap_Blended_Prefix", resourceCulture);
+                return ResourceManager.GetString("SaveBitmap_Bitmap_Suffix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to blended bitmap.
+        /// </summary>
+        internal static string SaveBitmap_Blended_Suffix {
+            get {
+                return ResourceManager.GetString("SaveBitmap_Blended_Suffix", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to An image must be selected to save the {0}.
         /// </summary>
-        internal static string saveBitmap_Error_Format {
+        internal static string SaveBitmap_Error_Format {
             get {
-                return ResourceManager.GetString("saveBitmap_Error_Format", resourceCulture);
+                return ResourceManager.GetString("SaveBitmap_Error_Format", resourceCulture);
             }
         }
         
