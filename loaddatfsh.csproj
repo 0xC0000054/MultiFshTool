@@ -68,7 +68,7 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FshDatIO, Version=1.2.0.5, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FshDatIO">
       <HintPath>..\readfshdat\FshDatIO\bin\Release\FshDatIO.dll</HintPath>
     </Reference>
     <Reference Include="FSHLib, Version=0.3.1.32186, Culture=neutral">
@@ -97,7 +97,6 @@
   <ItemGroup>
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BlendBmp.cs" />
-    <Compile Include="Fshwrite.cs" />
     <Compile Include="ICloneableExtensions.cs" />
     <Compile Include="JumpListHelper.cs" />
     <Compile Include="ListViewItemComparer.cs" />
