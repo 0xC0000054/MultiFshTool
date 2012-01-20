@@ -98,6 +98,7 @@
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="BlendBmp.cs" />
     <Compile Include="ICloneableExtensions.cs" />
+    <Compile Include="ImageListExtensions.cs" />
     <Compile Include="JumpListHelper.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="Multifshfrm.cs">
@@ -160,7 +161,7 @@
   -->
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateAssemblyVersion="True" BuildVersion_StartDate="2003/10/21" BuildVersion_BuildVersioningStyle="None.None.None.None" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.None" BuildVersion_StartDate="2003/10/21" BuildVersion_UpdateAssemblyVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
