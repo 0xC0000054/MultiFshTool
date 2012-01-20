@@ -77,7 +77,7 @@ namespace loaddatfsh
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.BitmapList1 = new System.Windows.Forms.ImageList(this.components);
+            this.bitmapList = new System.Windows.Forms.ImageList(this.components);
             this.listViewMain = new System.Windows.Forms.ListView();
             this.loadFshBtn = new System.Windows.Forms.Button();
             this.blendRadio = new System.Windows.Forms.RadioButton();
@@ -85,8 +85,8 @@ namespace loaddatfsh
             this.colorRadio = new System.Windows.Forms.RadioButton();
             this.openFshDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.fshTypeBox = new System.Windows.Forms.ComboBox();
-            this.alphaList1 = new System.Windows.Forms.ImageList(this.components);
-            this.blendList1 = new System.Windows.Forms.ImageList(this.components);
+            this.alphaList = new System.Windows.Forms.ImageList(this.components);
+            this.blendList = new System.Windows.Forms.ImageList(this.components);
             this.sizeLbl = new System.Windows.Forms.Label();
             this.imgSizeLbl = new System.Windows.Forms.Label();
             this.dirNameLbl = new System.Windows.Forms.Label();
@@ -176,11 +176,11 @@ namespace loaddatfsh
             this.expbmpBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // BitmapList1
+            // bitmapList
             // 
-            this.BitmapList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.BitmapList1.ImageSize = new System.Drawing.Size(96, 96);
-            this.BitmapList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.bitmapList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.bitmapList.ImageSize = new System.Drawing.Size(96, 96);
+            this.bitmapList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // listViewMain
             // 
@@ -189,12 +189,12 @@ namespace loaddatfsh
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMain.BackgroundImageTiled = true;
             this.listViewMain.HideSelection = false;
-            this.listViewMain.LargeImageList = this.BitmapList1;
+            this.listViewMain.LargeImageList = this.bitmapList;
             this.listViewMain.Location = new System.Drawing.Point(-7, -8);
             this.listViewMain.MultiSelect = false;
             this.listViewMain.Name = "listViewMain";
             this.listViewMain.Size = new System.Drawing.Size(523, 150);
-            this.listViewMain.SmallImageList = this.BitmapList1;
+            this.listViewMain.SmallImageList = this.bitmapList;
             this.listViewMain.TabIndex = 0;
             this.listViewMain.TileSize = new System.Drawing.Size(184, 34);
             this.listViewMain.UseCompatibleStateImageBehavior = false;
@@ -261,7 +261,6 @@ namespace loaddatfsh
             // fshTypeBox
             // 
             this.fshTypeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.fshTypeBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.fshTypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fshTypeBox.FormattingEnabled = true;
             this.fshTypeBox.Items.AddRange(new object[] {
@@ -274,20 +273,19 @@ namespace loaddatfsh
             this.fshTypeBox.Size = new System.Drawing.Size(164, 21);
             this.fshTypeBox.TabIndex = 46;
             this.toolTip1.SetToolTip(this.fshTypeBox, global::loaddatfsh.Properties.Resources.fshTypeBox_ToolTip);
-            this.fshTypeBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.FshtypeBox_DrawItem);
             this.fshTypeBox.SelectedIndexChanged += new System.EventHandler(this.FshtypeBox_SelectedIndexChanged);
             // 
-            // alphaList1
+            // alphaList
             // 
-            this.alphaList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.alphaList1.ImageSize = new System.Drawing.Size(96, 96);
-            this.alphaList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.alphaList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.alphaList.ImageSize = new System.Drawing.Size(96, 96);
+            this.alphaList.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // blendList1
+            // blendList
             // 
-            this.blendList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.blendList1.ImageSize = new System.Drawing.Size(96, 96);
-            this.blendList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.blendList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            this.blendList.ImageSize = new System.Drawing.Size(96, 96);
+            this.blendList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // sizeLbl
             // 
@@ -525,12 +523,12 @@ namespace loaddatfsh
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMip64.BackgroundImageTiled = true;
             this.listViewMip64.HideSelection = false;
-            this.listViewMip64.LargeImageList = this.BitmapList1;
+            this.listViewMip64.LargeImageList = this.bitmapList;
             this.listViewMip64.Location = new System.Drawing.Point(-7, -2);
             this.listViewMip64.MultiSelect = false;
             this.listViewMip64.Name = "listViewMip64";
             this.listViewMip64.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip64.SmallImageList = this.BitmapList1;
+            this.listViewMip64.SmallImageList = this.bitmapList;
             this.listViewMip64.TabIndex = 1;
             this.listViewMip64.TileSize = new System.Drawing.Size(184, 34);
             this.listViewMip64.UseCompatibleStateImageBehavior = false;
@@ -552,12 +550,12 @@ namespace loaddatfsh
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewMip32.BackgroundImageTiled = true;
             this.listViewMip32.HideSelection = false;
-            this.listViewMip32.LargeImageList = this.BitmapList1;
+            this.listViewMip32.LargeImageList = this.bitmapList;
             this.listViewMip32.Location = new System.Drawing.Point(-4, -2);
             this.listViewMip32.MultiSelect = false;
             this.listViewMip32.Name = "listViewMip32";
             this.listViewMip32.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip32.SmallImageList = this.BitmapList1;
+            this.listViewMip32.SmallImageList = this.bitmapList;
             this.listViewMip32.TabIndex = 2;
             this.listViewMip32.TileSize = new System.Drawing.Size(184, 34);
             this.listViewMip32.UseCompatibleStateImageBehavior = false;
@@ -617,7 +615,7 @@ namespace loaddatfsh
             this.listViewMip8.MultiSelect = false;
             this.listViewMip8.Name = "listViewMip8";
             this.listViewMip8.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip8.SmallImageList = this.BitmapList1;
+            this.listViewMip8.SmallImageList = this.bitmapList;
             this.listViewMip8.TabIndex = 2;
             this.listViewMip8.TileSize = new System.Drawing.Size(184, 34);
             this.listViewMip8.UseCompatibleStateImageBehavior = false;
@@ -1126,7 +1124,7 @@ namespace loaddatfsh
 
         #endregion
 
-        private System.Windows.Forms.ImageList BitmapList1;
+        private System.Windows.Forms.ImageList bitmapList;
         private System.Windows.Forms.ListView listViewMain;
         private System.Windows.Forms.Button loadFshBtn;
         private System.Windows.Forms.RadioButton blendRadio;
@@ -1134,8 +1132,8 @@ namespace loaddatfsh
         private System.Windows.Forms.RadioButton colorRadio;
         private System.Windows.Forms.OpenFileDialog openFshDialog1;
         private System.Windows.Forms.ComboBox fshTypeBox;
-        private System.Windows.Forms.ImageList alphaList1;
-        private System.Windows.Forms.ImageList blendList1;
+        private System.Windows.Forms.ImageList alphaList;
+        private System.Windows.Forms.ImageList blendList;
         private System.Windows.Forms.Label sizeLbl;
         private System.Windows.Forms.Label imgSizeLbl;
         private System.Windows.Forms.Label dirNameLbl;

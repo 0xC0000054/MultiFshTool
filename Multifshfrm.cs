@@ -108,7 +108,7 @@ namespace loaddatfsh
 									origbmplist.Add(item.Bitmap.Clone<Bitmap>());
 								}
 
-								if (tempitem.Bitmap.Width >= 128 && tempitem.Bitmap.Height >= 128)
+								if (tempitem.Bitmap.Width >= 128 || tempitem.Bitmap.Height >= 128)
 								{
 									curImage = tempimg.Clone();
 									RefreshImageLists();
@@ -306,7 +306,7 @@ namespace loaddatfsh
 				{
 					if (tabControl1.SelectedTab == Maintab)
 					{
-						RefreshBitmapList(curImage, listViewMain, BitmapList1);
+						RefreshBitmapList(curImage, listViewMain, bitmapList);
 					}
 					else if (tabControl1.SelectedTab == mip64tab)
 					{
@@ -329,7 +329,7 @@ namespace loaddatfsh
 				{
 					if (tabControl1.SelectedTab == Maintab)
 					{
-						RefreshAlphaList(curImage, listViewMain, alphaList1);
+						RefreshAlphaList(curImage, listViewMain, alphaList);
 					}
 					else if (tabControl1.SelectedTab == mip64tab)
 					{
@@ -352,7 +352,7 @@ namespace loaddatfsh
 				{
 					if (tabControl1.SelectedTab == Maintab)
 					{
-						RefreshBlendList(curImage, listViewMain, blendList1);
+						RefreshBlendList(curImage, listViewMain, blendList);
 					}
 					else if (tabControl1.SelectedTab == mip64tab)
 					{
@@ -836,9 +836,11 @@ namespace loaddatfsh
                     bmpEntry = curImage.Bitmaps[i];
 
 					Reset24bitAlpha(bmpEntry);
-					BitmapList1.Images.Add(bmpEntry.Bitmap);
-					alphaList1.Images.Add(bmpEntry.Alpha);
-					blendList1.Images.Add(Alphablend(bmpEntry, blendList1.ImageSize));
+                    bitmapList.ScaleListSize(bmpEntry.Bitmap);
+					bitmapList.Images.Add(bmpEntry.Bitmap);
+                    alphaList.ScaleListSize(bmpEntry.Alpha);
+					alphaList.Images.Add(bmpEntry.Alpha);
+					blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
 				}
 				  
 			}
@@ -847,9 +849,11 @@ namespace loaddatfsh
 				remBtn.Enabled = false;
 				bmpEntry = curImage.Bitmaps[0];
 				Reset24bitAlpha(bmpEntry);
-				BitmapList1.Images.Add(bmpEntry.Bitmap);
-				alphaList1.Images.Add(bmpEntry.Alpha);
-				blendList1.Images.Add(Alphablend(bmpEntry, blendList1.ImageSize));
+                bitmapList.ScaleListSize(bmpEntry.Bitmap);
+                bitmapList.Images.Add(bmpEntry.Bitmap);
+                alphaList.ScaleListSize(bmpEntry.Alpha);
+                alphaList.Images.Add(bmpEntry.Alpha); 
+                blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
 
 			} 
 			
@@ -858,15 +862,15 @@ namespace loaddatfsh
 			listViewMain.BeginUpdate();
 			if (colorRadio.Checked)
 			{
-				RefreshBitmapList(curImage, listViewMain, BitmapList1);
+				RefreshBitmapList(curImage, listViewMain, bitmapList);
 			}
 			else if (alphaRadio.Checked)
 			{
-				RefreshAlphaList(curImage, listViewMain, alphaList1);
+				RefreshAlphaList(curImage, listViewMain, alphaList);
 			}
 			else if (blendRadio.Checked)
 			{
-				RefreshBlendList(curImage, listViewMain, blendList1);
+				RefreshBlendList(curImage, listViewMain, blendList);
 			}
 			listViewMain.EndUpdate();
 		}
@@ -2552,17 +2556,17 @@ namespace loaddatfsh
 			listViewMip32.Items.Clear();
 			listViewMip16.Items.Clear();
 			listViewMip8.Items.Clear();
-			BitmapList1.Images.Clear();
+			bitmapList.Images.Clear();
 			bmp64Mip.Images.Clear();
 			bmp32Mip.Images.Clear();
 			bmp16Mip.Images.Clear();
 			bmp8Mip.Images.Clear();
-			alphaList1.Images.Clear();
+			alphaList.Images.Clear();
 			alpha64Mip.Images.Clear();
 			alpha32Mip.Images.Clear();
 			alpha16Mip.Images.Clear();
 			alpha8Mip.Images.Clear();
-			blendList1.Images.Clear();
+			blendList.Images.Clear();
 			blend64Mip.Images.Clear();
 			blend32Mip.Images.Clear();
 			blend16Mip.Images.Clear();
@@ -3178,51 +3182,7 @@ namespace loaddatfsh
 			}
 			return image;
 		}
-		private void FshtypeBox_DrawItem(object sender, DrawItemEventArgs e)
-		{
-			ComboBox cb = sender as ComboBox;
-			FSHImageWrapper image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
-
-			if (image != null && image.Bitmaps.Count > 0 && bmpEntry != null && bmpEntry.Bitmap != null)
-			{
-				if (!Checkhdimgsize(bmpEntry.Bitmap))
-				{
-					if (e.Index == 0 || e.Index == 1)
-					{
-						// make the hd fsh items look disabled 
-						string text = cb.Items[e.Index].ToString();
-						e.DrawBackground();
-						e.Graphics.DrawString(text, e.Font, SystemBrushes.GrayText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-						e.DrawFocusRectangle();
-					}
-					else
-					{
-						//leave the other items alone
-						string text = cb.Items[e.Index].ToString();
-						e.DrawBackground();
-						e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-						e.DrawFocusRectangle();
-					}
-				}
-				else
-				{
-					// draw it normally
-					string text = cb.Items[e.Index].ToString();
-					e.DrawBackground();
-					e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-					e.DrawFocusRectangle();
-				}
-			}
-			else
-			{
-				// draw it normally
-				string text = cb.Items[e.Index].ToString();
-				e.DrawBackground();
-				e.Graphics.DrawString(text, e.Font, SystemBrushes.WindowText, new RectangleF(e.Bounds.X, e.Bounds.Y, e.Bounds.Width, e.Bounds.Height));
-				e.DrawFocusRectangle();
-			}
-		}
-
+		
 		private int sortColumn = -1;
 		private void DatlistView_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
