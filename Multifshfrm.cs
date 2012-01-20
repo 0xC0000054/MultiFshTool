@@ -222,7 +222,7 @@ namespace loaddatfsh
 
                 bool fshWriteCompression = fshWriteCompCb.Checked;
 
-                if (IsDXTFsh(image) && fshWriteCompression && useOriginalImage)
+                if (image.IsDXTFsh() && fshWriteCompression && useOriginalImage)
                 {
                     BitmapEntryCollection entries = image.Bitmaps;
                     int count = entries.Count;
@@ -254,22 +254,7 @@ namespace loaddatfsh
 				throw;
 			}
 		}
-		/// <summary>
-		/// Test if the fsh only contains DXT1 or DXT3 items
-		/// </summary>
-		/// <param name="image">The image to test</param>
-		/// <returns>True if successful otherwise false</returns>
-		private static bool IsDXTFsh(FSHImageWrapper image)
-		{
-			foreach (BitmapEntry item in image.Bitmaps)
-			{
-				if (item.BmpType != FSHBmpType.DXT3 && item.BmpType != FSHBmpType.DXT1)
-				{
-				   return false;
-				}
-			}
-			return true;
-		}
+
 		/// <summary>
 		/// Sets the IsDirty flag on the loaded dat if it has changed
 		/// </summary>
