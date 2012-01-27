@@ -2626,35 +2626,33 @@ namespace loaddatfsh
 
 			if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null)
 			{
-				uint[] instanceid = new uint[5];
+				uint[] instanceIds = new uint[5];
 				FshWrapper[] fshwrap = new FshWrapper[5];
 				FSHImageWrapper[] fshimg = new FSHImageWrapper[5];
 				fshimg[0] = mip8Fsh; fshimg[1] = mip16Fsh; fshimg[2] = mip32Fsh;
 				fshimg[3] = mip64Fsh; fshimg[4] = curImage;
-				instanceid[0] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceid[1] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceid[2] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceid[3] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceid[4] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				instanceIds[0] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				instanceIds[1] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				instanceIds[2] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				instanceIds[3] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				instanceIds[4] = uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 				if (inputdat == null)
 				{
 					dat = new DatFile();
 				}
-				
+
+
+              
 				for (int i = 4; i >= 0; i--)
 				{
 					
 					fshwrap[i] = new FshWrapper(fshimg[i]);
-					int index = CheckInstance(inputdat, group, instanceid[i]);
 
-					if (index >= 0)
-					{
-						inputdat.Insert(fshwrap[i], index, group, instanceid[i], compress_datmips);
-					}
-					else
-					{
-						inputdat.Add(fshwrap[i], group, instanceid[i], compress_datmips);
-					}
+                    CheckInstance(inputdat, group, instanceIds[i]);
+
+
+					inputdat.Add(fshwrap[i], group, instanceIds[i], compress_datmips);
+					
 				}
 				DatRebuilt = true;
 			}
@@ -2664,16 +2662,9 @@ namespace loaddatfsh
 
 				FshWrapper wrap = new FshWrapper(curImage);
 
-				int index = CheckInstance(inputdat, group, instance);
+				CheckInstance(inputdat, group, instance);
 
-				if (index >= 0)
-				{
-					inputdat.Insert(wrap, index, group, instance, compress_datmips);
-				}
-				else
-				{
-					inputdat.Add(wrap, group, instance, compress_datmips);
-				}
+				inputdat.Add(wrap, group, instance, compress_datmips);
 				DatRebuilt = true;
 			}
 		}
@@ -2706,7 +2697,7 @@ namespace loaddatfsh
 		/// <param name="checkdat">The Dat to check</param>
 		/// <param name="group">The group id to check</param>
 		/// <param name="instance">The instance id to check</param>
-		private int CheckInstance(DatFile checkdat, uint group, uint instance)
+		private void CheckInstance(DatFile checkdat, uint group, uint instance)
 		{
             int count = checkdat.Indexes.Count;
 			for (int n = 0; n < count; n++)
@@ -2716,12 +2707,10 @@ namespace loaddatfsh
 				{
 					if (chkindex.Instance == instance)
 					{ 
-						return checkdat.Remove(group, instance); 
+						checkdat.Remove(group, instance); 
 					}
 				}
 			}
-
-			return -1;
 		}
 		/// <summary>
 		/// Saves the new or modified dat
