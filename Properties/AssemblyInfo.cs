@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-
+[assembly: System.Resources.NeutralResourcesLanguage("en-US")]
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("d6df1dc7-21b5-4ca2-b5e4-22c6f52202bb")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.3.0.5")]
-[assembly: AssemblyFileVersion("1.3.0.5")]
+[assembly: AssemblyVersion("1.3.0.6")]
+[assembly: AssemblyFileVersion("1.3.0.6")]
