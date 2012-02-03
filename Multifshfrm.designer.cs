@@ -96,7 +96,6 @@ namespace loaddatfsh
             this.openAlphaDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.dirTxt = new System.Windows.Forms.TextBox();
             this.repBtn = new System.Windows.Forms.Button();
-            this.mipbtn = new System.Windows.Forms.Button();
             this.saveFshBtn = new System.Windows.Forms.Button();
             this.saveFshDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.newFshBtn = new System.Windows.Forms.Button();
@@ -152,9 +151,9 @@ namespace loaddatfsh
             this.compDatCb = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.fshWriteCompCb = new System.Windows.Forms.CheckBox();
-            this.alphaSaveBtn = new System.Windows.Forms.Button();
+            this.saveAlphaBtn = new System.Windows.Forms.Button();
             this.saveBmpBlendBtn = new System.Windows.Forms.Button();
-            this.bmpSaveBtn = new System.Windows.Forms.Button();
+            this.saveBmpBtn = new System.Windows.Forms.Button();
             this.expbmpBox1 = new System.Windows.Forms.GroupBox();
             this.alphaLbl = new System.Windows.Forms.Label();
             this.bmpLbl = new System.Windows.Forms.Label();
@@ -371,18 +370,6 @@ namespace loaddatfsh
             this.toolTip1.SetToolTip(this.repBtn, global::loaddatfsh.Properties.Resources.repBtn_ToolTip);
             this.repBtn.UseVisualStyleBackColor = true;
             this.repBtn.Click += new System.EventHandler(this.repBtn_Click);
-            // 
-            // mipbtn
-            // 
-            this.mipbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.mipbtn.Location = new System.Drawing.Point(145, 541);
-            this.mipbtn.Name = "mipbtn";
-            this.mipbtn.Size = new System.Drawing.Size(106, 23);
-            this.mipbtn.TabIndex = 61;
-            this.mipbtn.Text = "Generate Mipmaps";
-            this.mipbtn.UseVisualStyleBackColor = true;
-            this.mipbtn.Visible = false;
-            this.mipbtn.Click += new System.EventHandler(this.mipbtn_Click);
             // 
             // saveFshBtn
             // 
@@ -948,15 +935,15 @@ namespace loaddatfsh
             this.fshWriteCompCb.UseVisualStyleBackColor = true;
             this.fshWriteCompCb.CheckedChanged += new System.EventHandler(this.Fshwritecompcb_CheckedChanged);
             // 
-            // alphaSaveBtn
+            // saveAlphaBtn
             // 
-            this.alphaSaveBtn.Location = new System.Drawing.Point(87, 18);
-            this.alphaSaveBtn.Name = "alphaSaveBtn";
-            this.alphaSaveBtn.Size = new System.Drawing.Size(75, 23);
-            this.alphaSaveBtn.TabIndex = 65;
-            this.alphaSaveBtn.Text = "Alpha";
-            this.alphaSaveBtn.UseVisualStyleBackColor = true;
-            this.alphaSaveBtn.Click += new System.EventHandler(this.alphaBtn_Click);
+            this.saveAlphaBtn.Location = new System.Drawing.Point(87, 18);
+            this.saveAlphaBtn.Name = "saveAlphaBtn";
+            this.saveAlphaBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveAlphaBtn.TabIndex = 65;
+            this.saveAlphaBtn.Text = "Alpha";
+            this.saveAlphaBtn.UseVisualStyleBackColor = true;
+            this.saveAlphaBtn.Click += new System.EventHandler(this.saveAlphaBtn_Click);
             // 
             // saveBmpBlendBtn
             // 
@@ -968,22 +955,22 @@ namespace loaddatfsh
             this.saveBmpBlendBtn.UseVisualStyleBackColor = true;
             this.saveBmpBlendBtn.Click += new System.EventHandler(this.saveBmpBlendBtn_Click);
             // 
-            // bmpSaveBtn
+            // saveBmpBtn
             // 
-            this.bmpSaveBtn.Location = new System.Drawing.Point(6, 18);
-            this.bmpSaveBtn.Name = "bmpSaveBtn";
-            this.bmpSaveBtn.Size = new System.Drawing.Size(75, 23);
-            this.bmpSaveBtn.TabIndex = 64;
-            this.bmpSaveBtn.Text = "Bitmap";
-            this.bmpSaveBtn.UseVisualStyleBackColor = true;
-            this.bmpSaveBtn.Click += new System.EventHandler(this.bmpSaveBtn_Click);
+            this.saveBmpBtn.Location = new System.Drawing.Point(6, 18);
+            this.saveBmpBtn.Name = "saveBmpBtn";
+            this.saveBmpBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveBmpBtn.TabIndex = 64;
+            this.saveBmpBtn.Text = "Bitmap";
+            this.saveBmpBtn.UseVisualStyleBackColor = true;
+            this.saveBmpBtn.Click += new System.EventHandler(this.saveBmpBtn_Click);
             // 
             // expbmpBox1
             // 
             this.expbmpBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.expbmpBox1.Controls.Add(this.bmpSaveBtn);
+            this.expbmpBox1.Controls.Add(this.saveBmpBtn);
             this.expbmpBox1.Controls.Add(this.saveBmpBlendBtn);
-            this.expbmpBox1.Controls.Add(this.alphaSaveBtn);
+            this.expbmpBox1.Controls.Add(this.saveAlphaBtn);
             this.expbmpBox1.Location = new System.Drawing.Point(256, 329);
             this.expbmpBox1.Name = "expbmpBox1";
             this.expbmpBox1.Size = new System.Drawing.Size(278, 50);
@@ -1081,7 +1068,6 @@ namespace loaddatfsh
             this.Controls.Add(this.tgiInstanceTxt);
             this.Controls.Add(this.tgiGroupTxt);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.mipbtn);
             this.Controls.Add(this.expbmpBox1);
             this.Controls.Add(this.bmpmanBox1);
             this.Controls.Add(this.newFshBtn);
@@ -1143,7 +1129,6 @@ namespace loaddatfsh
         private System.Windows.Forms.OpenFileDialog openAlphaDialog1;
         private System.Windows.Forms.TextBox dirTxt;
         private System.Windows.Forms.Button repBtn;
-        private System.Windows.Forms.Button mipbtn;
         private System.Windows.Forms.Button saveFshBtn;
         private System.Windows.Forms.SaveFileDialog saveFshDialog1;
         private System.Windows.Forms.Button newFshBtn;
@@ -1197,9 +1182,9 @@ namespace loaddatfsh
         private System.Windows.Forms.Label datNameTxt;
         private System.Windows.Forms.CheckBox compDatCb;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button alphaSaveBtn;
+        private System.Windows.Forms.Button saveAlphaBtn;
         private System.Windows.Forms.Button saveBmpBlendBtn;
-        private System.Windows.Forms.Button bmpSaveBtn;
+        private System.Windows.Forms.Button saveBmpBtn;
         private System.Windows.Forms.GroupBox expbmpBox1;
         private System.Windows.Forms.Label alphaLbl;
         private System.Windows.Forms.Label bmpLbl;

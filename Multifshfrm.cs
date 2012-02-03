@@ -596,9 +596,10 @@ namespace loaddatfsh
 						files = CheckSize(files);
 						files = TrimAlphaBitmaps(files);
 					}
-					for (int f = 0; f < files.Count; f++)
+                    int count = files.Count;
+					for (int i = 0; i < count; i++)
 					{
-						FileInfo fi = new FileInfo(files[f]);
+						FileInfo fi = new FileInfo(files[i]);
 
 						BitmapEntry addbmp = new BitmapEntry();
 						string alphaPath = Path.Combine(fi.DirectoryName, Path.GetFileNameWithoutExtension(fi.FullName) + "_a" + fi.Extension);
@@ -621,7 +622,7 @@ namespace loaddatfsh
 								{
 									Bitmap alpha = new Bitmap(alphaPath);
 									addbmp.Alpha = alpha;
-									if (Checkhdimgsize(bmp) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+									if (CheckHdImageSize(bmp) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
 										addbmp.BmpType = FSHBmpType.ThirtyTwoBit;
 										fshTypeBox.SelectedIndex = 1;
@@ -637,7 +638,7 @@ namespace loaddatfsh
 								{
 									Bitmap testbmp = GetAlphafromPng(bmp);
 									addbmp.Alpha = testbmp;
-									if (Checkhdimgsize(bmp) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+									if (CheckHdImageSize(bmp) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
 										addbmp.BmpType = FSHBmpType.ThirtyTwoBit;
 										fshTypeBox.SelectedIndex = 1;
@@ -651,7 +652,7 @@ namespace loaddatfsh
 								else
 								{
 									addbmp.Alpha = GenerateAlpha(bmp);
-									if (Checkhdimgsize(bmp) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+									if (CheckHdImageSize(bmp) && fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
 										addbmp.BmpType = FSHBmpType.TwentyFourBit;
 										fshTypeBox.SelectedIndex = 0;
@@ -704,10 +705,10 @@ namespace loaddatfsh
 										curImage = new FSHImageWrapper();
 									}
 									curImage.Bitmaps.Add(addbmp);
-									if (f == files.Count - 1)
+									if (i == files.Count - 1)
 									{
 										Temp_fsh();
-										mipbtn_Click(null, null);
+										BuildMipMaps();
 										listViewMain.Items[0].Selected = true;
 									}
 								} 
@@ -799,15 +800,19 @@ namespace loaddatfsh
 		{
 			if (item.BmpType == FSHBmpType.TwentyFourBit)
 			{
-				item.Alpha = new Bitmap(item.Bitmap.Width,item.Bitmap.Height, PixelFormat.Format24bppRgb);
+                int width = item.Bitmap.Width;
+                int height = item.Bitmap.Height;
+				item.Alpha = new Bitmap(width, height, PixelFormat.Format24bppRgb);
 				BitmapData bd = item.Alpha.LockBits(new Rectangle(0, 0, item.Alpha.Width, item.Alpha.Height), ImageLockMode.WriteOnly,
 				PixelFormat.Format24bppRgb);
 				try
 				{
-					for (int y = 0; y < bd.Height; y++)
+                    void* scan0 = bd.Scan0.ToPointer();
+                    int stride = bd.Stride;
+					for (int y = 0; y < height; y++)
 					{
-						byte* p = (byte*)bd.Scan0.ToPointer() + (y * bd.Stride);
-						for (int x = 0; x < bd.Width; x++)
+						byte* p = (byte*)scan0 + (y * stride);
+						for (int x = 0; x < width; x++)
 						{
 							p[0] = p[1] = p[2] = 255;
 							p += 3;
@@ -913,7 +918,7 @@ namespace loaddatfsh
 					{
 						curImage.Bitmaps.Remove(bmpEntry); //remove the item and rebuild the mipmaps
 						Temp_fsh();
-						mipbtn_Click(null, null);
+						BuildMipMaps();
 						listViewMain.Items[0].Selected = true;
 					}
 					catch (Exception ex)
@@ -979,7 +984,7 @@ namespace loaddatfsh
 									repBmp.Alpha = alpha.Clone(PixelFormat.Format24bppRgb);
 								}
 
-								if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+								if (CheckHdImageSize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
@@ -992,9 +997,11 @@ namespace loaddatfsh
 							}
 							else if (!string.IsNullOrEmpty(alphaMap) && File.Exists(alphaMap))
 							{
-								Bitmap alpha = new Bitmap(alphaMap);
-								repBmp.Alpha = alpha;
-								if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+                                using (Bitmap alpha = new Bitmap(alphaMap))
+                                {
+                                    repBmp.Alpha = alpha.Clone(PixelFormat.Format24bppRgb); 
+                                }
+								if (CheckHdImageSize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
@@ -1008,7 +1015,7 @@ namespace loaddatfsh
 							else if (Path.GetExtension(bmpFileName).Equals(".png", StringComparison.OrdinalIgnoreCase) && bmp.PixelFormat == PixelFormat.Format32bppArgb)
 							{
 								repBmp.Alpha = GetAlphafromPng(bmp);
-								if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+								if (CheckHdImageSize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
@@ -1022,7 +1029,7 @@ namespace loaddatfsh
 							else
 							{
 								repBmp.Alpha = GenerateAlpha(bmp);
-								if (Checkhdimgsize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+								if (CheckHdImageSize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									repBmp.BmpType = FSHBmpType.TwentyFourBit;
 									fshTypeBox.SelectedIndex = 0;
@@ -1046,7 +1053,7 @@ namespace loaddatfsh
 							curImage.Bitmaps.Insert(listViewMain.SelectedItems[0].Index, repBmp);
 
 							Temp_fsh();
-							mipbtn_Click(null, null);
+							BuildMipMaps();
 						}
 					}
 					catch (Exception ex)
@@ -1303,7 +1310,10 @@ namespace loaddatfsh
 			Temp_Mips(8);
 		}
 
-		private void mipbtn_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Builds the mip maps for the image.
+        /// </summary>
+		private void BuildMipMaps()
 		{
 			if ((curImage != null) && curImage.Bitmaps.Count >= 1)
 			{
@@ -1338,7 +1348,9 @@ namespace loaddatfsh
 			try
 			{
 				using (StreamWriter sw = new StreamWriter(fs))
-				{
+				{				
+                    fs = null;
+
 					sw.WriteLine("7ab50e44\t\n");
 					sw.WriteLine(string.Format("{0:X8}", tgiGroupTxt.Text.ToString() + "\n"));
 					switch (zoom)
@@ -1361,7 +1373,6 @@ namespace loaddatfsh
 
 					}
 				}
-				fs = null;
 			}
 			finally
 			{
@@ -1380,7 +1391,7 @@ namespace loaddatfsh
 			FSHImageWrapper image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
 			if (bmpEntry != null && bmpEntry.Bitmap != null)
 			{
-				if (!Checkhdimgsize(bmpEntry.Bitmap))
+				if (!CheckHdImageSize(bmpEntry.Bitmap))
 				{
 					if (fshTypeBox.SelectedIndex == 0 || fshTypeBox.SelectedIndex == 1)
 					{
@@ -1440,7 +1451,7 @@ namespace loaddatfsh
 					{
 						if (!mipsbtn_clicked)
 						{
-							mipbtn_Click(sender, e);
+							BuildMipMaps();
 						}
 						if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null)
 						{
@@ -1674,7 +1685,7 @@ namespace loaddatfsh
 			}
 		}
 
-		private void bmpSaveBtn_Click(object sender, EventArgs e)
+		private void saveBmpBtn_Click(object sender, EventArgs e)
 		{
 			if (bmpEntry != null && bmpEntry.Bitmap != null)
 			{
@@ -1682,7 +1693,7 @@ namespace loaddatfsh
 			}
 		}
 
-		private void alphaSaveBtn_Click(object sender, EventArgs e)
+		private void saveAlphaBtn_Click(object sender, EventArgs e)
 		{
 			if (bmpEntry != null && bmpEntry.Alpha != null)
 			{
@@ -1780,7 +1791,7 @@ namespace loaddatfsh
 							 if (alphaBox.Text.Length > 0 && File.Exists(alphaBox.Text))
 							 {
 								 bmpEntry.Alpha = new Bitmap(alphaBox.Text);
-								 if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+								 if (CheckHdImageSize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								 {
 									 bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
 									 fshTypeBox.SelectedIndex = 1;
@@ -1794,7 +1805,7 @@ namespace loaddatfsh
 							 else if (!string.IsNullOrEmpty(alphaMap) && File.Exists(alphaMap))
 							 {
 								 bmpEntry.Alpha = new Bitmap(alphaMap);
-								 if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+								 if (CheckHdImageSize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								 {
 									 bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
 									 fshTypeBox.SelectedIndex = 1;
@@ -1809,7 +1820,7 @@ namespace loaddatfsh
 							 {
 
 								 bmpEntry.Alpha = GetAlphafromPng(bmp);
-								 if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+								 if (CheckHdImageSize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								 {
 									 bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
 									 fshTypeBox.SelectedIndex = 1;
@@ -1825,7 +1836,7 @@ namespace loaddatfsh
 								 if (bmp != null)
 								 {
 									 bmpEntry.Alpha = GenerateAlpha(bmp);
-									 if (Checkhdimgsize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
+									 if (CheckHdImageSize(bmp) && Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									 {
 										 bmpEntry.BmpType = FSHBmpType.TwentyFourBit;
 										 fshTypeBox.SelectedIndex = 0;
@@ -1906,13 +1917,13 @@ namespace loaddatfsh
 								 if (files.Count - 1 == 0)
 								 {
 									 Temp_fsh();
-									 mipbtn_Click(null, null);
+									 BuildMipMaps();
 									 listViewMain.Items[0].Selected = true;
 								 }
 							 } 
 						 }
 
-						if (files.Count - 1 > 0)
+						if ((files.Count - 1) > 0)
 						{
 							int cnt = files.Count - 1;
 							List<string> add = new List<string>(cnt);
@@ -1984,7 +1995,8 @@ namespace loaddatfsh
 				}
 			}
 		}
-		private void ReloadGroupID()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
+        private void ReloadGroupID()
 		{
 			string g = string.Empty; 
 			if (!string.IsNullOrEmpty(Groupidoverride))
@@ -2004,15 +2016,16 @@ namespace loaddatfsh
 		/// <returns>The generated alpha map</returns>
 		private unsafe static Bitmap GenerateAlpha(Bitmap temp)
 		{
-			Bitmap alpha = new Bitmap(temp.Width, temp.Height, PixelFormat.Format24bppRgb);
-			BitmapData data = alpha.LockBits(new Rectangle(0, 0, alpha.Width, alpha.Height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+            int height = temp.Height;
+            int width = temp.Width;
+
+			Bitmap alpha = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+			BitmapData data = alpha.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
 
             try
             {
                 void* scan0 = data.Scan0.ToPointer();
                 int stride = data.Stride;
-                int height = data.Height;
-                int width = data.Width;
 
                 for (int y = 0; y < height; y++)
                 {
@@ -2766,7 +2779,7 @@ namespace loaddatfsh
 					}
 					else
 					{
-						mipbtn_Click(sender, e);
+						BuildMipMaps();
 						RebuildDat(dat);
 					}
 				}
@@ -3137,16 +3150,9 @@ namespace loaddatfsh
 		/// </summary>
 		/// <param name="b">The bitmap to check</param>
 		/// <returns>True if the bitmap is 256 x 256 or larger otherwise false</returns>
-		private bool Checkhdimgsize(Bitmap b)
+		private bool CheckHdImageSize(Bitmap b)
 		{
-			if (b.Width >= 256 && b.Height >= 256)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+            return (b.Width >= 256 && b.Height >= 256);
 		}
 		private FSHImageWrapper GetImageFromSelectedTab(int index)
 		{
@@ -3212,7 +3218,7 @@ namespace loaddatfsh
 
 					if (fshWriteCbGenMips)
 					{
-						mipbtn_Click(null, null);
+						BuildMipMaps();
 					}
 
 				}
