@@ -78,134 +78,144 @@ namespace loaddatfsh
 			{
 				if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
 				{
+                    FileStream fs = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
 					try
 					{
 						bool success = false;
-						using (FileStream fstream = new FileStream(fi.FullName, FileMode.Open))
+
+						using (FSHImageWrapper tempimg = new FSHImageWrapper(fs))
 						{
-							using (FSHImageWrapper tempimg = new FSHImageWrapper(fstream))
+                            fs = null;
+							BitmapEntry tempitem = tempimg.Bitmaps[0];
+
+							fshFileName = filename;
+							ClearandReset(true);
+							if (origbmplist == null)
 							{
-								BitmapEntry tempitem = tempimg.Bitmaps[0];
-
-								fshFileName = filename;
-								ClearandReset(true);
-								if (origbmplist == null)
-								{
-									origbmplist = new List<Bitmap>();
-								}
-								else
-								{
-									foreach (var item in origbmplist)
-									{
-										item.Dispose();
-									}
-									origbmplist.Clear();
-								}
-								this.fshWriteCbGenMips = false;
-
-								foreach (var item in tempimg.Bitmaps)
-								{
-									origbmplist.Add(item.Bitmap.Clone<Bitmap>());
-								}
-
-								if (tempitem.Bitmap.Width >= 128 || tempitem.Bitmap.Height >= 128)
-								{
-									curImage = tempimg.Clone();
-									RefreshImageLists();
-									SetHdRadiosEnabled(curImage.Bitmaps[0]);
-									success = true;
-									tabControl1.SelectedTab = Maintab;
-
-								}
-								else if (tempitem.Bitmap.Width == 64 && tempitem.Bitmap.Height == 64)
-								{
-									mip64Fsh = tempimg.Clone();
-									RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
-									ListViewItem item = listViewMip64.Items[0];
-									item.Selected = true;
-									loadIsMip = true;
-									success = true;
-									tabControl1.SelectedTab = mip64tab;
-								}
-								else if (tempitem.Bitmap.Width == 32 && tempitem.Bitmap.Height == 32)
-								{
-									mip32Fsh = tempimg.Clone();
-									RefreshMipImageList(mip32Fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
-									ListViewItem item = listViewMip32.Items[0];
-									item.Selected = true;
-									loadIsMip = true;
-									success = true;
-									tabControl1.SelectedTab = mip32tab;
-								}
-								else if (tempitem.Bitmap.Width == 16 && tempitem.Bitmap.Height == 16)
-								{
-									mip16Fsh = tempimg.Clone();
-									RefreshMipImageList(mip16Fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
-									ListViewItem item = listViewMip16.Items[0];
-									item.Selected = true;
-									loadIsMip = true;
-									success = true;
-									tabControl1.SelectedTab = mip16tab;
-								}
-								else if (tempitem.Bitmap.Width == 8 && tempitem.Bitmap.Height == 8)
-								{
-									mip8Fsh = tempimg.Clone();
-									RefreshMipImageList(mip8Fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
-									ListViewItem item = listViewMip8.Items[0];
-									item.Selected = true;
-									loadIsMip = true;
-									success = true;
-									tabControl1.SelectedTab = mip8tab;
-								}
+								origbmplist = new List<Bitmap>();
 							}
-							if (success)
+							else
 							{
-								RefreshBmpType();
-								SetHdRadiosEnabled(bmpEntry);
-								string tgistr = fi.FullName + ".TGI";
-								if (File.Exists(tgistr)) // check for a TGI file from Ilive's Reader
+								foreach (var item in origbmplist)
 								{
-									using (StreamReader sr = new StreamReader(tgistr))
-									{
-										string line;
-										bool groupread = false;
-										bool instread = false;
+									item.Dispose();
+								}
+								origbmplist.Clear();
+							}
+							this.fshWriteCbGenMips = false;
 
-										while ((line = sr.ReadLine()) != null)
+							foreach (var item in tempimg.Bitmaps)
+							{
+								origbmplist.Add(item.Bitmap.Clone<Bitmap>());
+							}
+
+							if (tempitem.Bitmap.Width >= 128 || tempitem.Bitmap.Height >= 128)
+							{
+								curImage = tempimg.Clone();
+								RefreshImageLists();
+								SetHdRadiosEnabled(curImage.Bitmaps[0]);
+								success = true;
+								tabControl1.SelectedTab = Maintab;
+
+							}
+							else if (tempitem.Bitmap.Width == 64 && tempitem.Bitmap.Height == 64)
+							{
+								mip64Fsh = tempimg.Clone();
+								RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
+								ListViewItem item = listViewMip64.Items[0];
+								item.Selected = true;
+								loadIsMip = true;
+								success = true;
+								tabControl1.SelectedTab = mip64tab;
+							}
+							else if (tempitem.Bitmap.Width == 32 && tempitem.Bitmap.Height == 32)
+							{
+								mip32Fsh = tempimg.Clone();
+								RefreshMipImageList(mip32Fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
+								ListViewItem item = listViewMip32.Items[0];
+								item.Selected = true;
+								loadIsMip = true;
+								success = true;
+								tabControl1.SelectedTab = mip32tab;
+							}
+							else if (tempitem.Bitmap.Width == 16 && tempitem.Bitmap.Height == 16)
+							{
+								mip16Fsh = tempimg.Clone();
+								RefreshMipImageList(mip16Fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
+								ListViewItem item = listViewMip16.Items[0];
+								item.Selected = true;
+								loadIsMip = true;
+								success = true;
+								tabControl1.SelectedTab = mip16tab;
+							}
+							else if (tempitem.Bitmap.Width == 8 && tempitem.Bitmap.Height == 8)
+							{
+								mip8Fsh = tempimg.Clone();
+								RefreshMipImageList(mip8Fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
+								ListViewItem item = listViewMip8.Items[0];
+								item.Selected = true;
+								loadIsMip = true;
+								success = true;
+								tabControl1.SelectedTab = mip8tab;
+							}
+						}
+
+						if (success)
+						{
+							RefreshBmpType();
+							SetHdRadiosEnabled(bmpEntry);
+							string tgistr = fi.FullName + ".TGI";
+							if (File.Exists(tgistr)) // check for a TGI file from Ilive's Reader
+							{
+								using (StreamReader sr = new StreamReader(tgistr))
+								{
+									string line;
+									bool groupread = false;
+									bool instread = false;
+
+									while ((line = sr.ReadLine()) != null)
+									{
+										if (!string.IsNullOrEmpty(line))
 										{
-											if (!string.IsNullOrEmpty(line))
+											if (line.StartsWith("7ab50e44", StringComparison.OrdinalIgnoreCase))
 											{
-												if (line.StartsWith("7ab50e44", StringComparison.OrdinalIgnoreCase))
+												continue;
+											}
+											else
+											{
+												if (!groupread)
 												{
-													continue;
+													tgiGroupTxt.Text = line;
+													groupread = true;
 												}
-												else
+												else if (!instread)
 												{
-													if (!groupread)
-													{
-														tgiGroupTxt.Text = line;
-														groupread = true;
-													}
-													else if (!instread)
-													{
-														instStr = line;
-														tgiInstanceTxt.Text = instStr;
-														EndFormat_Refresh();
-														instread = true;
-													}
+													instStr = line;
+													tgiInstanceTxt.Text = instStr;
+													EndFormat_Refresh();
+													instread = true;
 												}
 											}
 										}
-
 									}
-								} 
-							}
+
+								}
+							} 
 						}
+						
 					}
 					catch (Exception)
 					{
 						throw;
 					}
+                    finally
+                    {
+                        if (fs != null)
+	                    {
+		                    fs.Dispose();
+                            fs = null;
+	                    }
+                    }
 
 				}
 			}
@@ -2045,50 +2055,62 @@ namespace loaddatfsh
 			return alpha;
 		}
 
-		/// <summary>
-		/// Gets the alpha map from a 32-bit png
-		/// </summary>
-		/// <param name="sourcepng">The source png</param>
-		/// <returns>The resulting alpha map</returns>
-		private unsafe static Bitmap GetAlphafromPng(Bitmap source)
-		{
+        /// <summary>
+        /// Gets the alpha map from a 32-bit png
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>
+        /// The resulting alpha map
+        /// </returns>
+        private unsafe static Bitmap GetAlphafromPng(Bitmap source)
+        {
+            Bitmap dest = null;
+
             int width = source.Width;
             int height = source.Height;
-			Bitmap dest = new Bitmap(width, height, PixelFormat.Format24bppRgb);
-			Rectangle rect = new Rectangle(0, 0, width, height);
-
-			BitmapData src = source.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-			BitmapData dst = dest.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+            Bitmap temp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
 
             try
             {
-                byte* srcScan0 = (byte*)src.Scan0.ToPointer();
-                byte* dstScan0 = (byte*)dst.Scan0.ToPointer();
+                Rectangle rect = new Rectangle(0, 0, width, height);
 
-                int srcStride = src.Stride;
-                int dstStride = dst.Stride;
+                BitmapData srcData = source.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                BitmapData dstData = temp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+
+                byte* srcScan0 = (byte*)srcData.Scan0.ToPointer();
+                byte* dstScan0 = (byte*)dstData.Scan0.ToPointer();
+                int srcStride = srcData.Stride;
+                int dstStride = dstData.Stride;
 
                 for (int y = 0; y < height; y++)
                 {
-                    byte* p = srcScan0 + (y * srcStride);
-                    byte* q = dstScan0 + (y * dstStride);
+                    byte* src = srcScan0 + (y * srcStride);
+                    byte* dst = dstScan0 + (y * dstStride);
                     for (int x = 0; x < width; x++)
                     {
-                        q[0] = q[1] = q[2] = p[3];
-                        
-                        p += 4;
-                        q += 3;
+                        dstScan0[0] = dstScan0[1] = dstScan0[2] = src[3];
+
+                        srcScan0 += 4;
+                        dstScan0 += 3;
                     }
                 }
+
+                temp.UnlockBits(dstData);
+                source.UnlockBits(srcData);
+
+                dest = temp.Clone(rect, temp.PixelFormat);
             }
             finally
             {
-			    dest.UnlockBits(dst);
-			    source.UnlockBits(src);
+                if (temp != null)
+                {
+                    temp.Dispose();
+                    temp = null;
+                }
             }
 
-			return dest;
-		}
+            return dest;
+        }
 
 		private int CountPngArgs(string[] args)
 		{
@@ -2123,7 +2145,6 @@ namespace loaddatfsh
 				instStr = RandomHexString(7);
 				EndFormat_Refresh();
 			}
-			//this.Text += string.Concat(" ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
 			datNameTxt.Text = Resources.NoDatLoadedText;
 		}
 		private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
@@ -2620,7 +2641,7 @@ namespace loaddatfsh
 				}
 			}
 		}
-		private bool DatRebuilt = false;
+		private bool datRebuilt = false;
 		/// <summary>
 		/// Rebuild the dat with the new items
 		/// </summary>
@@ -2646,8 +2667,6 @@ namespace loaddatfsh
 					dat = new DatFile();
 				}
 
-
-              
 				for (int i = 4; i >= 0; i--)
 				{
 					
@@ -2659,7 +2678,7 @@ namespace loaddatfsh
 					inputdat.Add(fshwrap[i], group, instanceIds[i], compress_datmips);
 					
 				}
-				DatRebuilt = true;
+				datRebuilt = true;
 			}
 			else if (curImage != null) // the dat does not contain mipmaps
 			{
@@ -2670,7 +2689,7 @@ namespace loaddatfsh
 				CheckInstance(inputdat, group, instance);
 
 				inputdat.Add(wrap, group, instance, compress_datmips);
-				DatRebuilt = true;
+				datRebuilt = true;
 			}
 		}
 
@@ -2754,7 +2773,7 @@ namespace loaddatfsh
 			if (dat == null)
 			{
 				dat = new DatFile();
-				DatRebuilt = false;
+				datRebuilt = false;
 			}
 			if (compDatCb.Checked && !compress_datmips)
 			{
@@ -2776,7 +2795,7 @@ namespace loaddatfsh
 					}
 				}
 
-				if (!genNewInstCb.Checked && !DatRebuilt)
+				if (!genNewInstCb.Checked && !datRebuilt)
 				{
 					if ((loadedDat && datListViewItems.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
 					{
@@ -2897,7 +2916,7 @@ namespace loaddatfsh
 			   ClearandReset(false);
 		   }
 		   this.dat = new DatFile();
-		   DatRebuilt = false;
+		   datRebuilt = false;
 		   datNameTxt.Text = Resources.DatInMemoryText;       
 		   SetLoadedDatEnables();
 		}
@@ -3457,7 +3476,7 @@ namespace loaddatfsh
                     datListView.VirtualListSize = datListViewItems.Count;
 
                     loadedDat = true;
-                    DatRebuilt = false;
+                    datRebuilt = false;
                     SetLoadedDatEnables();
                     datListView.SelectedIndices.Add(0);
                     datNameTxt.Text = Path.GetFileName(dat.FileName);
