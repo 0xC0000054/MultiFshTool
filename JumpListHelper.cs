@@ -25,7 +25,7 @@ namespace loaddatfsh
                 public string pszAppID;
             }
 
-            [DllImport("shell32.dll")]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "1"), DllImport("shell32.dll")]
             internal static extern void SHAddToRecentDocs(
                 ShellAddToRecentDocs flags,
                 SHARDAPPIDINFOLINK link);
