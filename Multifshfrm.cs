@@ -175,7 +175,7 @@ namespace loaddatfsh
 										{
 											if (!string.IsNullOrEmpty(line))
 											{
-												if (line.Equals("7ab50e44", StringComparison.OrdinalIgnoreCase))
+												if (line.StartsWith("7ab50e44", StringComparison.OrdinalIgnoreCase))
 												{
 													continue;
 												}
@@ -2344,23 +2344,17 @@ namespace loaddatfsh
 				{
 					string inst0 = instarray[0];
 					string inst1 = instarray[1];
-					if (inst0.Length == 10)
+					if (inst0.Length == 10 && inst0.ToUpperInvariant().StartsWith("0X"))
 					{
-						if (inst0.ToUpperInvariant().StartsWith("0X"))
-						{
-							lowerinst = inst0.Substring(2, 8);
-						}
+						lowerinst = inst0.Substring(2, 8);
 					}
 					else if (inst0.Length == 8)
 					{
 						lowerinst = inst0;
 					}
-					if (inst1.Length == 10)
+					if (inst1.Length == 10 && inst1.ToUpperInvariant().StartsWith("0X"))
 					{
-						if (inst1.ToUpperInvariant().StartsWith("0X"))
-						{
-							upperinst = inst1.Substring(2, 8);
-						}
+						upperinst = inst1.Substring(2, 8);
 					}
 					else if (inst1.Length == 8)
 					{
@@ -2370,23 +2364,21 @@ namespace loaddatfsh
 
 			}
 
+            if (!string.IsNullOrEmpty(lowerinst) && !string.IsNullOrEmpty(upperinst))
+			{
+				long lower = long.Parse(lowerinst, NumberStyles.HexNumber);
+				long upper = long.Parse(upperinst, NumberStyles.HexNumber);
+				double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
+
+                return Convert.ToInt64(rn).ToString("X").Substring(0,7);
+			}
+				
+            int index; 
+            // generate a random hes 
 			for (int c = 0; c < charArray.Length; c++)
 			{
-				int index;
-				if (!string.IsNullOrEmpty(lowerinst) && !string.IsNullOrEmpty(upperinst))
-				{
-					long lower = long.Parse(lowerinst, NumberStyles.HexNumber);
-					long upper = long.Parse(upperinst, NumberStyles.HexNumber);
-					double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
-					string str =  Convert.ToInt64(rn).ToString("X").Substring(0,7);
-					return str;
-				}
-				else
-				{
-					index = ra.Next(0, hexstring.Length);
-					charArray[c] = hexstring[index];
-				}
-
+				index = ra.Next(0, hexstring.Length);
+				charArray[c] = hexstring[index];
 			}
 			return new string(charArray);
 		}
