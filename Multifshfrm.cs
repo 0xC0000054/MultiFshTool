@@ -2088,10 +2088,10 @@ namespace loaddatfsh
                     byte* dst = dstScan0 + (y * dstStride);
                     for (int x = 0; x < width; x++)
                     {
-                        dstScan0[0] = dstScan0[1] = dstScan0[2] = src[3];
+                        dst[0] = dst[1] = dst[2] = src[3];
 
-                        srcScan0 += 4;
-                        dstScan0 += 3;
+                        src += 4;
+                        dst += 3;
                     }
                 }
 
@@ -3440,6 +3440,8 @@ namespace loaddatfsh
 						}
 						catch (FormatException)
 						{
+                            System.Diagnostics.Debug.WriteLine("0x" + index.Instance.ToString("X8"));
+
 							// Invalid or unsupported file, skip it
 							continue;
 						}
