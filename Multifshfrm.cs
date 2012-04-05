@@ -1398,30 +1398,28 @@ namespace loaddatfsh
 		
 		private void FshtypeBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			FSHImageWrapper image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
 			if (bmpEntry != null && bmpEntry.Bitmap != null)
 			{
-				if (!CheckHdImageSize(bmpEntry.Bitmap))
-				{
-					if (fshTypeBox.SelectedIndex == 0 || fshTypeBox.SelectedIndex == 1)
-					{
-						fshTypeBox.SelectedIndex = typeindex;
-					}
-				}
-			 
-				if (fshTypeBox.SelectedIndex == 0)
-				{
-					hdBaseFshRadio.Checked = true;
-				}
-				else if (fshTypeBox.SelectedIndex == 1)
-				{
-					hdFshRadio.Checked = true;
-				}
-				else
-				{
-					regFshRadio.Checked = true;
-				}
-				switch (fshTypeBox.SelectedIndex)
+                int selectedIndex = fshTypeBox.SelectedIndex;
+                if (!CheckHdImageSize(bmpEntry.Bitmap) && (selectedIndex == 0 || selectedIndex == 1))
+                {
+                    fshTypeBox.SelectedIndex = typeindex;
+                }
+
+                switch (selectedIndex)
+                {
+                    case 0 :
+					    hdBaseFshRadio.Checked = true;
+                        break;
+                    case 1:					
+                        hdFshRadio.Checked = true;
+                        break;
+                    default:
+                        regFshRadio.Checked = true;
+                        break;
+                }
+
+				switch (selectedIndex)
 				{
 					case 0:
 						bmpEntry.BmpType = FSHBmpType.TwentyFourBit;
@@ -2205,6 +2203,10 @@ namespace loaddatfsh
 			{
 				hdFshRadio.Enabled = hdBaseFshRadio.Enabled = false;
 			}
+            else
+            {
+                hdFshRadio.Enabled = hdBaseFshRadio.Enabled = true;
+            }
 		}
 		private bool savedFshWriteCbValue;
 		private void DisableFshWriteCheckBox(TabPage page)
@@ -2230,7 +2232,7 @@ namespace loaddatfsh
 		}
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (mipsbtn_clicked == false && loadIsMip == false)
+			if (!mipsbtn_clicked && !loadIsMip)
 			{
 				if (tabControl1.SelectedTab == mip64tab || tabControl1.SelectedTab == mip32tab || tabControl1.SelectedTab == mip16tab || tabControl1.SelectedTab == mip8tab)
 				{
@@ -2925,7 +2927,9 @@ namespace loaddatfsh
 
 		private void SetHdRadiosEnabled(BitmapEntry entry)
 		{
-			if ((entry.Bitmap.Height >= 256 && entry.Bitmap.Width >= 256) && entry.BmpType == FSHBmpType.ThirtyTwoBit)
+            int height = entry.Bitmap.Height;
+            int width = entry.Bitmap.Width;
+			if ((height >= 256 && width >= 256) && entry.BmpType == FSHBmpType.ThirtyTwoBit)
 			{
 				hdFshRadio.Enabled = true;
 				hdBaseFshRadio.Enabled = true;
@@ -2933,7 +2937,7 @@ namespace loaddatfsh
 				regFshRadio.Checked = false;
 				hdFshRadio.Checked = true;
 			}
-			else if ((entry.Bitmap.Height >= 256 && entry.Bitmap.Width >= 256) && entry.BmpType == FSHBmpType.TwentyFourBit)
+			else if ((height >= 256 && width >= 256) && entry.BmpType == FSHBmpType.TwentyFourBit)
 			{
 				hdFshRadio.Enabled = true;
 				hdBaseFshRadio.Enabled = true;
@@ -2943,8 +2947,11 @@ namespace loaddatfsh
 			}
 			else
 			{
-				hdFshRadio.Enabled = false;
-				hdBaseFshRadio.Enabled = false;
+                if (height < 256 && width < 256)
+                {
+                    hdFshRadio.Enabled = false;
+                    hdBaseFshRadio.Enabled = false; 
+                }
 				regFshRadio.Checked = true;
 			}
 		}
