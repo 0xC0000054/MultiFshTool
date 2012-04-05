@@ -78,14 +78,14 @@ namespace loaddatfsh
 			{
 				if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
 				{
-                    FileStream fs = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
+					FileStream fs = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
 					try
 					{
 						bool success = false;
 
 						using (FSHImageWrapper tempimg = new FSHImageWrapper(fs))
 						{
-                            fs = null;
+							fs = null;
 							BitmapEntry tempitem = tempimg.Bitmaps[0];
 
 							fshFileName = filename;
@@ -208,14 +208,14 @@ namespace loaddatfsh
 					{
 						throw;
 					}
-                    finally
-                    {
-                        if (fs != null)
-	                    {
-		                    fs.Dispose();
-                            fs = null;
-	                    }
-                    }
+					finally
+					{
+						if (fs != null)
+						{
+							fs.Dispose();
+							fs = null;
+						}
+					}
 
 				}
 			}
@@ -230,35 +230,35 @@ namespace loaddatfsh
 			try
 			{
 
-                bool fshWriteCompression = fshWriteCompCb.Checked;
+				bool fshWriteCompression = fshWriteCompCb.Checked;
 
-                if (image.IsDXTFsh() && fshWriteCompression && useOriginalImage)
-                {
-                    BitmapEntryCollection entries = image.Bitmaps;
-                    int count = entries.Count;
-                    using (FSHImageWrapper fsh = new FSHImageWrapper())
-                    {
-                        for (int i = 0; i < count; i++)
-                        {
-                            BitmapEntry item = entries[i];
+				if (image.IsDXTFsh() && fshWriteCompression && useOriginalImage)
+				{
+					BitmapEntryCollection entries = image.Bitmaps;
+					int count = entries.Count;
+					using (FSHImageWrapper fsh = new FSHImageWrapper())
+					{
+						for (int i = 0; i < count; i++)
+						{
+							BitmapEntry item = entries[i];
 
-                            BitmapEntry entry = new BitmapEntry();
-                            entry.Bitmap = origbmplist[i].Clone(PixelFormat.Format24bppRgb);
-                            entry.Alpha = item.Alpha.Clone<Bitmap>();
-                            entry.BmpType = item.BmpType;
-                            entry.DirName = item.DirName;
+							BitmapEntry entry = new BitmapEntry();
+							entry.Bitmap = origbmplist[i].Clone(PixelFormat.Format24bppRgb);
+							entry.Alpha = item.Alpha.Clone<Bitmap>();
+							entry.BmpType = item.BmpType;
+							entry.DirName = item.DirName;
 
-                            fsh.Bitmaps.Add(entry);
-                        }
+							fsh.Bitmaps.Add(entry);
+						}
 
-                        fsh.Save(fs, true);
-                    }
-                }
-                else
-                {
-                    image.Save(fs, fshWriteCompression);
-                }
-            }
+						fsh.Save(fs, true);
+					}
+				}
+				else
+				{
+					image.Save(fs, fshWriteCompression);
+				}
+			}
 			catch (Exception)
 			{
 				throw;
@@ -405,7 +405,7 @@ namespace loaddatfsh
 			}
 			listview.LargeImageList = imglist;
 			listview.SmallImageList = imglist;
-            int count = image.Bitmaps.Count;
+			int count = image.Bitmaps.Count;
 			for (int i = 0; i < count; i++)
 			{
 				ListViewItem alpha = new ListViewItem(Resources.BitmapNumberText + i.ToString(), i);
@@ -428,9 +428,9 @@ namespace loaddatfsh
 			listview.LargeImageList = imglist;
 			listview.SmallImageList = imglist;
 
-            int count = image.Bitmaps.Count;
-            for (int i = 0; i < count; i++)
-            {
+			int count = image.Bitmaps.Count;
+			for (int i = 0; i < count; i++)
+			{
 				ListViewItem alpha = new ListViewItem(Resources.AlphaNumberText + i.ToString(), i);
 				listview.Items.Add(alpha);
 			}
@@ -449,8 +449,8 @@ namespace loaddatfsh
 			}
 			listview.LargeImageList = imglist;
 			listview.SmallImageList = imglist;
-            
-            int count = image.Bitmaps.Count;
+			
+			int count = image.Bitmaps.Count;
 			for (int i = 0; i < count; i++)
 			{
 				ListViewItem blend = new ListViewItem(Resources.BlendNumberText + i.ToString(), i);
@@ -462,17 +462,17 @@ namespace loaddatfsh
 			Bitmap blendbmp = new Bitmap(displaySize.Width, displaySize.Height);
 			using(Graphics g = Graphics.FromImage(blendbmp))
 			{
-                Rectangle rect = new Rectangle(0, 0, blendbmp.Width, blendbmp.Height);
+				Rectangle rect = new Rectangle(0, 0, blendbmp.Width, blendbmp.Height);
 				using (HatchBrush brush = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.White, Color.FromArgb(192, 192, 192)))
 				{
 					g.FillRectangle(brush, rect);
 				}
 				g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 				g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
-                { 
-                    g.DrawImage(blended, rect);
-                }
+				using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
+				{ 
+					g.DrawImage(blended, rect);
+				}
 			}
 			return blendbmp;
 		}
@@ -606,7 +606,7 @@ namespace loaddatfsh
 						files = CheckSize(files);
 						files = TrimAlphaBitmaps(files);
 					}
-                    int count = files.Count;
+					int count = files.Count;
 					for (int i = 0; i < count; i++)
 					{
 						FileInfo fi = new FileInfo(files[i]);
@@ -764,30 +764,30 @@ namespace loaddatfsh
 			alphalist.Images.Clear();
 			blendlist.Images.Clear();
 
-            if (image.Bitmaps.Count > 1)
-            {
+			if (image.Bitmaps.Count > 1)
+			{
 
-                int count = image.Bitmaps.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    bmpEntry = image.Bitmaps[i];
-                    Reset24bitAlpha(bmpEntry);
-                    bmplist.Images.Add(bmpEntry.Bitmap);
-                    alphalist.Images.Add(bmpEntry.Alpha);
-                    blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
+				int count = image.Bitmaps.Count;
+				for (int i = 0; i < count; i++)
+				{
+					bmpEntry = image.Bitmaps[i];
+					Reset24bitAlpha(bmpEntry);
+					bmplist.Images.Add(bmpEntry.Bitmap);
+					alphalist.Images.Add(bmpEntry.Alpha);
+					blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
 
-                }
+				}
 
-            }
-            else
-            {
+			}
+			else
+			{
 
-                bmpEntry = image.Bitmaps[0];
-                Reset24bitAlpha(bmpEntry);
-                bmplist.Images.Add(bmpEntry.Bitmap);
-                alphalist.Images.Add(bmpEntry.Alpha);
-                blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
-            }
+				bmpEntry = image.Bitmaps[0];
+				Reset24bitAlpha(bmpEntry);
+				bmplist.Images.Add(bmpEntry.Bitmap);
+				alphalist.Images.Add(bmpEntry.Alpha);
+				blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
+			}
 			RefreshDirectory(image);
 			
 			list.BeginUpdate();
@@ -810,15 +810,15 @@ namespace loaddatfsh
 		{
 			if (item.BmpType == FSHBmpType.TwentyFourBit)
 			{
-                int width = item.Bitmap.Width;
-                int height = item.Bitmap.Height;
+				int width = item.Bitmap.Width;
+				int height = item.Bitmap.Height;
 				item.Alpha = new Bitmap(width, height, PixelFormat.Format24bppRgb);
 				BitmapData bd = item.Alpha.LockBits(new Rectangle(0, 0, item.Alpha.Width, item.Alpha.Height), ImageLockMode.WriteOnly,
 				PixelFormat.Format24bppRgb);
 				try
 				{
-                    void* scan0 = bd.Scan0.ToPointer();
-                    int stride = bd.Stride;
+					void* scan0 = bd.Scan0.ToPointer();
+					int stride = bd.Stride;
 					for (int y = 0; y < height; y++)
 					{
 						byte* p = (byte*)scan0 + (y * stride);
@@ -845,15 +845,15 @@ namespace loaddatfsh
 			{
 
 				remBtn.Enabled = true;
-                int count = curImage.Bitmaps.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    bmpEntry = curImage.Bitmaps[i];
+				int count = curImage.Bitmaps.Count;
+				for (int i = 0; i < count; i++)
+				{
+					bmpEntry = curImage.Bitmaps[i];
 
 					Reset24bitAlpha(bmpEntry);
-                    bitmapList.ScaleListSize(bmpEntry.Bitmap);
+					bitmapList.ScaleListSize(bmpEntry.Bitmap);
 					bitmapList.Images.Add(bmpEntry.Bitmap);
-                    alphaList.ScaleListSize(bmpEntry.Alpha);
+					alphaList.ScaleListSize(bmpEntry.Alpha);
 					alphaList.Images.Add(bmpEntry.Alpha);
 					blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
 				}
@@ -864,11 +864,11 @@ namespace loaddatfsh
 				remBtn.Enabled = false;
 				bmpEntry = curImage.Bitmaps[0];
 				Reset24bitAlpha(bmpEntry);
-                bitmapList.ScaleListSize(bmpEntry.Bitmap);
-                bitmapList.Images.Add(bmpEntry.Bitmap);
-                alphaList.ScaleListSize(bmpEntry.Alpha);
-                alphaList.Images.Add(bmpEntry.Alpha); 
-                blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
+				bitmapList.ScaleListSize(bmpEntry.Bitmap);
+				bitmapList.Images.Add(bmpEntry.Bitmap);
+				alphaList.ScaleListSize(bmpEntry.Alpha);
+				alphaList.Images.Add(bmpEntry.Alpha); 
+				blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
 
 			} 
 			
@@ -895,7 +895,7 @@ namespace loaddatfsh
 		/// <param name="image">The input image</param>
 		private void RefreshDirectory(FSHImageWrapper image)
 		{
-            int count = image.Bitmaps.Count;
+			int count = image.Bitmaps.Count;
 			dirName = new string[count];
 			fshSize = new string[count];
 			for (int i = 0; i < count; i++)
@@ -1007,10 +1007,10 @@ namespace loaddatfsh
 							}
 							else if (!string.IsNullOrEmpty(alphaMap) && File.Exists(alphaMap))
 							{
-                                using (Bitmap alpha = new Bitmap(alphaMap))
-                                {
-                                    repBmp.Alpha = alpha.Clone(PixelFormat.Format24bppRgb); 
-                                }
+								using (Bitmap alpha = new Bitmap(alphaMap))
+								{
+									repBmp.Alpha = alpha.Clone(PixelFormat.Format24bppRgb); 
+								}
 								if (CheckHdImageSize(bmp) && Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
@@ -1320,9 +1320,9 @@ namespace loaddatfsh
 			Temp_Mips(8);
 		}
 
-        /// <summary>
-        /// Builds the mip maps for the image.
-        /// </summary>
+		/// <summary>
+		/// Builds the mip maps for the image.
+		/// </summary>
 		private void BuildMipMaps()
 		{
 			if ((curImage != null) && curImage.Bitmaps.Count >= 1)
@@ -1359,7 +1359,7 @@ namespace loaddatfsh
 			{
 				using (StreamWriter sw = new StreamWriter(fs))
 				{				
-                    fs = null;
+					fs = null;
 
 					sw.WriteLine("7ab50e44\t\n");
 					sw.WriteLine(string.Format("{0:X8}", tgiGroupTxt.Text.ToString() + "\n"));
@@ -1583,12 +1583,12 @@ namespace loaddatfsh
 				}
 			}
 		}
-        /// <summary>
-        /// Saves the bitmap.
-        /// </summary>
-        /// <param name="bmp">The Bitmap  to save.</param>
-        /// <param name="format">The format to save in.</param>
-        /// <param name="append">The suffix to append to the file name.</param>
+		/// <summary>
+		/// Saves the bitmap.
+		/// </summary>
+		/// <param name="bmp">The Bitmap  to save.</param>
+		/// <param name="format">The format to save in.</param>
+		/// <param name="append">The suffix to append to the file name.</param>
 		private void SaveBitmap(Bitmap bmp, PixelFormat format, string append)
 		{
 			ListView listv = null;
@@ -1674,9 +1674,9 @@ namespace loaddatfsh
 						case "_blend":
 							suffix = Resources.SaveBitmap_Blended_Suffix;
 							break;
-                        default:
-                            suffix = Resources.SaveBitmap_Bitmap_Suffix;
-                            break;
+						default:
+							suffix = Resources.SaveBitmap_Bitmap_Suffix;
+							break;
 					}
 
 					string message = string.Format(Resources.SaveBitmap_Error_Format, suffix);
@@ -1688,10 +1688,10 @@ namespace loaddatfsh
 		{
 			if (bmpEntry != null && bmpEntry.Bitmap != null && bmpEntry.Alpha != null)
 			{
-                using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
-                {
-                	SaveBitmap(blended, PixelFormat.Format32bppArgb, "_blend");
-                }
+				using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
+				{
+					SaveBitmap(blended, PixelFormat.Format32bppArgb, "_blend");
+				}
 			}
 		}
 
@@ -2005,8 +2005,8 @@ namespace loaddatfsh
 				}
 			}
 		}
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
-        private void ReloadGroupID()
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
+		private void ReloadGroupID()
 		{
 			string g = string.Empty; 
 			if (!string.IsNullOrEmpty(Groupidoverride))
@@ -2026,91 +2026,91 @@ namespace loaddatfsh
 		/// <returns>The generated alpha map</returns>
 		private unsafe static Bitmap GenerateAlpha(Bitmap temp)
 		{
-            int height = temp.Height;
-            int width = temp.Width;
+			int height = temp.Height;
+			int width = temp.Width;
 
 			Bitmap alpha = new Bitmap(width, height, PixelFormat.Format24bppRgb);
 			BitmapData data = alpha.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
 
-            try
-            {
-                void* scan0 = data.Scan0.ToPointer();
-                int stride = data.Stride;
+			try
+			{
+				void* scan0 = data.Scan0.ToPointer();
+				int stride = data.Stride;
 
-                for (int y = 0; y < height; y++)
-                {
-                    byte* p = (byte*)scan0 + (y * stride);
-                    for (int x = 0; x < width; x++)
-                    {
-                        p[0] = p[1] = p[2] = 255;
-                        p += 3;
-                    }
-                }
-            }
-            finally
-            {
-			    alpha.UnlockBits(data);
-            }
+				for (int y = 0; y < height; y++)
+				{
+					byte* p = (byte*)scan0 + (y * stride);
+					for (int x = 0; x < width; x++)
+					{
+						p[0] = p[1] = p[2] = 255;
+						p += 3;
+					}
+				}
+			}
+			finally
+			{
+				alpha.UnlockBits(data);
+			}
 
 			return alpha;
 		}
 
-        /// <summary>
-        /// Gets the alpha map from a 32-bit png
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <returns>
-        /// The resulting alpha map
-        /// </returns>
-        private unsafe static Bitmap GetAlphafromPng(Bitmap source)
-        {
-            Bitmap dest = null;
+		/// <summary>
+		/// Gets the alpha map from a 32-bit png
+		/// </summary>
+		/// <param name="source">The source.</param>
+		/// <returns>
+		/// The resulting alpha map
+		/// </returns>
+		private unsafe static Bitmap GetAlphafromPng(Bitmap source)
+		{
+			Bitmap dest = null;
 
-            int width = source.Width;
-            int height = source.Height;
-            Bitmap temp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+			int width = source.Width;
+			int height = source.Height;
+			Bitmap temp = new Bitmap(width, height, PixelFormat.Format24bppRgb);
 
-            try
-            {
-                Rectangle rect = new Rectangle(0, 0, width, height);
+			try
+			{
+				Rectangle rect = new Rectangle(0, 0, width, height);
 
-                BitmapData srcData = source.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-                BitmapData dstData = temp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+				BitmapData srcData = source.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+				BitmapData dstData = temp.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
 
-                byte* srcScan0 = (byte*)srcData.Scan0.ToPointer();
-                byte* dstScan0 = (byte*)dstData.Scan0.ToPointer();
-                int srcStride = srcData.Stride;
-                int dstStride = dstData.Stride;
+				byte* srcScan0 = (byte*)srcData.Scan0.ToPointer();
+				byte* dstScan0 = (byte*)dstData.Scan0.ToPointer();
+				int srcStride = srcData.Stride;
+				int dstStride = dstData.Stride;
 
-                for (int y = 0; y < height; y++)
-                {
-                    byte* src = srcScan0 + (y * srcStride);
-                    byte* dst = dstScan0 + (y * dstStride);
-                    for (int x = 0; x < width; x++)
-                    {
-                        dst[0] = dst[1] = dst[2] = src[3];
+				for (int y = 0; y < height; y++)
+				{
+					byte* src = srcScan0 + (y * srcStride);
+					byte* dst = dstScan0 + (y * dstStride);
+					for (int x = 0; x < width; x++)
+					{
+						dst[0] = dst[1] = dst[2] = src[3];
 
-                        src += 4;
-                        dst += 3;
-                    }
-                }
+						src += 4;
+						dst += 3;
+					}
+				}
 
-                temp.UnlockBits(dstData);
-                source.UnlockBits(srcData);
+				temp.UnlockBits(dstData);
+				source.UnlockBits(srcData);
 
-                dest = temp.Clone(rect, temp.PixelFormat);
-            }
-            finally
-            {
-                if (temp != null)
-                {
-                    temp.Dispose();
-                    temp = null;
-                }
-            }
+				dest = temp.Clone(rect, temp.PixelFormat);
+			}
+			finally
+			{
+				if (temp != null)
+				{
+					temp.Dispose();
+					temp = null;
+				}
+			}
 
-            return dest;
-        }
+			return dest;
+		}
 
 		private int CountPngArgs(string[] args)
 		{
@@ -2334,19 +2334,13 @@ namespace loaddatfsh
 			}
 		}
 		private Random ra = new Random(); 
+		private string lowerInstRange = string.Empty;
+		private string upperInstRange = string.Empty;
+
 		private string RandomHexString(int length)
 		{
-			const string numbers = "0123456789";
-			const string hexcode = "ABCDEF";
-			char[] charArray = new char[length];
-			string hexstring = string.Empty;
-		   
-			hexstring += numbers;
-			hexstring += hexcode;
 			string rangepath = Path.Combine(Application.StartupPath, @"instRange.txt");
-			string lowerinst = string.Empty;
-			string upperinst = string.Empty;
-			if (File.Exists(rangepath))
+			if (File.Exists(rangepath) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
 			{                    
 				string[] instarray = null;
 				using (StreamReader sr = new StreamReader(rangepath))
@@ -2367,38 +2361,46 @@ namespace loaddatfsh
 					string inst1 = instarray[1];
 					if (inst0.Length == 10 && inst0.ToUpperInvariant().StartsWith("0X"))
 					{
-						lowerinst = inst0.Substring(2, 8);
+						lowerInstRange = inst0.Substring(2, 8);
 					}
 					else if (inst0.Length == 8)
 					{
-						lowerinst = inst0;
+						lowerInstRange = inst0;
 					}
 					if (inst1.Length == 10 && inst1.ToUpperInvariant().StartsWith("0X"))
 					{
-						upperinst = inst1.Substring(2, 8);
+						upperInstRange = inst1.Substring(2, 8);
 					}
 					else if (inst1.Length == 8)
 					{
-						upperinst = inst1;
+						upperInstRange = inst1;
 					}
 				}
 
 			}
 
-            if (!string.IsNullOrEmpty(lowerinst) && !string.IsNullOrEmpty(upperinst))
+			if (!string.IsNullOrEmpty(lowerInstRange) && !string.IsNullOrEmpty(upperInstRange))
 			{
-				long lower = long.Parse(lowerinst, NumberStyles.HexNumber);
-				long upper = long.Parse(upperinst, NumberStyles.HexNumber);
+				long lower = long.Parse(lowerInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				long upper = long.Parse(upperInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 				double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
 
-                return Convert.ToInt64(rn).ToString("X").Substring(0,7);
+				return Convert.ToInt64(rn).ToString("X").Substring(0,7);
 			}
+
+			const string numbers = "0123456789";
+			const string hexcode = "ABCDEF";
+			char[] charArray = new char[length];
+			string hexstring = string.Empty;
+
+			hexstring += numbers;
+			hexstring += hexcode;
 				
-            int index; 
-            // generate a random hes 
-			for (int c = 0; c < charArray.Length; c++)
+			int index; 
+			// generate a random hex string
+			for (int c = 0; c < length; c++)
 			{
-				index = ra.Next(0, hexstring.Length);
+				index = ra.Next(0, 16);
 				charArray[c] = hexstring[index];
 			}
 			return new string(charArray);
@@ -2672,7 +2674,7 @@ namespace loaddatfsh
 					
 					fshwrap[i] = new FshWrapper(fshimg[i]);
 
-                    CheckInstance(inputdat, group, instanceIds[i]);
+					CheckInstance(inputdat, group, instanceIds[i]);
 
 
 					inputdat.Add(fshwrap[i], group, instanceIds[i], compress_datmips);
@@ -2723,7 +2725,7 @@ namespace loaddatfsh
 		/// <param name="instance">The instance id to check</param>
 		private void CheckInstance(DatFile checkdat, uint group, uint instance)
 		{
-            int count = checkdat.Indexes.Count;
+			int count = checkdat.Indexes.Count;
 			for (int n = 0; n < count; n++)
 			{
 				DatIndex chkindex = checkdat.Indexes[n];
@@ -2962,23 +2964,23 @@ namespace loaddatfsh
 					tgiGroupTxt.Text = group;
 					tgiInstanceTxt.Text = instance;
 
-                      if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) ||
-                        !instance.EndsWith("A", StringComparison.Ordinal))
-                    {
-                        instStr = instance.Substring(0, 7);
-                        if (instance.EndsWith("4", StringComparison.Ordinal))
-                        {
-                            inst0_4Rdo.Checked = true;
-                        }
-                        else if (instance.EndsWith("9", StringComparison.Ordinal))
-                        {
-                            inst5_9Rdo.Checked = true;
-                        }
-                        else if (instance.EndsWith("E", StringComparison.Ordinal))
-                        {
-                            instA_ERdo.Checked = true;
-                        }
-                    }
+					  if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) ||
+						!instance.EndsWith("A", StringComparison.Ordinal))
+					{
+						instStr = instance.Substring(0, 7);
+						if (instance.EndsWith("4", StringComparison.Ordinal))
+						{
+							inst0_4Rdo.Checked = true;
+						}
+						else if (instance.EndsWith("9", StringComparison.Ordinal))
+						{
+							inst5_9Rdo.Checked = true;
+						}
+						else if (instance.EndsWith("E", StringComparison.Ordinal))
+						{
+							instA_ERdo.Checked = true;
+						}
+					}
 
 
 
@@ -3118,7 +3120,7 @@ namespace loaddatfsh
 						origbmplist.Clear();
 					}
 				}
-                remBtn.Enabled = false;
+				remBtn.Enabled = false;
 				hdFshRadio.Enabled = true;
 				hdBaseFshRadio.Enabled = true;
 			}
@@ -3126,12 +3128,12 @@ namespace loaddatfsh
 
 		private void Multifshfrm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-            if (loadDatWorker.IsBusy)
-            {
-                loadDatWorker.CancelAsync();
-                e.Cancel = true;
-            }
-            else if (dat != null)
+			if (loadDatWorker.IsBusy)
+			{
+				loadDatWorker.CancelAsync();
+				e.Cancel = true;
+			}
+			else if (dat != null)
 			{
 				if (dat.IsDirty)
 				{
@@ -3163,7 +3165,7 @@ namespace loaddatfsh
 		/// <returns>True if the bitmap is 256 x 256 or larger otherwise false</returns>
 		private bool CheckHdImageSize(Bitmap b)
 		{
-            return (b.Width >= 256 && b.Height >= 256);
+			return (b.Width >= 256 && b.Height >= 256);
 		}
 		private FSHImageWrapper GetImageFromSelectedTab(int index)
 		{
@@ -3224,8 +3226,8 @@ namespace loaddatfsh
 					useOriginalImage = true;
 
 					Temp_fsh();					
-                    
-                    useOriginalImage = false; // reset it to false
+					
+					useOriginalImage = false; // reset it to false
 
 					if (fshWriteCbGenMips)
 					{
@@ -3304,16 +3306,16 @@ namespace loaddatfsh
 
 		private void listViewMain_DragDrop(object sender, DragEventArgs e)
 		{               
-            List<string> files = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop));
-            if (loadedDat && datListViewItems.Count > 0)
-            {
-                AddbtnFiles(files, false);
-            }
-            else
-            {
-                NewFsh(files);
-            }
-        }
+			List<string> files = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop));
+			if (loadedDat && datListViewItems.Count > 0)
+			{
+				AddbtnFiles(files, false);
+			}
+			else
+			{
+				NewFsh(files);
+			}
+		}
 
 		private void Multifshfrm_Shown(object sender, EventArgs e)
 		{
@@ -3357,7 +3359,7 @@ namespace loaddatfsh
 					for (int i = 0; i < args.Length; i++)
 					{
 						FileInfo fi = new FileInfo(args[i]);
-                        string ext = fi.Extension;
+						string ext = fi.Extension;
 						if (fi.Exists)
 						{
 							if (ext.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || ext.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
@@ -3411,7 +3413,7 @@ namespace loaddatfsh
 				if (loadDatWorker.CancellationPending)
 				{
 					e.Cancel = true;
-                    return;
+					return;
 				}
 
 				if (index.Type == fshTypeID)
@@ -3440,7 +3442,7 @@ namespace loaddatfsh
 						}
 						catch (FormatException)
 						{
-                            System.Diagnostics.Debug.WriteLine("0x" + index.Instance.ToString("X8"));
+							System.Diagnostics.Debug.WriteLine("0x" + index.Instance.ToString("X8"));
 
 							// Invalid or unsupported file, skip it
 							continue;
@@ -3469,33 +3471,33 @@ namespace loaddatfsh
 			}
 			else if (e.Cancelled)
 			{
-                this.Close();
+				this.Close();
 			}
-            else
-            {
-                if (datListViewItems.Count > 0)
-                {
-                    datListView.VirtualListSize = datListViewItems.Count;
+			else
+			{
+				if (datListViewItems.Count > 0)
+				{
+					datListView.VirtualListSize = datListViewItems.Count;
 
-                    loadedDat = true;
-                    datRebuilt = false;
-                    SetLoadedDatEnables();
-                    datListView.SelectedIndices.Add(0);
-                    datNameTxt.Text = Path.GetFileName(dat.FileName);
-                }
-                else
-                {
-                    string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
-                    MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    ClearandReset(true);
-                }
+					loadedDat = true;
+					datRebuilt = false;
+					SetLoadedDatEnables();
+					datListView.SelectedIndices.Add(0);
+					datNameTxt.Text = Path.GetFileName(dat.FileName);
+				}
+				else
+				{
+					string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
+					MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					ClearandReset(true);
+				}
 
-                this.Cursor = Cursors.Default;
-                if (manager != null)
-                {
-                    this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
-                }
-            }
+				this.Cursor = Cursors.Default;
+				if (manager != null)
+				{
+					this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
+				}
+			}
 				
 		}
 	}
