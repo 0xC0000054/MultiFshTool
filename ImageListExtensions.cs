@@ -10,12 +10,25 @@ namespace loaddatfsh
     static class ImageListExtensions
     {
         private static readonly Size defaultSize = new Size(96, 96); 
+
+        
+
         public static void ScaleListSize(this ImageList list, Bitmap image)
         {
-            if (list.ImageSize.Width > image.Width || list.ImageSize.Height > image.Height)
+            Size listSize = list.ImageSize;
+            if (listSize.Width > image.Width || listSize.Height > image.Height)
             {
-                int width = Math.Min(list.ImageSize.Width, image.Width);
-                int height = Math.Min(list.ImageSize.Height, image.Height);
+                int imageWidth = image.Width;
+                int imageHeight = image.Height;
+
+                // Figure out the ratio
+                double ratioX = (double)listSize.Width / (double)imageWidth;
+                double ratioY = (double)listSize.Height / (double)imageHeight;
+                double ratio = ratioX < ratioY ? ratioX : ratioY; // use whichever multiplier is smaller
+
+                // now we can get the new height and width
+                int height = (int)(imageHeight * ratio);
+                int width = (int)(imageWidth * ratio);
 
                 list.ImageSize = new Size(width, height);
             }
