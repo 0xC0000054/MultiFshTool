@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FshDatIO;
-using FSHLib;
 using loaddatfsh.Properties;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Threading;
@@ -613,12 +612,12 @@ namespace loaddatfsh
 									addbmp.Alpha = alpha;
 									if (fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
-										addbmp.BmpType = FSHBmpType.ThirtyTwoBit;
+										addbmp.BmpType = FshImageFormat.ThirtyTwoBit;
 										fshTypeBox.SelectedIndex = 1;
 									}
 									else
 									{
-										addbmp.BmpType = FSHBmpType.DXT3;
+										addbmp.BmpType = FshImageFormat.DXT3;
 										fshTypeBox.SelectedIndex = 3;
 									}
 
@@ -629,12 +628,12 @@ namespace loaddatfsh
 									addbmp.Alpha = testbmp;
 									if (fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
-										addbmp.BmpType = FSHBmpType.ThirtyTwoBit;
+										addbmp.BmpType = FshImageFormat.ThirtyTwoBit;
 										fshTypeBox.SelectedIndex = 1;
 									}
 									else
 									{
-										addbmp.BmpType = FSHBmpType.DXT3;
+										addbmp.BmpType = FshImageFormat.DXT3;
 										fshTypeBox.SelectedIndex = 3;
 									}
 								}
@@ -643,12 +642,12 @@ namespace loaddatfsh
 									addbmp.Alpha = GenerateAlpha(bmp);
 									if (fi.Name.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
-										addbmp.BmpType = FSHBmpType.TwentyFourBit;
+										addbmp.BmpType = FshImageFormat.TwentyFourBit;
 										fshTypeBox.SelectedIndex = 0;
 									}
 									else
 									{
-										addbmp.BmpType = FSHBmpType.DXT1;
+										addbmp.BmpType = FshImageFormat.DXT1;
 										fshTypeBox.SelectedIndex = 2;
 									}
 
@@ -662,11 +661,11 @@ namespace loaddatfsh
 									addbmp.DirName = "FiSH";
 								}
 
-								if (bmpEntry.BmpType == FSHBmpType.ThirtyTwoBit)
+								if (bmpEntry.BmpType == FshImageFormat.ThirtyTwoBit)
 								{
 									hdFshRadio.Checked = true;
 								}
-								else if (bmpEntry.BmpType == FSHBmpType.TwentyFourBit)
+								else if (bmpEntry.BmpType == FshImageFormat.TwentyFourBit)
 								{
 									hdBaseFshRadio.Checked = true;
 								}
@@ -931,12 +930,12 @@ namespace loaddatfsh
 
 								if (Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
+									repBmp.BmpType = FshImageFormat.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
 								}
 								else
 								{
-									repBmp.BmpType = FSHBmpType.DXT3;
+									repBmp.BmpType = FshImageFormat.DXT3;
 									fshTypeBox.SelectedIndex = 3;
 								}
 							}
@@ -948,12 +947,12 @@ namespace loaddatfsh
 								}
 								if (Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
+									repBmp.BmpType = FshImageFormat.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
 								}
 								else
 								{
-									repBmp.BmpType = FSHBmpType.DXT3;
+									repBmp.BmpType = FshImageFormat.DXT3;
 									fshTypeBox.SelectedIndex = 3;
 								}
 							}
@@ -962,12 +961,12 @@ namespace loaddatfsh
 								repBmp.Alpha = GetAlphafromPng(bmp);
 								if (Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									repBmp.BmpType = FSHBmpType.ThirtyTwoBit;
+									repBmp.BmpType = FshImageFormat.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
 								}
 								else
 								{
-									repBmp.BmpType = FSHBmpType.DXT3;
+									repBmp.BmpType = FshImageFormat.DXT3;
 									fshTypeBox.SelectedIndex = 3;
 								}
 							}
@@ -976,12 +975,12 @@ namespace loaddatfsh
 								repBmp.Alpha = GenerateAlpha(bmp);
 								if (Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									repBmp.BmpType = FSHBmpType.TwentyFourBit;
+									repBmp.BmpType = FshImageFormat.TwentyFourBit;
 									fshTypeBox.SelectedIndex = 0;
 								}
 								else
 								{
-									repBmp.BmpType = FSHBmpType.DXT1;
+									repBmp.BmpType = FshImageFormat.DXT1;
 									fshTypeBox.SelectedIndex = 2;
 								}
 							}
@@ -1030,24 +1029,24 @@ namespace loaddatfsh
 				hdBaseFshRadio.Enabled = true;
 				if (hdFshRadio.Checked)
 				{
-					bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
+					bmpEntry.BmpType = FshImageFormat.ThirtyTwoBit;
 					fshTypeBox.SelectedIndex = 1;
 				}
 				else if (hdBaseFshRadio.Checked)
 				{
-					bmpEntry.BmpType = FSHBmpType.TwentyFourBit;
+					bmpEntry.BmpType = FshImageFormat.TwentyFourBit;
 					fshTypeBox.SelectedIndex = 0;
 				}
 				else if (regFshRadio.Checked)
 				{
 					if (bmpEntry.Alpha.GetPixel(0, 0) != Color.White)
 					{
-						bmpEntry.BmpType = FSHBmpType.DXT3;
+						bmpEntry.BmpType = FshImageFormat.DXT3;
 						fshTypeBox.SelectedIndex = 3;
 					}
 					else
 					{
-						bmpEntry.BmpType = FSHBmpType.DXT1;
+						bmpEntry.BmpType = FshImageFormat.DXT1;
 						fshTypeBox.SelectedIndex = 2;
 					}
 				}
@@ -1117,7 +1116,7 @@ namespace loaddatfsh
 		/// <returns>The new scaled Bitmap</returns>
 		private Bitmap GetBitmapThumbnail(Bitmap source, int width, int height)
 		{
-			return SuperSample.SuperSample.GetBitmapThumbnail(source, width, height);
+			return SuperSample.GetBitmapThumbnail(source, width, height);
 		}
 		private bool mipsbtn_clicked = false;
 
@@ -1328,16 +1327,16 @@ namespace loaddatfsh
 				switch (selectedIndex)
 				{
 					case 0:
-						bmpEntry.BmpType = FSHBmpType.TwentyFourBit;
+						bmpEntry.BmpType = FshImageFormat.TwentyFourBit;
 						break;
 					case 1:
-						bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
+						bmpEntry.BmpType = FshImageFormat.ThirtyTwoBit;
 						break;
 					case 2:
-						bmpEntry.BmpType = FSHBmpType.DXT1;
+						bmpEntry.BmpType = FshImageFormat.DXT1;
 						break;
 					case 3:
-						bmpEntry.BmpType = FSHBmpType.DXT3;
+						bmpEntry.BmpType = FshImageFormat.DXT3;
 						break;
 				}
 			}
@@ -1707,12 +1706,12 @@ namespace loaddatfsh
 								bmpEntry.Alpha = new Bitmap(alphaBox.Text);
 								if (Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
+									bmpEntry.BmpType = FshImageFormat.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
 								}
 								else
 								{
-									bmpEntry.BmpType = FSHBmpType.DXT3;
+									bmpEntry.BmpType = FshImageFormat.DXT3;
 									fshTypeBox.SelectedIndex = 3;
 								}
 							}
@@ -1721,12 +1720,12 @@ namespace loaddatfsh
 								bmpEntry.Alpha = new Bitmap(alphaMap);
 								if (Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
+									bmpEntry.BmpType = FshImageFormat.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
 								}
 								else
 								{
-									bmpEntry.BmpType = FSHBmpType.DXT3;
+									bmpEntry.BmpType = FshImageFormat.DXT3;
 									fshTypeBox.SelectedIndex = 3;
 								}
 							}
@@ -1736,12 +1735,12 @@ namespace loaddatfsh
 								bmpEntry.Alpha = GetAlphafromPng(bmp);
 								if (Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
-									bmpEntry.BmpType = FSHBmpType.ThirtyTwoBit;
+									bmpEntry.BmpType = FshImageFormat.ThirtyTwoBit;
 									fshTypeBox.SelectedIndex = 1;
 								}
 								else
 								{
-									bmpEntry.BmpType = FSHBmpType.DXT3;
+									bmpEntry.BmpType = FshImageFormat.DXT3;
 									fshTypeBox.SelectedIndex = 3;
 								}
 							}
@@ -1752,12 +1751,12 @@ namespace loaddatfsh
 									bmpEntry.Alpha = GenerateAlpha(bmp);
 									if (Path.GetFileName(files[0]).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
-										bmpEntry.BmpType = FSHBmpType.TwentyFourBit;
+										bmpEntry.BmpType = FshImageFormat.TwentyFourBit;
 										fshTypeBox.SelectedIndex = 0;
 									}
 									else
 									{
-										bmpEntry.BmpType = FSHBmpType.DXT1;
+										bmpEntry.BmpType = FshImageFormat.DXT1;
 										fshTypeBox.SelectedIndex = 2;
 									}
 								}
@@ -1784,11 +1783,11 @@ namespace loaddatfsh
 								EndFormat_Refresh();
 							}
 
-							if (bmpEntry.BmpType == FSHBmpType.ThirtyTwoBit)
+							if (bmpEntry.BmpType == FshImageFormat.ThirtyTwoBit)
 							{
 								hdFshRadio.Checked = true;
 							}
-							else if (bmpEntry.BmpType == FSHBmpType.TwentyFourBit)
+							else if (bmpEntry.BmpType == FshImageFormat.TwentyFourBit)
 							{
 								hdBaseFshRadio.Checked = true;
 							}
@@ -2065,16 +2064,16 @@ namespace loaddatfsh
 		{
 			switch (bmpEntry.BmpType)
 			{
-				case FSHBmpType.TwentyFourBit:
+				case FshImageFormat.TwentyFourBit:
 					fshTypeBox.SelectedIndex = 0;
 					break;
-				case FSHBmpType.ThirtyTwoBit:
+				case FshImageFormat.ThirtyTwoBit:
 					fshTypeBox.SelectedIndex = 1;
 					break;
-				case FSHBmpType.DXT1:
+				case FshImageFormat.DXT1:
 					fshTypeBox.SelectedIndex = 2;
 					break;
-				case FSHBmpType.DXT3:
+				case FshImageFormat.DXT3:
 					fshTypeBox.SelectedIndex = 3;
 					break;
 			}
@@ -2870,16 +2869,16 @@ namespace loaddatfsh
 						
 						switch (tempEntry.BmpType)
 						{
-							case FSHBmpType.TwentyFourBit:
+							case FshImageFormat.TwentyFourBit:
 								fshTypeBox.SelectedIndex = 0;
 								break;
-							case FSHBmpType.ThirtyTwoBit:
+							case FshImageFormat.ThirtyTwoBit:
 								fshTypeBox.SelectedIndex = 1;
 								break;
-							case FSHBmpType.DXT1:
+							case FshImageFormat.DXT1:
 								fshTypeBox.SelectedIndex = 2;
 								break;
-							case FSHBmpType.DXT3:
+							case FshImageFormat.DXT3:
 								fshTypeBox.SelectedIndex = 3;
 								break;
 						}
