@@ -494,7 +494,7 @@ namespace loaddatfsh
 		{
 			if (tabControl1.SelectedTab == Maintab)
 			{
-				if (bmp.Width >= 128 && bmp.Height >= 128)
+				if (bmp.Width >= 128 || bmp.Height >= 128)
 				{
 					return true;
 				}
@@ -1133,15 +1133,18 @@ namespace loaddatfsh
 			try
 			{
 				// 0 = 8, 1 = 16, 2 = 32, 3 = 64
-				bmps[0] = GetBitmapThumbnail(item.Bitmap, 8, 8);
-				bmps[1] = GetBitmapThumbnail(item.Bitmap, 16, 16);
-				bmps[2] = GetBitmapThumbnail(item.Bitmap, 32, 32);
-				bmps[3] = GetBitmapThumbnail(item.Bitmap, 64, 64);
-				//alpha
-				alphas[0] = GetBitmapThumbnail(item.Alpha, 8, 8);
-				alphas[1] = GetBitmapThumbnail(item.Alpha, 16, 16);
-				alphas[2] = GetBitmapThumbnail(item.Alpha, 32, 32);
-				alphas[3] = GetBitmapThumbnail(item.Alpha, 64, 64);
+                int[] sizes = new int[4] { 8, 16, 32, 64 };
+                int width = item.Bitmap.Width;
+                int height = item.Bitmap.Height;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    int sWidth = Math.Min(sizes[i], width);
+                    int sHeight = Math.Min(sizes[i], height);
+
+                    bmps[i] = GetBitmapThumbnail(item.Bitmap, sWidth, sHeight);
+                    alphas[i] = GetBitmapThumbnail(item.Alpha, sWidth, sHeight);
+                }
 
 				if (mip8Fsh == null)
 				{
@@ -2039,7 +2042,6 @@ namespace loaddatfsh
 				instStr = RandomHexString(7);
 				EndFormat_Refresh();
 			}
-			datNameTxt.Text = Resources.NoDatLoadedText;
 		}
 		private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
 		{
@@ -2480,6 +2482,9 @@ namespace loaddatfsh
 			blend32Mip.Images.Clear();
 			blend16Mip.Images.Clear();
 			blend8Mip.Images.Clear();
+            bitmapList.ResetImageSize();
+            alphaList.ResetImageSize();
+            blendList.ResetImageSize();
 		}
 
 
@@ -2501,6 +2506,7 @@ namespace loaddatfsh
 				{
 					this.manager.SetProgressState(TaskbarProgressBarState.Normal);
 				}
+                this.toolStripStatusLabel1.Text = "Loading: " + Path.GetFileName(fileName);
 
 				if (!loadDatWorker.IsBusy)
 				{
@@ -2533,7 +2539,7 @@ namespace loaddatfsh
 		{                
 			uint group = uint.Parse(tgiGroupTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
-			if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null)
+			if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null && !embeddedMipmapsCb.Checked)
 			{
 				uint[] instanceIds = new uint[5];
 				FshWrapper[] fshwrap = new FshWrapper[5];
@@ -2570,6 +2576,18 @@ namespace loaddatfsh
 			{
 				uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber);
 
+                if (embeddedMipmapsCb.Checked)
+                {
+                    foreach (var item in curImage.Bitmaps)
+                    {
+                        if (item.EmbeddedMipmapCount == 0)
+                        {
+                            item.CalculateMipmapCount();
+                        }
+                    }
+                }
+
+
 				FshWrapper wrap = new FshWrapper(curImage);
 
 				CheckInstance(inputdat, group, instance);
@@ -2581,6 +2599,11 @@ namespace loaddatfsh
 
 		private bool CheckDatForMipMaps(string group, string instance)
 		{
+            if (curImage.Bitmaps[0].EmbeddedMipmapCount > 0)
+            {
+                return false;
+            }
+
 			uint groupID = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 			uint instanceID = uint.Parse(instance.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
@@ -2632,7 +2655,7 @@ namespace loaddatfsh
 			{
 				dat.Save(fileName);   
 				
-				datNameTxt.Text = Path.GetFileName(dat.FileName);
+				toolStripStatusLabel1.Text = "Saving: " + Path.GetFileName(dat.FileName);
 
 				dat.Close();
 			}
@@ -2666,7 +2689,7 @@ namespace loaddatfsh
 				compress_datmips = true; // compress the dat items
 			}
 
-			if ((datListViewItems.Count > 0 && dat.IsDirty) || dat.Indexes.Count == 0)
+			if ((datListViewItems.Count > 0 /*&& dat.IsDirty*/) || dat.Indexes.Count == 0)
 			{
 				if (!mipsbtn_clicked)
 				{
@@ -2803,7 +2826,7 @@ namespace loaddatfsh
 		   }
 		   this.dat = new DatFile();
 		   datRebuilt = false;
-		   datNameTxt.Text = Resources.DatInMemoryText;       
+		   toolStripStatusLabel1.Text = Resources.DatInMemoryText;       
 		   SetLoadedDatEnables();
 		}
 		
@@ -2912,7 +2935,7 @@ namespace loaddatfsh
 			{
 				dat.Close();
 				dat = null;
-				datNameTxt.Text = Resources.NoDatLoadedText;
+				toolStripStatusLabel1.Text = Resources.StatusReadyText;
 			}
 			if (datListViewItems.Count > 0)
 			{               
@@ -3106,6 +3129,10 @@ namespace loaddatfsh
 				{
 					closeDatBtn.Enabled = false;
 				}
+                if (!embeddedMipmapsCb.Enabled)
+                {
+                    embeddedMipmapsCb.Enabled = true;
+                }
 			}
 			else
 			{
@@ -3121,6 +3148,10 @@ namespace loaddatfsh
 				{
 					closeDatBtn.Enabled = true;
 				}
+                if (embeddedMipmapsCb.Enabled)
+                {
+                    embeddedMipmapsCb.Enabled = false;
+                }
 			}
 		}
 
@@ -3255,6 +3286,12 @@ namespace loaddatfsh
 		private void loadDatWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
 		{
 			int count = dat.Indexes.Count;
+            base.Invoke(new MethodInvoker(delegate()
+                {
+                    this.toolStripProgressBar1.Visible = true;
+                    this.toolStripProgressBar1.Maximum = count;
+                }));
+           
 			int fshNum = 0;
 			for (int i = 0; i < count; i++)
 			{
@@ -3300,18 +3337,19 @@ namespace loaddatfsh
 						}
 					}
 				}
-
-				if (manager != null)
-				{
-					loadDatWorker.ReportProgress(i, count);
-				}
+				loadDatWorker.ReportProgress(i, count);
+				
 			}
 		}
 
-		private void loadDatWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
-		{
-			manager.SetProgressValue(e.ProgressPercentage, (int)e.UserState);
-		}
+        private void loadDatWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
+        {
+            this.toolStripProgressBar1.Value = e.ProgressPercentage;
+            if (manager != null)
+            {
+                manager.SetProgressValue(e.ProgressPercentage, (int)e.UserState);
+            }
+        }
 
 		private void loadDatWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
 		{
@@ -3334,7 +3372,7 @@ namespace loaddatfsh
 					datRebuilt = false;
 					SetLoadedDatEnables();
 					datListView.SelectedIndices.Add(0);
-					datNameTxt.Text = Path.GetFileName(dat.FileName);
+					toolStripStatusLabel1.Text = Resources.StatusReadyText;
 				}
 				else
 				{
@@ -3344,6 +3382,8 @@ namespace loaddatfsh
 				}
 
 				this.Cursor = Cursors.Default;
+                this.toolStripProgressBar1.Visible = false;
+                this.toolStripStatusLabel1.Text = Resources.StatusReadyText;
 				if (manager != null)
 				{
 					this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);

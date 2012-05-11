@@ -145,8 +145,6 @@ namespace loaddatfsh
             this.newDatBtn = new System.Windows.Forms.Button();
             this.DatfuncBox1 = new System.Windows.Forms.GroupBox();
             this.closeDatBtn = new System.Windows.Forms.Button();
-            this.datNameTxt = new System.Windows.Forms.Label();
-            this.datLbl = new System.Windows.Forms.Label();
             this.genNewInstCb = new System.Windows.Forms.CheckBox();
             this.compDatCb = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -162,6 +160,10 @@ namespace loaddatfsh
             this.bmpbtn = new System.Windows.Forms.Button();
             this.bmpBox = new System.Windows.Forms.TextBox();
             this.loadDatWorker = new System.ComponentModel.BackgroundWorker();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.embeddedMipmapsCb = new System.Windows.Forms.CheckBox();
             this.bmpmanBox1.SuspendLayout();
             this.fshDefbox.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -173,6 +175,7 @@ namespace loaddatfsh
             this.InstendBox1.SuspendLayout();
             this.DatfuncBox1.SuspendLayout();
             this.expbmpBox1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // bitmapList
@@ -205,7 +208,7 @@ namespace loaddatfsh
             // 
             this.loadFshBtn.AllowDrop = true;
             this.loadFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.loadFshBtn.Location = new System.Drawing.Point(349, 541);
+            this.loadFshBtn.Location = new System.Drawing.Point(349, 571);
             this.loadFshBtn.Name = "loadFshBtn";
             this.loadFshBtn.Size = new System.Drawing.Size(75, 23);
             this.loadFshBtn.TabIndex = 1;
@@ -218,7 +221,7 @@ namespace loaddatfsh
             // 
             this.blendRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.blendRadio.AutoSize = true;
-            this.blendRadio.Location = new System.Drawing.Point(12, 360);
+            this.blendRadio.Location = new System.Drawing.Point(12, 367);
             this.blendRadio.Name = "blendRadio";
             this.blendRadio.Size = new System.Drawing.Size(82, 17);
             this.blendRadio.TabIndex = 45;
@@ -231,7 +234,7 @@ namespace loaddatfsh
             // 
             this.alphaRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.alphaRadio.AutoSize = true;
-            this.alphaRadio.Location = new System.Drawing.Point(12, 337);
+            this.alphaRadio.Location = new System.Drawing.Point(12, 344);
             this.alphaRadio.Name = "alphaRadio";
             this.alphaRadio.Size = new System.Drawing.Size(52, 17);
             this.alphaRadio.TabIndex = 44;
@@ -244,7 +247,7 @@ namespace loaddatfsh
             this.colorRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.colorRadio.AutoSize = true;
             this.colorRadio.Checked = true;
-            this.colorRadio.Location = new System.Drawing.Point(12, 314);
+            this.colorRadio.Location = new System.Drawing.Point(12, 321);
             this.colorRadio.Name = "colorRadio";
             this.colorRadio.Size = new System.Drawing.Size(49, 17);
             this.colorRadio.TabIndex = 43;
@@ -267,7 +270,7 @@ namespace loaddatfsh
             "32 Bit ARGB (8:8:8:8)",
             "DXT1 Compressed, no Alpha",
             "DXT3 Compressed, with Alpha"});
-            this.fshTypeBox.Location = new System.Drawing.Point(12, 287);
+            this.fshTypeBox.Location = new System.Drawing.Point(12, 294);
             this.fshTypeBox.Name = "fshTypeBox";
             this.fshTypeBox.Size = new System.Drawing.Size(164, 21);
             this.fshTypeBox.TabIndex = 46;
@@ -290,7 +293,7 @@ namespace loaddatfsh
             // 
             this.sizeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.sizeLbl.AutoSize = true;
-            this.sizeLbl.Location = new System.Drawing.Point(142, 318);
+            this.sizeLbl.Location = new System.Drawing.Point(142, 325);
             this.sizeLbl.Name = "sizeLbl";
             this.sizeLbl.Size = new System.Drawing.Size(0, 13);
             this.sizeLbl.TabIndex = 48;
@@ -299,7 +302,7 @@ namespace loaddatfsh
             // 
             this.imgSizeLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.imgSizeLbl.AutoSize = true;
-            this.imgSizeLbl.Location = new System.Drawing.Point(100, 318);
+            this.imgSizeLbl.Location = new System.Drawing.Point(100, 325);
             this.imgSizeLbl.Name = "imgSizeLbl";
             this.imgSizeLbl.Size = new System.Drawing.Size(33, 13);
             this.imgSizeLbl.TabIndex = 47;
@@ -309,7 +312,7 @@ namespace loaddatfsh
             // 
             this.dirNameLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dirNameLbl.AutoSize = true;
-            this.dirNameLbl.Location = new System.Drawing.Point(95, 339);
+            this.dirNameLbl.Location = new System.Drawing.Point(95, 346);
             this.dirNameLbl.Name = "dirNameLbl";
             this.dirNameLbl.Size = new System.Drawing.Size(81, 13);
             this.dirNameLbl.TabIndex = 50;
@@ -352,7 +355,7 @@ namespace loaddatfsh
             // dirTxt
             // 
             this.dirTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.dirTxt.Location = new System.Drawing.Point(182, 336);
+            this.dirTxt.Location = new System.Drawing.Point(182, 343);
             this.dirTxt.MaxLength = 4;
             this.dirTxt.Name = "dirTxt";
             this.dirTxt.Size = new System.Drawing.Size(45, 20);
@@ -374,7 +377,7 @@ namespace loaddatfsh
             // saveFshBtn
             // 
             this.saveFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.saveFshBtn.Location = new System.Drawing.Point(430, 541);
+            this.saveFshBtn.Location = new System.Drawing.Point(430, 571);
             this.saveFshBtn.Name = "saveFshBtn";
             this.saveFshBtn.Size = new System.Drawing.Size(75, 23);
             this.saveFshBtn.TabIndex = 62;
@@ -392,7 +395,7 @@ namespace loaddatfsh
             // 
             this.newFshBtn.AllowDrop = true;
             this.newFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.newFshBtn.Location = new System.Drawing.Point(268, 541);
+            this.newFshBtn.Location = new System.Drawing.Point(268, 571);
             this.newFshBtn.Name = "newFshBtn";
             this.newFshBtn.Size = new System.Drawing.Size(75, 23);
             this.newFshBtn.TabIndex = 66;
@@ -409,7 +412,7 @@ namespace loaddatfsh
             this.bmpmanBox1.Controls.Add(this.addBtn);
             this.bmpmanBox1.Controls.Add(this.remBtn);
             this.bmpmanBox1.Controls.Add(this.repBtn);
-            this.bmpmanBox1.Location = new System.Drawing.Point(261, 385);
+            this.bmpmanBox1.Location = new System.Drawing.Point(261, 392);
             this.bmpmanBox1.Name = "bmpmanBox1";
             this.bmpmanBox1.Size = new System.Drawing.Size(260, 52);
             this.bmpmanBox1.TabIndex = 67;
@@ -422,7 +425,7 @@ namespace loaddatfsh
             this.fshDefbox.Controls.Add(this.regFshRadio);
             this.fshDefbox.Controls.Add(this.hdBaseFshRadio);
             this.fshDefbox.Controls.Add(this.hdFshRadio);
-            this.fshDefbox.Location = new System.Drawing.Point(3, 402);
+            this.fshDefbox.Location = new System.Drawing.Point(3, 409);
             this.fshDefbox.Name = "fshDefbox";
             this.fshDefbox.Size = new System.Drawing.Size(130, 93);
             this.fshDefbox.TabIndex = 69;
@@ -473,7 +476,7 @@ namespace loaddatfsh
             this.tabControl1.Controls.Add(this.mip32tab);
             this.tabControl1.Controls.Add(this.mip16tab);
             this.tabControl1.Controls.Add(this.mip8tab);
-            this.tabControl1.Location = new System.Drawing.Point(15, 117);
+            this.tabControl1.Location = new System.Drawing.Point(15, 118);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.ShowToolTips = true;
@@ -677,7 +680,7 @@ namespace loaddatfsh
             // tgiGroupTxt
             // 
             this.tgiGroupTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tgiGroupTxt.Location = new System.Drawing.Point(145, 359);
+            this.tgiGroupTxt.Location = new System.Drawing.Point(145, 366);
             this.tgiGroupTxt.MaxLength = 8;
             this.tgiGroupTxt.Name = "tgiGroupTxt";
             this.tgiGroupTxt.Size = new System.Drawing.Size(82, 20);
@@ -688,7 +691,7 @@ namespace loaddatfsh
             // tgiInstanceTxt
             // 
             this.tgiInstanceTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tgiInstanceTxt.Location = new System.Drawing.Point(145, 385);
+            this.tgiInstanceTxt.Location = new System.Drawing.Point(145, 392);
             this.tgiInstanceTxt.MaxLength = 8;
             this.tgiInstanceTxt.Name = "tgiInstanceTxt";
             this.tgiInstanceTxt.Size = new System.Drawing.Size(82, 20);
@@ -700,7 +703,7 @@ namespace loaddatfsh
             // 
             this.tgiGroupLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tgiGroupLbl.AutoSize = true;
-            this.tgiGroupLbl.Location = new System.Drawing.Point(103, 365);
+            this.tgiGroupLbl.Location = new System.Drawing.Point(103, 372);
             this.tgiGroupLbl.Name = "tgiGroupLbl";
             this.tgiGroupLbl.Size = new System.Drawing.Size(36, 13);
             this.tgiGroupLbl.TabIndex = 73;
@@ -711,7 +714,7 @@ namespace loaddatfsh
             this.tgiInstLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.tgiInstLbl.AutoSize = true;
             this.tgiInstLbl.BackColor = System.Drawing.SystemColors.Control;
-            this.tgiInstLbl.Location = new System.Drawing.Point(91, 388);
+            this.tgiInstLbl.Location = new System.Drawing.Point(91, 395);
             this.tgiInstLbl.Name = "tgiInstLbl";
             this.tgiInstLbl.Size = new System.Drawing.Size(48, 13);
             this.tgiInstLbl.TabIndex = 74;
@@ -723,7 +726,7 @@ namespace loaddatfsh
             this.InstendBox1.Controls.Add(this.instA_ERdo);
             this.InstendBox1.Controls.Add(this.inst5_9Rdo);
             this.InstendBox1.Controls.Add(this.inst0_4Rdo);
-            this.InstendBox1.Location = new System.Drawing.Point(145, 412);
+            this.InstendBox1.Location = new System.Drawing.Point(145, 419);
             this.InstendBox1.Name = "InstendBox1";
             this.InstendBox1.Size = new System.Drawing.Size(82, 80);
             this.InstendBox1.TabIndex = 75;
@@ -781,7 +784,7 @@ namespace loaddatfsh
             this.datListView.Location = new System.Drawing.Point(15, 12);
             this.datListView.MultiSelect = false;
             this.datListView.Name = "datListView";
-            this.datListView.Size = new System.Drawing.Size(523, 99);
+            this.datListView.Size = new System.Drawing.Size(523, 100);
             this.datListView.TabIndex = 76;
             this.toolTip1.SetToolTip(this.datListView, global::loaddatfsh.Properties.Resources.datListView_ToolTip);
             this.datListView.UseCompatibleStateImageBehavior = false;
@@ -852,12 +855,10 @@ namespace loaddatfsh
             // 
             this.DatfuncBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DatfuncBox1.Controls.Add(this.closeDatBtn);
-            this.DatfuncBox1.Controls.Add(this.datNameTxt);
-            this.DatfuncBox1.Controls.Add(this.datLbl);
             this.DatfuncBox1.Controls.Add(this.newDatBtn);
             this.DatfuncBox1.Controls.Add(this.loadDatBtn);
             this.DatfuncBox1.Controls.Add(this.saveDatBtn);
-            this.DatfuncBox1.Location = new System.Drawing.Point(256, 443);
+            this.DatfuncBox1.Location = new System.Drawing.Point(256, 456);
             this.DatfuncBox1.Name = "DatfuncBox1";
             this.DatfuncBox1.Size = new System.Drawing.Size(265, 75);
             this.DatfuncBox1.TabIndex = 82;
@@ -876,29 +877,11 @@ namespace loaddatfsh
             this.closeDatBtn.UseVisualStyleBackColor = true;
             this.closeDatBtn.Click += new System.EventHandler(this.closeDatbtn_Click);
             // 
-            // datNameTxt
-            // 
-            this.datNameTxt.AutoSize = true;
-            this.datNameTxt.Location = new System.Drawing.Point(28, 18);
-            this.datNameTxt.Name = "datNameTxt";
-            this.datNameTxt.Size = new System.Drawing.Size(22, 13);
-            this.datNameTxt.TabIndex = 83;
-            this.datNameTxt.Text = "dat";
-            // 
-            // datLbl
-            // 
-            this.datLbl.AutoSize = true;
-            this.datLbl.Location = new System.Drawing.Point(-3, 18);
-            this.datLbl.Name = "datLbl";
-            this.datLbl.Size = new System.Drawing.Size(36, 13);
-            this.datLbl.TabIndex = 82;
-            this.datLbl.Text = "Dat = ";
-            // 
             // genNewInstCb
             // 
             this.genNewInstCb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.genNewInstCb.AutoSize = true;
-            this.genNewInstCb.Location = new System.Drawing.Point(3, 501);
+            this.genNewInstCb.Location = new System.Drawing.Point(3, 508);
             this.genNewInstCb.Name = "genNewInstCb";
             this.genNewInstCb.Size = new System.Drawing.Size(141, 17);
             this.genNewInstCb.TabIndex = 80;
@@ -913,7 +896,7 @@ namespace loaddatfsh
             this.compDatCb.AutoSize = true;
             this.compDatCb.Checked = true;
             this.compDatCb.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.compDatCb.Location = new System.Drawing.Point(3, 524);
+            this.compDatCb.Location = new System.Drawing.Point(3, 531);
             this.compDatCb.Name = "compDatCb";
             this.compDatCb.Size = new System.Drawing.Size(120, 17);
             this.compDatCb.TabIndex = 84;
@@ -926,7 +909,7 @@ namespace loaddatfsh
             // 
             this.fshWriteCompCb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.fshWriteCompCb.AutoSize = true;
-            this.fshWriteCompCb.Location = new System.Drawing.Point(3, 547);
+            this.fshWriteCompCb.Location = new System.Drawing.Point(3, 554);
             this.fshWriteCompCb.Name = "fshWriteCompCb";
             this.fshWriteCompCb.Size = new System.Drawing.Size(127, 17);
             this.fshWriteCompCb.TabIndex = 91;
@@ -971,7 +954,7 @@ namespace loaddatfsh
             this.expbmpBox1.Controls.Add(this.saveBmpBtn);
             this.expbmpBox1.Controls.Add(this.saveBmpBlendBtn);
             this.expbmpBox1.Controls.Add(this.saveAlphaBtn);
-            this.expbmpBox1.Location = new System.Drawing.Point(256, 329);
+            this.expbmpBox1.Location = new System.Drawing.Point(256, 336);
             this.expbmpBox1.Name = "expbmpBox1";
             this.expbmpBox1.Size = new System.Drawing.Size(278, 50);
             this.expbmpBox1.TabIndex = 68;
@@ -982,7 +965,7 @@ namespace loaddatfsh
             // 
             this.alphaLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.alphaLbl.AutoSize = true;
-            this.alphaLbl.Location = new System.Drawing.Point(229, 312);
+            this.alphaLbl.Location = new System.Drawing.Point(230, 315);
             this.alphaLbl.Name = "alphaLbl";
             this.alphaLbl.Size = new System.Drawing.Size(46, 13);
             this.alphaLbl.TabIndex = 90;
@@ -992,7 +975,7 @@ namespace loaddatfsh
             // 
             this.bmpLbl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bmpLbl.AutoSize = true;
-            this.bmpLbl.Location = new System.Drawing.Point(225, 287);
+            this.bmpLbl.Location = new System.Drawing.Point(225, 290);
             this.bmpLbl.Name = "bmpLbl";
             this.bmpLbl.Size = new System.Drawing.Size(51, 13);
             this.bmpLbl.TabIndex = 89;
@@ -1002,7 +985,7 @@ namespace loaddatfsh
             // 
             this.Alphabtn.AllowDrop = true;
             this.Alphabtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Alphabtn.Location = new System.Drawing.Point(511, 308);
+            this.Alphabtn.Location = new System.Drawing.Point(510, 311);
             this.Alphabtn.Name = "Alphabtn";
             this.Alphabtn.Size = new System.Drawing.Size(24, 21);
             this.Alphabtn.TabIndex = 88;
@@ -1014,7 +997,7 @@ namespace loaddatfsh
             // 
             this.alphaBox.AllowDrop = true;
             this.alphaBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.alphaBox.Location = new System.Drawing.Point(282, 309);
+            this.alphaBox.Location = new System.Drawing.Point(282, 312);
             this.alphaBox.Name = "alphaBox";
             this.alphaBox.Size = new System.Drawing.Size(223, 20);
             this.alphaBox.TabIndex = 87;
@@ -1022,7 +1005,7 @@ namespace loaddatfsh
             // bmpbtn
             // 
             this.bmpbtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bmpbtn.Location = new System.Drawing.Point(511, 283);
+            this.bmpbtn.Location = new System.Drawing.Point(510, 286);
             this.bmpbtn.Name = "bmpbtn";
             this.bmpbtn.Size = new System.Drawing.Size(24, 21);
             this.bmpbtn.TabIndex = 86;
@@ -1033,7 +1016,7 @@ namespace loaddatfsh
             // bmpBox
             // 
             this.bmpBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bmpBox.Location = new System.Drawing.Point(282, 283);
+            this.bmpBox.Location = new System.Drawing.Point(282, 287);
             this.bmpBox.Name = "bmpBox";
             this.bmpBox.Size = new System.Drawing.Size(223, 20);
             this.bmpBox.TabIndex = 85;
@@ -1046,11 +1029,45 @@ namespace loaddatfsh
             this.loadDatWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.loadDatWorker_ProgressChanged);
             this.loadDatWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.loadDatWorker_RunWorkerCompleted);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 598);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(545, 22);
+            this.statusStrip1.TabIndex = 0;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(39, 17);
+            this.toolStripStatusLabel1.Text = "Ready";
+            // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar1.Visible = false;
+            // 
+            // embeddedMipmapsCb
+            // 
+            this.embeddedMipmapsCb.Location = new System.Drawing.Point(3, 575);
+            this.embeddedMipmapsCb.Name = "embeddedMipmapsCb";
+            this.embeddedMipmapsCb.Size = new System.Drawing.Size(125, 17);
+            this.embeddedMipmapsCb.TabIndex = 0;
+            this.embeddedMipmapsCb.Text = "Embedded Mipmaps";
+            this.embeddedMipmapsCb.UseVisualStyleBackColor = true;
+            // 
             // Multifshfrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(545, 567);
+            this.ClientSize = new System.Drawing.Size(545, 620);
+            this.Controls.Add(this.embeddedMipmapsCb);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.fshWriteCompCb);
             this.Controls.Add(this.alphaLbl);
             this.Controls.Add(this.bmpLbl);
@@ -1101,8 +1118,9 @@ namespace loaddatfsh
             this.InstendBox1.ResumeLayout(false);
             this.InstendBox1.PerformLayout();
             this.DatfuncBox1.ResumeLayout(false);
-            this.DatfuncBox1.PerformLayout();
             this.expbmpBox1.ResumeLayout(false);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1178,8 +1196,6 @@ namespace loaddatfsh
         private System.Windows.Forms.Button newDatBtn;
         private System.Windows.Forms.GroupBox DatfuncBox1;
         private System.Windows.Forms.CheckBox genNewInstCb;
-        private System.Windows.Forms.Label datLbl;
-        private System.Windows.Forms.Label datNameTxt;
         private System.Windows.Forms.CheckBox compDatCb;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button saveAlphaBtn;
@@ -1195,6 +1211,10 @@ namespace loaddatfsh
         private System.Windows.Forms.CheckBox fshWriteCompCb;
         private System.Windows.Forms.Button closeDatBtn;
         private System.ComponentModel.BackgroundWorker loadDatWorker;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.CheckBox embeddedMipmapsCb;
     }
 }
 
