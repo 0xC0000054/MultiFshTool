@@ -38,5 +38,9 @@ namespace loaddatfsh
             }
         }
 
+        public static void ResetImageSize(this ImageList list)
+        {
+            list.ImageSize = defaultSize;
+        }
     }
 }
