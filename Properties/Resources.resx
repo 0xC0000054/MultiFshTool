@@ -152,9 +152,6 @@
   <data name="BlendNumberText" xml:space="preserve">
     <value>blend # :</value>
   </data>
-  <data name="CheckReplaceBitmapSizeError" xml:space="preserve">
-    <value>The bitmap must be at least 128 x 128</value>
-  </data>
   <data name="closeDatBtn_ToolTip" xml:space="preserve">
     <value>Close the loaded dat</value>
   </data>
@@ -232,5 +229,11 @@
   </data>
   <data name="SaveBitmap_Bitmap_Suffix" xml:space="preserve">
     <value>bitmap</value>
+  </data>
+  <data name="CheckReplaceBitmapSizeError" xml:space="preserve">
+    <value>The bitmap must be at least 128 x 128</value>
+  </data>
+  <data name="StatusReadyText" xml:space="preserve">
+    <value>Ready</value>
   </data>
 </root>
