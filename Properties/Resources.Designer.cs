@@ -241,6 +241,15 @@ namespace loaddatfsh.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading: .
+        /// </summary>
+        internal static string LoadingDatText {
+            get {
+                return ResourceManager.GetString("LoadingDatText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create a new dat.
         /// </summary>
         internal static string newDatBtn_ToolTip {
@@ -372,6 +381,15 @@ namespace loaddatfsh.Properties {
         internal static string saveFshBtn_ToolTip {
             get {
                 return ResourceManager.GetString("saveFshBtn_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving:  .
+        /// </summary>
+        internal static string SavingDatText {
+            get {
+                return ResourceManager.GetString("SavingDatText", resourceCulture);
             }
         }
         

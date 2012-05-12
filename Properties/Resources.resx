@@ -236,4 +236,10 @@
   <data name="StatusReadyText" xml:space="preserve">
     <value>Ready</value>
   </data>
+  <data name="LoadingDatText" xml:space="preserve">
+    <value>Loading: </value>
+  </data>
+  <data name="SavingDatText" xml:space="preserve">
+    <value>Saving:  </value>
+  </data>
 </root>
