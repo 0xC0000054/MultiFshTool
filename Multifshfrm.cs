@@ -482,11 +482,14 @@ namespace loaddatfsh
 		{
 			if (listViewMain.SelectedItems.Count > 0)
 			{
-				bmpEntry = curImage.Bitmaps[listViewMain.SelectedItems[0].Index];
+                int index = listViewMain.SelectedItems[0].Index;
+				bmpEntry = curImage.Bitmaps[index];
 				RefreshBmpType();
 
-				sizeLbl.Text = fshSize[listViewMain.SelectedItems[0].Index];
-				dirTxt.Text = dirName[listViewMain.SelectedItems[0].Index];
+                embeddedMipmapsCb.Checked = bmpEntry.EmbeddedMipmapCount > 0;
+
+				sizeLbl.Text = fshSize[index];
+				dirTxt.Text = dirName[index];
 			}
 		}
 		
