@@ -739,27 +739,24 @@ namespace loaddatfsh
 			bmplist.Images.Clear();
 			alphalist.Images.Clear();
 			blendlist.Images.Clear();
+            
+            bmplist.ResetImageSize();
+            alphalist.ResetImageSize();
+            blendlist.ResetImageSize();
 
-			if (image.Bitmaps.Count > 1)
+			int count = image.Bitmaps.Count;
+			for (int i = 0; i < count; i++)
 			{
-
-				int count = image.Bitmaps.Count;
-				for (int i = 0; i < count; i++)
-				{
-					bmpEntry = image.Bitmaps[i];
-					bmplist.Images.Add(bmpEntry.Bitmap);
-					alphalist.Images.Add(bmpEntry.Alpha);
-					blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
-				}
-
-			}
-			else
-			{
-				bmpEntry = image.Bitmaps[0];
+				bmpEntry = image.Bitmaps[i];
+                bmplist.ScaleListSize(bmpEntry.Bitmap);
 				bmplist.Images.Add(bmpEntry.Bitmap);
+                alphalist.ScaleListSize(bmpEntry.Alpha);
 				alphalist.Images.Add(bmpEntry.Alpha);
+                blendlist.ScaleListSize(bmpEntry.Bitmap);
 				blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
 			}
+
+			
 			RefreshDirectory(image);
 			
 			list.BeginUpdate();
@@ -784,35 +781,21 @@ namespace loaddatfsh
 		/// </summary>
 		private void RefreshImageLists()
 		{
-			if (curImage.Bitmaps.Count > 1)
-			{
+			
+			int count = curImage.Bitmaps.Count;			
+            remBtn.Enabled = (count > 1);
 
-				remBtn.Enabled = true;
-				int count = curImage.Bitmaps.Count;
-				for (int i = 0; i < count; i++)
-				{
-					bmpEntry = curImage.Bitmaps[i];
-
-					bitmapList.ScaleListSize(bmpEntry.Bitmap);
-					bitmapList.Images.Add(bmpEntry.Bitmap);
-					alphaList.ScaleListSize(bmpEntry.Alpha);
-					alphaList.Images.Add(bmpEntry.Alpha);
-					blendList.ScaleListSize(bmpEntry.Bitmap);
-					blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
-				}
-				  
-			}
-			else
+			for (int i = 0; i < count; i++)
 			{
-				remBtn.Enabled = false;
-				bmpEntry = curImage.Bitmaps[0];
+				bmpEntry = curImage.Bitmaps[i];
+
 				bitmapList.ScaleListSize(bmpEntry.Bitmap);
 				bitmapList.Images.Add(bmpEntry.Bitmap);
 				alphaList.ScaleListSize(bmpEntry.Alpha);
 				alphaList.Images.Add(bmpEntry.Alpha);
 				blendList.ScaleListSize(bmpEntry.Bitmap);
 				blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
-			} 
+			}
 			
 			RefreshDirectory(curImage);
 
@@ -1124,8 +1107,11 @@ namespace loaddatfsh
 		/// <returns>The new scaled Bitmap</returns>
 		private Bitmap GetBitmapThumbnail(Bitmap source, int width, int height)
 		{
-			return SuperSample.GetBitmapThumbnail(source, width, height);
-		}
+            using (Bitmap temp = SuperSample.GetBitmapThumbnail(source, width, height))
+            {
+                return temp.Clone(new Rectangle(0, 0, width, height), PixelFormat.Format24bppRgb);
+            }
+        }
 		private bool mipsbtn_clicked = false;
 
 		/// <summary>
@@ -2172,6 +2158,9 @@ namespace loaddatfsh
 				}
 				else if (curImage != null && curImage.Bitmaps.Count > 0 && tabControl1.SelectedTab == Maintab)
 				{
+                    bitmapList.ResetImageSize();
+                    alphaList.ResetImageSize();
+                    blendList.ResetImageSize();
 					RefreshImageLists(); 
 					bmpEntry = curImage.Bitmaps[0];
 					listViewMain.Items[0].Selected = true;
