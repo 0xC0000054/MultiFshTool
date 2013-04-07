@@ -274,20 +274,6 @@ namespace loaddatfsh
 		}
 
 		/// <summary>
-		/// Sets the IsDirty flag on the loaded dat if it has changed
-		/// </summary>
-		private void SetLoadedDatIsDirty()
-		{
-			if (dat != null && datListView.SelectedIndices.Count > 0)
-			{
-				if (!dat.IsDirty)
-				{
-					dat.IsDirty = true;
-				}
-			}
-
-		}
-		/// <summary>
 		/// Save the fsh and reload it
 		/// </summary>
 		private void Temp_fsh()
@@ -301,7 +287,10 @@ namespace loaddatfsh
 					curImage = new FSHImageWrapper(mstream);
 				}
 
-				SetLoadedDatIsDirty();
+				if ((dat != null) && datListView.SelectedIndices.Count > 0)
+				{
+					dat.IsDirty = true;
+				}
 
 				ClearFshlists();
 				RefreshImageLists();
@@ -2028,6 +2017,8 @@ namespace loaddatfsh
 
 			LoadSettings();
 
+			this.rangePath = Path.Combine(Application.StartupPath, @"instRange.txt");
+
 			if (tgiGroupTxt.Text.Length <= 0)
 			{
 				ReloadGroupID();
@@ -2214,33 +2205,33 @@ namespace loaddatfsh
 				dirTxt.Text = dirName[listViewMip8.SelectedItems[0].Index];
 			}
 		}
+
 		private Random ra = new Random(); 
 		private string lowerInstRange = string.Empty;
 		private string upperInstRange = string.Empty;
+		private string rangePath; 
 
 		private string RandomHexString(int length)
 		{
-			string rangepath = Path.Combine(Application.StartupPath, @"instRange.txt");
-			if (File.Exists(rangepath) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
+			if (File.Exists(rangePath) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
 			{                    
-				string[] instarray = null;
-				using (StreamReader sr = new StreamReader(rangepath))
+				string[] instArray = null;
+				using (StreamReader sr = new StreamReader(rangePath))
 				{
 					string line;
-					char[] splitchar = new char[] { ',' };
 					while ((line = sr.ReadLine()) != null)
 					{
 						if (!string.IsNullOrEmpty(line))
 						{
-							instarray = line.Split(splitchar, StringSplitOptions.RemoveEmptyEntries);
+							instArray = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 						}
 					}
 				}
-				if (instarray != null)
+				if ((instArray != null) && instArray.Length == 2)
 				{
-					string inst0 = instarray[0];
-					string inst1 = instarray[1];
-					if (inst0.Length == 10 && inst0.ToUpperInvariant().StartsWith("0X"))
+					string inst0 = instArray[0];
+					string inst1 = instArray[1];
+					if (inst0.Length == 10 && inst0.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
 					{
 						lowerInstRange = inst0.Substring(2, 8);
 					}
@@ -2248,7 +2239,8 @@ namespace loaddatfsh
 					{
 						lowerInstRange = inst0;
 					}
-					if (inst1.Length == 10 && inst1.ToUpperInvariant().StartsWith("0X"))
+
+					if (inst1.Length == 10 && inst1.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
 					{
 						upperInstRange = inst1.Substring(2, 8);
 					}
@@ -2262,11 +2254,15 @@ namespace loaddatfsh
 
 			if (!string.IsNullOrEmpty(lowerInstRange) && !string.IsNullOrEmpty(upperInstRange))
 			{
-				long lower = long.Parse(lowerInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				long upper = long.Parse(upperInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
+				long lower, upper;
 
-				return Convert.ToInt64(rn).ToString("X").Substring(0,7);
+				if (long.TryParse(lowerInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out lower) &&
+					long.TryParse(upperInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out upper))
+				{
+					double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
+
+					return Convert.ToInt64(rn).ToString("X").Substring(0,7);
+				}
 			}
 			
 			byte[] buffer = new byte[length / 2];
@@ -2751,41 +2747,44 @@ namespace loaddatfsh
 				settings.PutSetting("genNewInstcb_checked",genNewInstCb.Checked.ToString());
 				if (genNewInstCb.Checked)
 				{
-					for (int n = 0; n < dat.Indexes.Count; n++)
+					int count = dat.Indexes.Count;
+					for (int i = 0; i < count; i++)
 					{
-						DatIndex addindex = dat.Indexes[n];
-						if (addindex.Type == fshTypeID)
+						DatIndex index = dat.Indexes[i];
+						if (index.Type == fshTypeID)
 						{
-							string newinstance = null;
+							string newInstance = null;
 
-							if (addindex.Instance == uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							string oldInstance = tgiInstanceTxt.Text.Substring(0, 7);
+
+							if (index.Instance == uint.Parse(oldInstance + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
 							{
-								newinstance = RandomHexString(7);
-								instStr = newinstance.Substring(0, 7);
+								newInstance = RandomHexString(7);
+								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (addindex.Instance == uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
 							{
-								newinstance = RandomHexString(7);
-								instStr = newinstance.Substring(0, 7);
+								newInstance = RandomHexString(7);
+								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (addindex.Instance == uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
 							{
-								newinstance = RandomHexString(7);
-								instStr = newinstance.Substring(0, 7);
+								newInstance = RandomHexString(7);
+								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (addindex.Instance == uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
 							{
-								newinstance = RandomHexString(7);
-								instStr = newinstance.Substring(0, 7);
+								newInstance = RandomHexString(7);
+								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (addindex.Instance == uint.Parse(tgiInstanceTxt.Text.Substring(0, 7) + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
 							{
-								newinstance = RandomHexString(7);
-								instStr = newinstance.Substring(0,7);
+								newInstance = RandomHexString(7);
+								instStr = newInstance.Substring(0,7);
 								EndFormat_Refresh();
 							}
 						} 
