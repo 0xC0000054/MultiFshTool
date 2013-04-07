@@ -29,10 +29,8 @@ namespace loaddatfsh
             int returnVal = -1;
             if (numsort)
             {
-                string xsub = x.Text;
-                string ysub = y.Text;
-                xsub = xsub.Substring(6, (xsub.Length - 6));
-                ysub = ysub.Substring(6, (ysub.Length - 6));
+                string xsub = x.Text.Substring(6, (x.Text.Length - 6));
+                string ysub = y.Text.Substring(6, (y.Text.Length - 6));
 
                 int numx = int.Parse(xsub, CultureInfo.InvariantCulture);
                 returnVal = numx.CompareTo(int.Parse(ysub, CultureInfo.InvariantCulture));
