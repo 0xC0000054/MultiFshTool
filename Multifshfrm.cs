@@ -17,7 +17,20 @@ using System.Linq;
 namespace loaddatfsh
 {
 	internal partial class Multifshfrm : Form
-	{
+	{	
+        private string[] dirName;
+		private string[] fshSize;
+		private string fshFileName;
+		private FSHImageWrapper curImage;
+		private FSHImageWrapper mip64Fsh;
+		private FSHImageWrapper mip32Fsh;
+		private FSHImageWrapper mip16Fsh;
+		private FSHImageWrapper mip8Fsh;
+		private BitmapEntry bmpEntry;
+		private const uint fshTypeID = 0x7ab50e44U;
+		private TaskbarManager manager;
+		private JumpList jumpList;
+
 		public Multifshfrm()
 		{
 			InitializeComponent();
@@ -42,18 +55,7 @@ namespace loaddatfsh
 				} 
 			}
 		}
-		private string[] dirName;
-		private string[] fshSize;
-		private string fshFileName;
-		private FSHImageWrapper curImage;
-		private FSHImageWrapper mip64Fsh;
-		private FSHImageWrapper mip32Fsh;
-		private FSHImageWrapper mip16Fsh;
-		private FSHImageWrapper mip8Fsh;
-		private BitmapEntry bmpEntry;
-		private const uint fshTypeID = 0x7ab50e44U;
-		private TaskbarManager manager;
-		private JumpList jumpList;
+
 
 		private void loadfsh_Click(object sender, EventArgs e)
 		{
@@ -241,11 +243,10 @@ namespace loaddatfsh
 
 				if (image.IsDXTFsh() && fshWriteCompression && useOriginalImage)
 				{
-					BitmapEntryCollection entries = image.Bitmaps;
-					int count = entries.Count;
 					using (FSHImageWrapper fsh = new FSHImageWrapper())
 					{
-						for (int i = 0; i < count; i++)
+						BitmapEntryCollection entries = image.Bitmaps;
+						for (int i = 0; i < entries.Count; i++)
 						{
 							BitmapEntry item = entries[i];
 
@@ -276,7 +277,7 @@ namespace loaddatfsh
 		/// <summary>
 		/// Save the fsh and reload it
 		/// </summary>
-		private void Temp_fsh()
+		private void ReloadCurrentImage()
 		{
 			try
 			{
@@ -448,37 +449,38 @@ namespace loaddatfsh
 				listview.Items.Add(blend);
 			}
 		}
-		private Bitmap Alphablend(BitmapEntry item, Size displaySize)
+		private static Bitmap AlphaBlend(BitmapEntry item, Size displaySize)
 		{
-			Bitmap blendbmp = new Bitmap(displaySize.Width, displaySize.Height);
-			using(Graphics g = Graphics.FromImage(blendbmp))
+			Bitmap image = new Bitmap(displaySize.Width, displaySize.Height);
+			using(Graphics g = Graphics.FromImage(image))
 			{
-				Rectangle rect = new Rectangle(0, 0, blendbmp.Width, blendbmp.Height);
+				Rectangle rect = new Rectangle(0, 0, image.Width, image.Height);
 				using (HatchBrush brush = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.White, Color.FromArgb(192, 192, 192)))
 				{
 					g.FillRectangle(brush, rect);
 				}
 				g.InterpolationMode = InterpolationMode.HighQualityBicubic;
 				g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-				using (Bitmap blended = BlendBitmap.BlendBmp(bmpEntry))
+				using (Bitmap blended = BlendBitmap.BlendBmp(item))
 				{ 
 					g.DrawImage(blended, rect);
 				}
 			}
-			return blendbmp;
+
+			return image;
 		}
 		private void listViewmain_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (listViewMain.SelectedItems.Count > 0)
 			{
 				int index = listViewMain.SelectedItems[0].Index;
-				bmpEntry = curImage.Bitmaps[index];
+				this.bmpEntry = curImage.Bitmaps[index];
 				RefreshBmpType();
 
-				embeddedMipmapsCb.Checked = bmpEntry.EmbeddedMipmapCount > 0;
+				this.embeddedMipmapsCb.Checked = this.bmpEntry.EmbeddedMipmapCount > 0;
 
-				sizeLbl.Text = fshSize[index];
-				dirTxt.Text = dirName[index];
+				this.sizeLbl.Text = this.fshSize[index];
+				this.dirTxt.Text = this.dirName[index];
 			}
 		}
 		
@@ -518,7 +520,7 @@ namespace loaddatfsh
 
 				if (Path.GetExtension(list[i]).Equals(".png", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(list[i]).Equals(".bmp", StringComparison.OrdinalIgnoreCase))
 				{
-					using (FileStream fs = new FileStream(list[i],FileMode.Open, FileAccess.Read, FileShare.None))
+					using (FileStream fs = new FileStream(list[i], FileMode.Open, FileAccess.Read, FileShare.None))
 					{
 						using (Bitmap b = new Bitmap(fs))
 						{
@@ -537,6 +539,7 @@ namespace loaddatfsh
 			}
 			list.TrimExcess();
 			list.Sort();
+			
 			return list;
 		}
 	  
@@ -569,14 +572,14 @@ namespace loaddatfsh
 		/// Adds a list files to an a new or existing image  
 		/// </summary>
 		/// <param name="files">The files to add</param>
-		/// <param name="listfiltered">Has the list of files been previously been filtered</param>
-		private void AddbtnFiles(List<string> files, bool listfiltered) 
+		/// <param name="listFiltered">Has the list of files been previously been filtered</param>
+		private void AddbtnFiles(List<string> files, bool listFiltered) 
 		{
 			try
 			{
 				if (curImage != null && bmpEntry != null)
 				{
-					if (!listfiltered)
+					if (!listFiltered)
 					{
 						files = CheckSize(files);
 						files = TrimAlphaBitmaps(files);
@@ -682,7 +685,7 @@ namespace loaddatfsh
 									curImage.Bitmaps.Add(addbmp);
 									if (i == files.Count - 1)
 									{
-										Temp_fsh();
+										ReloadCurrentImage();
 										BuildMipMaps();
 										listViewMain.Items[0].Selected = true;
 									}
@@ -742,7 +745,7 @@ namespace loaddatfsh
 				alphalist.ScaleListSize(bmpEntry.Alpha);
 				alphalist.Images.Add(bmpEntry.Alpha);
 				blendlist.ScaleListSize(bmpEntry.Bitmap);
-				blendlist.Images.Add(Alphablend(bmpEntry, blendlist.ImageSize));
+				blendlist.Images.Add(AlphaBlend(bmpEntry, blendlist.ImageSize));
 			}
 
 			
@@ -783,7 +786,7 @@ namespace loaddatfsh
 				alphaList.ScaleListSize(bmpEntry.Alpha);
 				alphaList.Images.Add(bmpEntry.Alpha);
 				blendList.ScaleListSize(bmpEntry.Bitmap);
-				blendList.Images.Add(Alphablend(bmpEntry, blendList.ImageSize));
+				blendList.Images.Add(AlphaBlend(bmpEntry, blendList.ImageSize));
 			}
 			
 			RefreshDirectory(curImage);
@@ -827,7 +830,7 @@ namespace loaddatfsh
 				if (dirTxt.Text.Length > 0 && dirTxt.Text.Length == 4 && dirTxt.Text != bmpEntry.DirName)
 				{
 					bmpEntry.DirName = dirTxt.Text;
-					Temp_fsh();
+					ReloadCurrentImage();
 				}
 			}
 		}
@@ -841,7 +844,7 @@ namespace loaddatfsh
 					try
 					{
 						curImage.Bitmaps.Remove(bmpEntry); //remove the item and rebuild the mipmaps
-						Temp_fsh();
+						ReloadCurrentImage();
 						BuildMipMaps();
 						listViewMain.Items[0].Selected = true;
 					}
@@ -976,7 +979,7 @@ namespace loaddatfsh
 							curImage.Bitmaps.RemoveAt(listViewMain.SelectedItems[0].Index);
 							curImage.Bitmaps.Insert(listViewMain.SelectedItems[0].Index, repBmp);
 
-							Temp_fsh();
+							ReloadCurrentImage();
 							BuildMipMaps();
 						}
 					}
@@ -1042,7 +1045,7 @@ namespace loaddatfsh
 		/// Save and reload the mip images
 		/// </summary>
 		/// <param name="mipsize">The size of the image</param>
-		private void Temp_Mips(int mipsize)
+		private void ReloadMipImage(int mipsize)
 		{
 			using (MemoryStream mstream = new MemoryStream())
 			{
@@ -1101,7 +1104,7 @@ namespace loaddatfsh
 				return temp.Clone(new Rectangle(0, 0, width, height), PixelFormat.Format24bppRgb);
 			}
 		}
-		private bool mipsbtn_clicked = false;
+		private bool mipsBuilt = false;
 
 		/// <summary>
 		/// Generates the mimmaps for the zoom levels
@@ -1207,12 +1210,12 @@ namespace loaddatfsh
 			}
 		}
 
-		private void ReloadMips()
+		private void RefreshMips()
 		{
-			Temp_Mips(64);
-			Temp_Mips(32);
-			Temp_Mips(16);
-			Temp_Mips(8);
+			ReloadMipImage(64);
+			ReloadMipImage(32);
+			ReloadMipImage(16);
+			ReloadMipImage(8);
 		}
 
 		/// <summary>
@@ -1232,10 +1235,10 @@ namespace loaddatfsh
 					{
 						GenerateMips(entry);
 					}
-					ReloadMips();
+					RefreshMips();
 
 					RefreshDirectory(curImage);
-					mipsbtn_clicked = true;
+					mipsBuilt = true;
 				}
 				catch (Exception ex)
 				{
@@ -1327,10 +1330,12 @@ namespace loaddatfsh
 				}
 			}
 		}
-		private FileStream mip_stream(string path, string addtopath)
+
+		private static FileStream CreateMipStream(string path, string addToPath)
 		{
-			return new FileStream(path + addtopath, FileMode.OpenOrCreate, FileAccess.Write);
+			return new FileStream(path + addToPath, FileMode.OpenOrCreate, FileAccess.Write);
 		}
+
 		private void saveFshBtn_Click(object sender, EventArgs e)
 		{
 			if (tabControl1.SelectedTab == Maintab)
@@ -1348,11 +1353,11 @@ namespace loaddatfsh
 
 					if (!loadedDat && datListViewItems.Count == 0 && !embeddedMipmapsCb.Checked)
 					{
-						if (!mipsbtn_clicked)
+						if (!mipsBuilt)
 						{
 							BuildMipMaps();
 						}
-						if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null)
+						if (mipsBuilt && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null)
 						{
 							string filepath = Path.Combine(Path.GetDirectoryName(saveFshDialog1.FileName), Path.GetFileName(saveFshDialog1.FileName));
 							if (curImage.IsCompressed)
@@ -1363,25 +1368,25 @@ namespace loaddatfsh
 								mip8Fsh.IsCompressed = true;
 							}
 							string ext = Path.GetExtension(saveFshDialog1.FileName);
-							using (FileStream m64 = mip_stream(filepath, "_s3" + ext))
+							using (FileStream m64 = CreateMipStream(filepath, "_s3" + ext))
 							{
 								SaveFsh(m64,mip64Fsh);
 							}
 							WriteTgi(filepath + "_s3" + ext, 3);
 
-							using (FileStream m32 = mip_stream(filepath, "_s2"+ ext))
+							using (FileStream m32 = CreateMipStream(filepath, "_s2"+ ext))
 							{
 								SaveFsh(m32, mip32Fsh);
 							}
 							WriteTgi(filepath + "_s2" + ext, 2);
 
-							using (FileStream m16 = mip_stream(filepath, "_s1" + ext))
+							using (FileStream m16 = CreateMipStream(filepath, "_s1" + ext))
 							{
 								SaveFsh(m16, mip16Fsh);
 							}
 							WriteTgi(filepath + "_s1" + ext, 1);
 
-							using (FileStream m8 = mip_stream(filepath, "_s0" + ext))
+							using (FileStream m8 = CreateMipStream(filepath, "_s0" + ext))
 							{
 								SaveFsh(m8, mip8Fsh);
 							}
@@ -1786,7 +1791,7 @@ namespace loaddatfsh
 
 							if (bmp.Width >= 128 || bmp.Height >= 128)
 							{
-								mipsbtn_clicked = false;
+								mipsBuilt = false;
 
 								if (origbmplist == null)
 								{
@@ -1807,7 +1812,7 @@ namespace loaddatfsh
 								curImage.Bitmaps.Add(bmpEntry);
 								if (files.Count - 1 == 0)
 								{
-									Temp_fsh();
+									ReloadCurrentImage();
 									BuildMipMaps();
 									listViewMain.Items[0].Selected = true;
 								}
@@ -1993,7 +1998,7 @@ namespace loaddatfsh
 			return dest;
 		}
 
-		private int CountPngArgs(string[] args)
+		private int CountImageArgs(string[] args)
 		{
 			int count = 0;
 			
@@ -2011,7 +2016,7 @@ namespace loaddatfsh
 		 
 			return count;
 		}
-		private void Multifshfrm_Load(object sender, EventArgs e)
+		protected override void OnLoad(EventArgs e)
 		{
 			fshTypeBox.SelectedIndex = 2;
 
@@ -2023,11 +2028,14 @@ namespace loaddatfsh
 			{
 				ReloadGroupID();
 			}
+			
 			if (tgiInstanceTxt.Text.Length <= 0)
 			{
 				instStr = RandomHexString(7);
 				EndFormat_Refresh();
 			}
+
+			base.OnLoad(e);
 		}
 		private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
 		{
@@ -2105,7 +2113,7 @@ namespace loaddatfsh
 		}
 		private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (!mipsbtn_clicked && !loadIsMip)
+			if (!mipsBuilt && !loadIsMip)
 			{
 				if (tabControl1.SelectedTab == mip64tab || tabControl1.SelectedTab == mip32tab || tabControl1.SelectedTab == mip16tab || tabControl1.SelectedTab == mip8tab)
 				{
@@ -2472,8 +2480,6 @@ namespace loaddatfsh
 			blendList.ResetImageSize();
 		}
 
-
-
 		private DatFile dat = null;
 		private bool compress_datmips = false;
 		private string origInst = null;
@@ -2524,7 +2530,7 @@ namespace loaddatfsh
 		{                
 			uint group = uint.Parse(tgiGroupTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
-			if (mipsbtn_clicked && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null && !embeddedMipmapsCb.Checked)
+			if (mipsBuilt && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null && !embeddedMipmapsCb.Checked)
 			{
 				uint[] instanceIds = new uint[5];
 				FshWrapper[] fshwrap = new FshWrapper[5];
@@ -2580,11 +2586,22 @@ namespace loaddatfsh
 			}
 		}
 
-		private bool CheckDatForMipMaps(string group, string instance)
+		/// <summary>
+		/// Checks if the Dat contains mipmaps in separate files.
+		/// </summary>
+		/// <param name="group">The group.</param>
+		/// <param name="instance">The instance.</param>
+		/// <returns></returns>
+		private bool DatContainsNormalMipMaps(string group, string instance)
 		{
 			if (curImage.Bitmaps[0].EmbeddedMipmapCount > 0)
 			{
 				return false;
+			}
+			
+			if (instance.EndsWith("0", StringComparison.Ordinal) || instance.EndsWith("5", StringComparison.Ordinal) || instance.EndsWith("A", StringComparison.OrdinalIgnoreCase))
+			{
+				return false; // if the instance ends with 0, 5 or A there should not be mipmaps
 			}
 
 			uint groupID = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
@@ -2594,14 +2611,8 @@ namespace loaddatfsh
 			{
 				return !dat.CheckImageSize(groupID, instanceID); // check if the next file is a mipmap
 			}
-			catch (DatFileException)
+			catch (DatIndexException)
 			{
-			} 
-			
-			if (instance.EndsWith("0", StringComparison.Ordinal) || instance.EndsWith("5", StringComparison.Ordinal) || 
-				instance.EndsWith("A", StringComparison.OrdinalIgnoreCase))
-			{
-				return false; // if the instance ends with 0, 5 or A there should not be mipmaps
 			}
 
 			return true; 
@@ -2690,9 +2701,9 @@ namespace loaddatfsh
 
 			if ((datListViewItems.Count > 0 && dat.IsDirty) || dat.Indexes.Count == 0)
 			{
-				if (!mipsbtn_clicked)
+				if (!mipsBuilt)
 				{
-					if ((loadedDat && datListViewItems.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+					if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
 					{
 						RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
 					}
@@ -2705,7 +2716,7 @@ namespace loaddatfsh
 
 				if (!genNewInstCb.Checked && !datRebuilt)
 				{
-					if ((loadedDat && datListViewItems.Count > 0) && !CheckDatForMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+					if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
 					{
 						if (mip64Fsh != null)
 						{
@@ -2727,7 +2738,7 @@ namespace loaddatfsh
 							mip8Fsh.Dispose();
 							mip8Fsh = null;
 						}
-						mipsbtn_clicked = false;
+						mipsBuilt = false;
 					}
 
 					RebuildDat(dat);
@@ -2835,8 +2846,7 @@ namespace loaddatfsh
 					tgiGroupTxt.Text = group;
 					tgiInstanceTxt.Text = instance;
 
-					  if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) ||
-						!instance.EndsWith("A", StringComparison.Ordinal))
+					if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) ||	!instance.EndsWith("A", StringComparison.Ordinal))
 					{
 						instStr = instance.Substring(0, 7);
 						if (instance.EndsWith("4", StringComparison.Ordinal))
@@ -2853,14 +2863,12 @@ namespace loaddatfsh
 						}
 					}
 
-
-
 					if (listItem.Tag == null)
 					{
 						uint grp = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 						uint inst = uint.Parse(instance, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 						FshWrapper item = dat.LoadFile(grp, inst);
-						listItem.Tag  = item;
+						listItem.Tag = item;
 					}
 
 					FshWrapper fshitem = listItem.Tag as FshWrapper;
@@ -2872,7 +2880,6 @@ namespace loaddatfsh
 
 					if (fshitem.Image != null)
 					{
-
 						BitmapEntry tempEntry = fshitem.Image.Bitmaps[0];
  
 						curImage = fshitem.Image.Clone();
@@ -2945,7 +2952,7 @@ namespace loaddatfsh
 				listViewMip32.Refresh();
 				listViewMip16.Refresh();
 				listViewMip8.Refresh();
-				mipsbtn_clicked = false;
+				mipsBuilt = false;
 				if (curImage != null)
 				{
 					curImage.Dispose();
@@ -3090,7 +3097,7 @@ namespace loaddatfsh
 				{
 					useOriginalImage = true;
 
-					Temp_fsh();					
+					ReloadCurrentImage();
 					
 					useOriginalImage = false; // reset it to false
 
@@ -3190,7 +3197,7 @@ namespace loaddatfsh
 			}
 		}
 
-		private void Multifshfrm_Shown(object sender, EventArgs e)
+		protected override void  OnShown(EventArgs e)
 		{
 			if (manager != null)
 			{
@@ -3198,6 +3205,8 @@ namespace loaddatfsh
 			}
 
 			ProcessCommandLineArguments();
+
+			base.OnShown(e);
 		}
 
 		private void AddRecentFile(string path)
@@ -3227,8 +3236,9 @@ namespace loaddatfsh
 				{                    
 					Application.DoEvents(); // finish loading the form before we read the command line arguments
 
-					int pngcnt = CountPngArgs(args);
-					List<string> pnglist = null;
+					int imageCount = CountImageArgs(args);
+					List<string> images = null;
+					
 					for (int i = 0; i < args.Length; i++)
 					{
 						FileInfo fi = new FileInfo(args[i]);
@@ -3242,14 +3252,15 @@ namespace loaddatfsh
 							}
 							else if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) || ext.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
 							{
-								if (pnglist == null)
+								if (images == null)
 								{
-									pnglist = new List<string>();
+									images = new List<string>();
 								}
-								pnglist.Add(fi.FullName);
-								if (pnglist.Count == pngcnt)
+								images.Add(fi.FullName);
+								if (images.Count == imageCount)
 								{
-									NewFsh(pnglist);
+									NewFsh(images);
+									break;
 								}
 							}
 							else if (ext.Equals(".dat", StringComparison.OrdinalIgnoreCase))
@@ -3345,43 +3356,45 @@ namespace loaddatfsh
 
 		private void loadDatWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
 		{
-			if (e.Error != null)
+			if (!e.Cancelled)
 			{
-				MessageBox.Show(this, e.Error.Message + Environment.NewLine + e.Error.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-				ClearandReset(true);
-			}
-			else if (e.Cancelled)
-			{
-				this.Close();
-			}
-			else
-			{
-				if (datListViewItems.Count > 0)
+				if (e.Error != null)
 				{
-					datListView.VirtualListSize = datListViewItems.Count;
-
-					loadedDat = true;
-					datRebuilt = false;
-					SetLoadedDatEnables();
-					datListView.SelectedIndices.Add(0);
-					toolStripStatusLabel1.Text = Resources.StatusReadyText;
+					MessageBox.Show(this, e.Error.Message + Environment.NewLine + e.Error.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					ClearandReset(true);
 				}
 				else
 				{
-					string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
-					MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-					ClearandReset(true);
-				}
+					if (datListViewItems.Count > 0)
+					{
+						datListView.VirtualListSize = datListViewItems.Count;
 
-				this.Cursor = Cursors.Default;
-				this.toolStripProgressBar1.Visible = false;
-				this.toolStripStatusLabel1.Text = Resources.StatusReadyText;
-				if (manager != null)
-				{
-					this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
-				}
+						loadedDat = true;
+						datRebuilt = false;
+						SetLoadedDatEnables();
+						datListView.SelectedIndices.Add(0);
+						toolStripStatusLabel1.Text = Resources.StatusReadyText;
+					}
+					else
+					{
+						string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
+						MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+						ClearandReset(true);
+					}
+
+					this.Cursor = Cursors.Default;
+					this.toolStripProgressBar1.Visible = false;
+					this.toolStripStatusLabel1.Text = Resources.StatusReadyText;
+					if (manager != null)
+					{
+						this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
+					}
+				} 
 			}
-				
+			else
+			{
+				this.Close();
+			}
 		}
 	}
 }
