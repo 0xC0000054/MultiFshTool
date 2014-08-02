@@ -18,7 +18,7 @@ namespace loaddatfsh
 {
 	internal partial class Multifshfrm : Form
 	{	
-        private string[] dirName;
+		private string[] dirName;
 		private string[] fshSize;
 		private string fshFileName;
 		private FSHImageWrapper curImage;
@@ -64,7 +64,7 @@ namespace loaddatfsh
 			{
 				try
 				{
-					Load_Fsh(openFshDialog1.FileName);
+					LoadFsh(openFshDialog1.FileName);
 				}
 				catch (Exception ex)
 				{
@@ -73,7 +73,7 @@ namespace loaddatfsh
 			}
 		}
 		private bool loadIsMip; 
-		private void Load_Fsh(string filename)
+		private void LoadFsh(string filename)
 		{
 			FileInfo fi = new FileInfo(filename);
 			if (fi.Exists)
@@ -246,16 +246,11 @@ namespace loaddatfsh
 					using (FSHImageWrapper fsh = new FSHImageWrapper())
 					{
 						BitmapEntryCollection entries = image.Bitmaps;
+						
 						for (int i = 0; i < entries.Count; i++)
 						{
-							BitmapEntry item = entries[i];
-
-							BitmapEntry entry = new BitmapEntry();
+							BitmapEntry entry =  entries[i].Clone();
 							entry.Bitmap = origbmplist[i].Clone(PixelFormat.Format24bppRgb);
-							entry.Alpha = item.Alpha.Clone<Bitmap>();
-							entry.BmpType = item.BmpType;
-							entry.DirName = item.DirName;
-							entry.EmbeddedMipmapCount = item.EmbeddedMipmapCount;
 
 							fsh.Bitmaps.Add(entry);
 						}
@@ -818,8 +813,8 @@ namespace loaddatfsh
 			for (int i = 0; i < count; i++)
 			{
 				FSHDirEntry dir = image.GetDirectoryEntry(i);
-				EntryHeader entryhead = image.GetEntryHeader(dir.offset);
-				dirName[i] = Encoding.ASCII.GetString(dir.name);
+				EntryHeader entryhead = image.GetEntryHeader(dir.Offset);
+				dirName[i] = Encoding.ASCII.GetString(dir.Name);
 				fshSize[i] = entryhead.Width.ToString(CultureInfo.CurrentCulture) + "x" + entryhead.Height.ToString(CultureInfo.CurrentCulture);
 			}
 		}
@@ -1849,8 +1844,8 @@ namespace loaddatfsh
 			List<string> list = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop));
 			NewFsh(list);
 		}
-		string instStr;
-		string Groupidoverride = null;
+		private string instStr;
+		private string groupIDOverride = null;
 		private Settings settings = null;
 		private void LoadSettings()
 		{
@@ -1859,7 +1854,7 @@ namespace loaddatfsh
 				settings = new Settings(Path.Combine(Application.StartupPath, @"Multifshview.xml"));
 				compDatCb.Checked = bool.Parse(settings.GetSetting("compDatcb_checked", bool.TrueString).Trim());
 				genNewInstCb.Checked = bool.Parse(settings.GetSetting("genNewInstcb_checked", bool.FalseString).Trim());
-				ValidateGroupString(settings.GetSetting("GroupidOverride",string.Empty).Trim());
+				ValidateGroupString(settings.GetSetting("GroupidOverride", string.Empty).Trim());
 			}
 			catch (Exception ex)
 			{
@@ -1886,7 +1881,7 @@ namespace loaddatfsh
 					Regex rx = new Regex(@"^[A-Fa-f0-9]*$");
 					if (rx.IsMatch(gid))
 					{
-						Groupidoverride = gid;
+						this.groupIDOverride = gid;
 					}
 				}
 			}
@@ -1895,9 +1890,9 @@ namespace loaddatfsh
 		private void ReloadGroupID()
 		{
 			string g = string.Empty; 
-			if (!string.IsNullOrEmpty(Groupidoverride))
+			if (!string.IsNullOrEmpty(groupIDOverride))
 			{
-				g = Groupidoverride;
+				g = groupIDOverride;
 			}
 			else
 			{
@@ -2016,19 +2011,21 @@ namespace loaddatfsh
 		 
 			return count;
 		}
+
 		protected override void OnLoad(EventArgs e)
 		{
 			fshTypeBox.SelectedIndex = 2;
 
 			LoadSettings();
 
-			this.rangePath = Path.Combine(Application.StartupPath, @"instRange.txt");
 
 			if (tgiGroupTxt.Text.Length <= 0)
 			{
 				ReloadGroupID();
 			}
-			
+					
+			ReadRangeTxt(Path.Combine(Application.StartupPath, @"instRange.txt"));
+
 			if (tgiInstanceTxt.Text.Length <= 0)
 			{
 				instStr = RandomHexString(7);
@@ -2037,6 +2034,7 @@ namespace loaddatfsh
 
 			base.OnLoad(e);
 		}
+
 		private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
 		{
 			if (mip64Fsh == null && e.TabPage == mip64tab)
@@ -2217,14 +2215,13 @@ namespace loaddatfsh
 		private Random ra = new Random(); 
 		private string lowerInstRange = string.Empty;
 		private string upperInstRange = string.Empty;
-		private string rangePath; 
 
-		private string RandomHexString(int length)
+		protected void ReadRangeTxt(string path)
 		{
-			if (File.Exists(rangePath) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
-			{                    
+			if (File.Exists(path) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
+			{
 				string[] instArray = null;
-				using (StreamReader sr = new StreamReader(rangePath))
+				using (StreamReader sr = new StreamReader(path))
 				{
 					string line;
 					while ((line = sr.ReadLine()) != null)
@@ -2259,7 +2256,10 @@ namespace loaddatfsh
 				}
 
 			}
+		}
 
+		private string RandomHexString(int length)
+		{
 			if (!string.IsNullOrEmpty(lowerInstRange) && !string.IsNullOrEmpty(upperInstRange))
 			{
 				long lower, upper;
@@ -2277,7 +2277,9 @@ namespace loaddatfsh
 			ra.NextBytes(buffer);
 			string result = String.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
 			if (length % 2 == 0)
+			{
 				return result;
+			}
 			
 			return result + ra.Next(16).ToString("X");
 		}
@@ -2346,7 +2348,22 @@ namespace loaddatfsh
 
 			if (instStr.Length > 7)
 			{
-				if (tabControl1.SelectedTab == mip64tab)
+				if (tabControl1.SelectedTab == Maintab)
+				{
+					if (instStr[7].Equals('E'))
+					{
+						instA_ERdo.Checked = true;
+					}
+					else if (instStr[7].Equals('9'))
+					{
+						inst5_9Rdo.Checked = true;
+					}
+					else if (instStr[7].Equals('4'))
+					{
+						inst0_4Rdo.Checked = true;
+					}
+				}
+				else if (tabControl1.SelectedTab == mip64tab)
 				{
 					if (instStr[7].Equals('D'))
 					{
@@ -2406,21 +2423,7 @@ namespace loaddatfsh
 						inst0_4Rdo.Checked = true;
 					}
 				}
-				else if (tabControl1.SelectedTab == Maintab)
-				{
-					if (instStr[7].Equals('E'))
-					{
-						instA_ERdo.Checked = true;
-					}
-					else if (instStr[7].Equals('9'))
-					{
-						inst5_9Rdo.Checked = true;
-					}
-					else if (instStr[7].Equals('4'))
-					{
-						inst0_4Rdo.Checked = true;
-					}
-				}
+
 				instStr = instStr.Substring(0,7);
 			}
 
@@ -2481,19 +2484,18 @@ namespace loaddatfsh
 		}
 
 		private DatFile dat = null;
-		private bool compress_datmips = false;
 		private string origInst = null;
 		private bool loadedDat = false;
 		private List<ListViewItem> datListViewItems = new List<ListViewItem>(); 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Fsh")]
-		private void Load_Dat(string fileName)
+		private void LoadDat(string fileName)
 		{
 			try
 			{                
 				ClearandReset(true);
 				dat = new DatFile(fileName);
 				this.Cursor = Cursors.WaitCursor;
-				if (manager != null)
+				if (this.manager != null)
 				{
 					this.manager.SetProgressState(TaskbarProgressBarState.Normal);
 				}
@@ -2503,7 +2505,6 @@ namespace loaddatfsh
 				{
 					loadDatWorker.RunWorkerAsync();
 				}
-
 			}
 			catch (Exception ex)
 			{
@@ -2516,7 +2517,7 @@ namespace loaddatfsh
 			{
 				if (openDatDialog1.ShowDialog() == DialogResult.OK)
 				{
-					Load_Dat(openDatDialog1.FileName);
+					LoadDat(openDatDialog1.FileName);
 					AddRecentFile(openDatDialog1.FileName);
 				}
 			}
@@ -2533,7 +2534,6 @@ namespace loaddatfsh
 			if (mipsBuilt && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null && !embeddedMipmapsCb.Checked)
 			{
 				uint[] instanceIds = new uint[5];
-				FshWrapper[] fshwrap = new FshWrapper[5];
 				FSHImageWrapper[] fshimg = new FSHImageWrapper[5];
 				fshimg[0] = mip8Fsh; fshimg[1] = mip16Fsh; fshimg[2] = mip32Fsh;
 				fshimg[3] = mip64Fsh; fshimg[4] = curImage;
@@ -2549,17 +2549,13 @@ namespace loaddatfsh
 					dat = new DatFile();
 				}
 
+				bool compress = this.compDatCb.Checked;
 				bool useFshWrite = this.fshWriteCompCb.Checked;
 				for (int i = 4; i >= 0; i--)
 				{
-
-					fshwrap[i] = new FshWrapper(fshimg[i]) { UseFshWrite = useFshWrite };
-
 					CheckInstance(inputdat, group, instanceIds[i]);
 
-
-					inputdat.Add(fshwrap[i], group, instanceIds[i], compress_datmips);
-					
+					inputdat.Add(new FshFileItem(fshimg[i], useFshWrite), group, instanceIds[i], compress);
 				}
 				datRebuilt = true;
 			}
@@ -2567,21 +2563,18 @@ namespace loaddatfsh
 			{
 				uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber);
 
-				if (embeddedMipmapsCb.Checked)
+				if (this.embeddedMipmapsCb.Checked)
 				{
-					IEnumerable<BitmapEntry> items = curImage.Bitmaps.Where(b => b.EmbeddedMipmapCount == 0);
-					foreach (var item in items)
+					foreach (var item in curImage.Bitmaps.Where(b => b.EmbeddedMipmapCount == 0))
 					{
 						item.CalculateMipmapCount();
 					}
 				}
 
 
-				FshWrapper wrap = new FshWrapper(curImage);
-
 				CheckInstance(inputdat, group, instance);
 
-				inputdat.Add(wrap, group, instance, compress_datmips);
+				inputdat.Add(new FshFileItem(curImage), group, instance, this.compDatCb.Checked);
 				datRebuilt = true;
 			}
 		}
@@ -2626,10 +2619,10 @@ namespace loaddatfsh
 		/// <param name="instance">The instance id to check</param>
 		private void CheckInstance(DatFile checkdat, uint group, uint instance)
 		{
-			int count = checkdat.Indexes.Count;
-			for (int n = 0; n < count; n++)
+			var indices = checkdat.Indexes;
+			for (int i = 0; i < indices.Count; i++)
 			{
-				DatIndex chkindex = checkdat.Indexes[n];
+				DatIndex chkindex = indices[i];
 				if (chkindex.Type == fshTypeID && chkindex.Group == group && chkindex.IndexState != DatIndexState.New)
 				{
 					if (chkindex.Instance == instance)
@@ -2665,7 +2658,7 @@ namespace loaddatfsh
 				}
 				else
 				{
-					Load_Dat(dat.FileName); // reload the modified dat
+					LoadDat(dat.FileName); // reload the modified dat
 				}
 			}
 		}
@@ -2689,21 +2682,17 @@ namespace loaddatfsh
 				fileName = dat.FileName;
 			}
 
-			if (dat == null)
+			if (this.dat == null)
 			{
-				dat = new DatFile();
-				datRebuilt = false;
-			}
-			if (compDatCb.Checked && !compress_datmips)
-			{
-				compress_datmips = true; // compress the dat items
+				this.dat = new DatFile();
+				this.datRebuilt = false;
 			}
 
-			if ((datListViewItems.Count > 0 && dat.IsDirty) || dat.Indexes.Count == 0)
+			if ((this.datListViewItems.Count > 0 && this.dat.IsDirty) || this.dat.Indexes.Count == 0)
 			{
 				if (!mipsBuilt)
 				{
-					if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+					if ((this.loadedDat && this.datListViewItems.Count > 0) && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
 					{
 						RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
 					}
@@ -2714,7 +2703,7 @@ namespace loaddatfsh
 					}
 				}
 
-				if (!genNewInstCb.Checked && !datRebuilt)
+				if (!this.genNewInstCb.Checked && !this.datRebuilt)
 				{
 					if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
 					{
@@ -2738,7 +2727,7 @@ namespace loaddatfsh
 							mip8Fsh.Dispose();
 							mip8Fsh = null;
 						}
-						mipsBuilt = false;
+						this.mipsBuilt = false;
 					}
 
 					RebuildDat(dat);
@@ -2758,10 +2747,11 @@ namespace loaddatfsh
 				settings.PutSetting("genNewInstcb_checked",genNewInstCb.Checked.ToString());
 				if (genNewInstCb.Checked)
 				{
-					int count = dat.Indexes.Count;
-					for (int i = 0; i < count; i++)
+					var indices = dat.Indexes;
+
+					for (int i = 0; i < indices.Count; i++)
 					{
-						DatIndex index = dat.Indexes[i];
+						DatIndex index = indices[i];
 						if (index.Type == fshTypeID)
 						{
 							string newInstance = null;
@@ -2833,7 +2823,7 @@ namespace loaddatfsh
 		   SetLoadedDatEnables();
 		}
 		
-		private void DatlistView_SelectedIndexChanged(object sender, EventArgs e)
+		private void datListView_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (datListView.SelectedIndices.Count > 0)
 			{
@@ -2867,14 +2857,13 @@ namespace loaddatfsh
 					{
 						uint grp = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 						uint inst = uint.Parse(instance, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-						FshWrapper item = dat.LoadFile(grp, inst);
+						FshFileItem item = dat.LoadFile(grp, inst);
 						listItem.Tag = item;
 					}
 
-					FshWrapper fshitem = listItem.Tag as FshWrapper;
+					FshFileItem fshitem = listItem.Tag as FshFileItem;
 					if (fshitem.Compressed)
 					{
-						compress_datmips = true;
 						compDatCb.Checked = true;
 					}
 
@@ -3003,25 +2992,25 @@ namespace loaddatfsh
 			}
 		}
 
-		private void Multifshfrm_FormClosing(object sender, FormClosingEventArgs e)
+		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			if (loadDatWorker.IsBusy)
+			if (this.loadDatWorker.IsBusy)
 			{
-				loadDatWorker.CancelAsync();
+				this.loadDatWorker.CancelAsync();
 				e.Cancel = true;
 			}
-			else if (dat != null)
+			else if (this.dat != null)
 			{
-				if (dat.IsDirty)
+				if (this.dat.IsDirty)
 				{
 					switch (MessageBox.Show(this, Resources.SaveDatChangesText, this.Text, MessageBoxButtons.YesNoCancel))
 					{
 						case DialogResult.Yes:
-							dat.Save();
-							dat.Close();
+							this.dat.Save();
+							this.dat.Close();
 							break;
 						case DialogResult.No:
-							dat.Close();
+							this.dat.Close();
 							break;
 						case DialogResult.Cancel:
 							e.Cancel = true;
@@ -3030,9 +3019,11 @@ namespace loaddatfsh
 				}
 				else
 				{
-					dat.Close();
+					this.dat.Close();
 				}
 			}
+
+			base.OnFormClosing(e);
 		}
 
 
@@ -3061,7 +3052,7 @@ namespace loaddatfsh
 		}
 		
 		private int sortColumn = -1;
-		private void DatlistView_ColumnClick(object sender, ColumnClickEventArgs e)
+		private void datListView_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
 			if (e.Column != sortColumn)
 			{
@@ -3074,9 +3065,13 @@ namespace loaddatfsh
 			{
 				// Determine what the last sort order was and change it.
 				if (datListView.Sorting == SortOrder.Ascending)
+				{
 					datListView.Sorting = SortOrder.Descending;
+				}
 				else
+				{
 					datListView.Sorting = SortOrder.Ascending;
+				}
 			}
 
 			// Set the ListViewItemSorter property to a new ListViewItemComparer
@@ -3247,7 +3242,7 @@ namespace loaddatfsh
 						{
 							if (ext.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || ext.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
 							{
-								Load_Fsh(fi.FullName);
+								LoadFsh(fi.FullName);
 								break; // exit the loop if a fsh or dat file has been loaded
 							}
 							else if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) || ext.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
@@ -3265,7 +3260,7 @@ namespace loaddatfsh
 							}
 							else if (ext.Equals(".dat", StringComparison.OrdinalIgnoreCase))
 							{
-								Load_Dat(fi.FullName);
+								LoadDat(fi.FullName);
 								break;
 							}
 						}
@@ -3288,17 +3283,20 @@ namespace loaddatfsh
 		
 		private void loadDatWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
 		{
-			int count = dat.Indexes.Count;
+			var indices = dat.Indexes;
+
 			base.Invoke(new MethodInvoker(delegate()
 				{
 					this.toolStripProgressBar1.Visible = true;
-					this.toolStripProgressBar1.Maximum = count;
+					this.toolStripProgressBar1.Maximum = indices.Count;
 				}));
 		   
 			int fshNum = 0;
+			int count = indices.Count;
+			
 			for (int i = 0; i < count; i++)
 			{
-				DatIndex index = dat.Indexes[i];
+				DatIndex index = indices[i];
 
 				if (loadDatWorker.CancellationPending)
 				{
@@ -3360,14 +3358,14 @@ namespace loaddatfsh
 			{
 				if (e.Error != null)
 				{
-					MessageBox.Show(this, e.Error.Message + Environment.NewLine + e.Error.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+					MessageBox.Show(this, e.Error.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 					ClearandReset(true);
 				}
 				else
 				{
-					if (datListViewItems.Count > 0)
+					if (this.datListViewItems.Count > 0)
 					{
-						datListView.VirtualListSize = datListViewItems.Count;
+						this.datListView.VirtualListSize = this.datListViewItems.Count;
 
 						loadedDat = true;
 						datRebuilt = false;
@@ -3381,15 +3379,15 @@ namespace loaddatfsh
 						MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						ClearandReset(true);
 					}
+				}
 
-					this.Cursor = Cursors.Default;
-					this.toolStripProgressBar1.Visible = false;
-					this.toolStripStatusLabel1.Text = Resources.StatusReadyText;
-					if (manager != null)
-					{
-						this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
-					}
-				} 
+				this.Cursor = Cursors.Default;
+				this.toolStripProgressBar1.Visible = false;
+				this.toolStripStatusLabel1.Text = Resources.StatusReadyText;
+				if (this.manager != null)
+				{
+					this.manager.SetProgressState(TaskbarProgressBarState.NoProgress);
+				}
 			}
 			else
 			{

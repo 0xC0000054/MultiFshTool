@@ -790,9 +790,9 @@ namespace loaddatfsh
             this.datListView.UseCompatibleStateImageBehavior = false;
             this.datListView.View = System.Windows.Forms.View.Details;
             this.datListView.VirtualMode = true;
-            this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DatlistView_ColumnClick);
+            this.datListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.datListView_ColumnClick);
             this.datListView.RetrieveVirtualItem += new System.Windows.Forms.RetrieveVirtualItemEventHandler(this.datListView_RetrieveVirtualItem);
-            this.datListView.SelectedIndexChanged += new System.EventHandler(this.DatlistView_SelectedIndexChanged);
+            this.datListView.SelectedIndexChanged += new System.EventHandler(this.datListView_SelectedIndexChanged);
             // 
             // NameHeader1
             // 
@@ -1103,7 +1103,6 @@ namespace loaddatfsh
             this.MinimumSize = new System.Drawing.Size(555, 591);
             this.Name = "Multifshfrm";
             this.Text = "Multi Fsh tool";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Multifshfrm_FormClosing);
             this.bmpmanBox1.ResumeLayout(false);
             this.fshDefbox.ResumeLayout(false);
             this.fshDefbox.PerformLayout();
