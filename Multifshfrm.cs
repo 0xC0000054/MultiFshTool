@@ -814,7 +814,7 @@ namespace loaddatfsh
 			{
 				FSHDirEntry dir = image.GetDirectoryEntry(i);
 				EntryHeader entryhead = image.GetEntryHeader(dir.Offset);
-				dirName[i] = Encoding.ASCII.GetString(dir.Name);
+				dirName[i] = dir.Name;
 				fshSize[i] = entryhead.Width.ToString(CultureInfo.CurrentCulture) + "x" + entryhead.Height.ToString(CultureInfo.CurrentCulture);
 			}
 		}
@@ -1144,39 +1144,34 @@ namespace loaddatfsh
 					mip64Fsh = new FSHImageWrapper();
 				}
 
+				FshImageFormat bmpType;
+				if (item.BmpType == FshImageFormat.DXT3 || item.BmpType == FshImageFormat.ThirtyTwoBit)
+				{
+					bmpType = FshImageFormat.DXT3;
+				}
+				else
+				{
+					bmpType = FshImageFormat.DXT1;
+				}
+				string dirName = !string.IsNullOrEmpty(item.DirName) ? item.DirName : "FiSH";
 
 				for (int i = 0; i < 4; i++)
 				{
 					if (bmps[i] != null && alphas[i] != null)
 					{
-						BitmapEntry mipitm = new BitmapEntry();
-						mipitm.Bitmap = bmps[i].Clone<Bitmap>();
-						mipitm.Alpha = alphas[i].Clone<Bitmap>();
-
-						if (!string.IsNullOrEmpty(item.DirName))
-						{
-							mipitm.DirName = item.DirName;
-						}
-						else
-						{
-							mipitm.DirName = "FiSH";
-						}
-
-						mipitm.BmpType = item.BmpType;
-
 						switch (i)
 						{
 							case 0:
-								mip8Fsh.Bitmaps.Add(mipitm);
+								mip8Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
 								break;
 							case 1:
-								mip16Fsh.Bitmaps.Add(mipitm);
+								mip16Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
 								break;
 							case 2:
-								mip32Fsh.Bitmaps.Add(mipitm);
+								mip32Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
 								break;
 							case 3:
-								mip64Fsh.Bitmaps.Add(mipitm);
+								mip64Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
 								break;
 						}
 					}
@@ -2216,7 +2211,7 @@ namespace loaddatfsh
 		private string lowerInstRange = string.Empty;
 		private string upperInstRange = string.Empty;
 
-		protected void ReadRangeTxt(string path)
+		private void ReadRangeTxt(string path)
 		{
 			if (File.Exists(path) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
 			{
