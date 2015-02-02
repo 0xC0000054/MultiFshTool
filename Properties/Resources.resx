@@ -242,4 +242,15 @@
   <data name="SavingDatText" xml:space="preserve">
     <value>Saving:  </value>
   </data>
+  <data name="InvalidInstanceFileNameFormat" xml:space="preserve">
+    <value>{0} is not a valid instance.</value>
+  </data>
+  <data name="InvalidInstanceIdFormat" xml:space="preserve">
+    <value>The instance id '{0}' in instRange.txt contains invalid characters.
+It must only contain numbers 0-9 and letters A-F.</value>
+  </data>
+  <data name="InvalidInstanceRange" xml:space="preserve">
+    <value>The instance range in instRange.txt is not valid. 
+It must consist of the lower and upper texture range separated by a comma.</value>
+  </data>
 </root>
