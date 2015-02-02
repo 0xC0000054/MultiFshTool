@@ -316,6 +316,7 @@ namespace loaddatfsh
                 using (MemoryStream mstream = new MemoryStream())
                 {
                     SaveFsh(mstream, curImage);
+                    mstream.Position = 0L;
                     curImage = new FSHImageWrapper(mstream);
                 }
 
@@ -335,6 +336,7 @@ namespace loaddatfsh
             }
 
         }
+
         private void Radio_CheckedChanged(object sender, EventArgs e)
         {
             FSHImageWrapper image = GetImageFromSelectedTab(tabControl1.SelectedIndex);
@@ -543,36 +545,31 @@ namespace loaddatfsh
         }
         
         /// <summary>
-        /// Check the size of the files for images 64 x 64 or smaller
+        /// Check the size of the files for images 64 x 64 or smaller and removes the alpha images.
         /// </summary>
         /// <param name="files">The list of files to check</param>
         /// <returns>The filtered list of files</returns>
-        private List<string> CheckSize(List<string> list)
+        private List<string> CheckSizeAndTrimAlpha(List<string> list)
         {
-            for (int i = 0; i < list.Count; i++)
+            list.RemoveAll(new Predicate<string>(delegate(string file)
             {
-
-                if (Path.GetExtension(list[i]).Equals(".png", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(list[i]).Equals(".bmp", StringComparison.OrdinalIgnoreCase))
+                string ext = Path.GetExtension(file);
+                if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) || ext.Equals(".bmp", StringComparison.OrdinalIgnoreCase))
                 {
-                    using (FileStream fs = new FileStream(list[i], FileMode.Open, FileAccess.Read, FileShare.None))
+                    if (Path.GetFileName(file).IndexOf("_a", StringComparison.OrdinalIgnoreCase) == -1)
                     {
-                        using (Bitmap b = new Bitmap(fs))
+                        using (Bitmap b = new Bitmap(file))
                         {
-                            if (b.Width < 128 && b.Height < 128)
+                            if (b.Width >= 128 || b.Height >= 128)
                             {
-                                list.Remove(list[i]);
+                                return false;
                             }
                         }
                     }
+                }
 
-                }
-                else
-                {
-                    list.Remove(list[i]);
-                }
-            }
-            list.TrimExcess();
-            list.Sort();
+                return true;
+            }));
 
             return list;
         }
@@ -615,8 +612,7 @@ namespace loaddatfsh
                 {
                     if (!listFiltered)
                     {
-                        files = CheckSize(files);
-                        files = TrimAlphaBitmaps(files);
+                        files = CheckSizeAndTrimAlpha(files);
                     }
                     int count = files.Count;
                     for (int i = 0; i < count; i++)
@@ -1089,18 +1085,22 @@ namespace loaddatfsh
                 {
                     case 64:
                         SaveFsh(mstream, mip64Fsh);
+                        mstream.Position = 0L;
                         mip64Fsh = new FSHImageWrapper(mstream);
                         break;
                     case 32:
                         SaveFsh(mstream, mip32Fsh);
+                        mstream.Position = 0L;
                         mip32Fsh = new FSHImageWrapper(mstream);
                         break;
                     case 16:
                         SaveFsh(mstream, mip16Fsh);
+                        mstream.Position = 0L;
                         mip16Fsh = new FSHImageWrapper(mstream);
                         break;
                     case 8:
                         SaveFsh(mstream, mip8Fsh);
+                        mstream.Position = 0L;
                         mip8Fsh = new FSHImageWrapper(mstream);
                         break;
                 }
@@ -1677,20 +1677,7 @@ namespace loaddatfsh
                 }
             }
         }
-        private static List<string> TrimAlphaBitmaps(List<string> list)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                FileInfo fi = new FileInfo(list[i]);
-                if (fi.Name.Contains("_a"))
-                {
-                    list.Remove(list[i]);
-                }
-            }
-            list.TrimExcess();
-            list.Sort();
-            return list;
-        }
+        
         private void NewFsh(List<string> files)
         {
             if (tabControl1.SelectedTab != Maintab)
@@ -1708,8 +1695,7 @@ namespace loaddatfsh
             bmpEntry = new BitmapEntry();
             try
             {
-                files = CheckSize(files);
-                files = TrimAlphaBitmaps(files);
+                files = CheckSizeAndTrimAlpha(files);
 
                 if (files.Count > 0)
                 {
@@ -3135,13 +3121,13 @@ namespace loaddatfsh
             {
                 if (curImage != null && curImage.Bitmaps.Count > 0 && origbmplist != null && !loadedDat && datListViewItems.Count == 0)
                 {
-                    useOriginalImage = true;
+                    this.useOriginalImage = true;
 
                     ReloadCurrentImage();
 
-                    useOriginalImage = false; // reset it to false
+                    this.useOriginalImage = false;
 
-                    if (fshWriteCbGenMips)
+                    if (fshWriteCbGenMips && !embeddedMipmapsCb.Checked)
                     {
                         BuildMipMaps();
                     }
@@ -3233,6 +3219,16 @@ namespace loaddatfsh
             }
             else
             {
+                if (files.Count == 1)
+                {
+                    string ext = Path.GetExtension(files[0]);
+                    if (ext.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || ext.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                    {
+                        LoadFsh(files[0]);
+                        return;
+                    }
+                }
+
                 NewFsh(files);
             }
         }
