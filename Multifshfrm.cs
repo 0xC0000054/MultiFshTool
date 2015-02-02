@@ -101,6 +101,14 @@ namespace loaddatfsh
                 {
                     LoadFsh(openFshDialog1.FileName);
                 }
+                catch (FileNotFoundException fnfex)
+                {
+                    MessageBox.Show(this, fnfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (FormatException fex)
+                {
+                    MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 catch (Exception ex)
                 {
                     MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text);
@@ -108,14 +116,15 @@ namespace loaddatfsh
             }
         }
 
-        private void LoadFsh(string filename)
+        private void LoadFsh(string fileName)
         {
-            FileInfo fi = new FileInfo(filename);
-            if (fi.Exists)
+            if (File.Exists(fileName))
             {
-                if (fi.Extension.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || fi.Extension.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                string ext = Path.GetExtension(fileName);
+
+                if (ext.Equals(".fsh", StringComparison.OrdinalIgnoreCase) || ext.Equals(".qfs", StringComparison.OrdinalIgnoreCase))
                 {
-                    FileStream fs = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read);
+                    FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
                     try
                     {
                         bool success = false;
@@ -125,7 +134,7 @@ namespace loaddatfsh
                             fs = null;
                             BitmapEntry tempitem = tempimg.Bitmaps[0];
 
-                            fshFileName = filename;
+                            fshFileName = fileName;
                             ClearandReset(true);
                             if (origbmplist == null)
                             {
@@ -199,14 +208,15 @@ namespace loaddatfsh
                         if (success)
                         {
                             RefreshBmpType();
-                            string tgistr = fi.FullName + ".TGI";
-                            if (File.Exists(tgistr)) // check for a TGI file from Ilive's Reader
+                            
+                            // Check for a TGI file from Ilive's Reader
+                            string tgiPath = fileName + ".TGI";
+                            if (File.Exists(tgiPath)) 
                             {
-                                using (StreamReader sr = new StreamReader(tgistr))
+                                using (StreamReader sr = new StreamReader(tgiPath))
                                 {
                                     string line;
-                                    bool groupread = false;
-                                    bool instread = false;
+                                    bool groupRead = false;
 
                                     while ((line = sr.ReadLine()) != null)
                                     {
@@ -218,17 +228,17 @@ namespace loaddatfsh
                                             }
                                             else
                                             {
-                                                if (!groupread)
+                                                if (!groupRead)
                                                 {
                                                     tgiGroupTxt.Text = line;
-                                                    groupread = true;
+                                                    groupRead = true;
                                                 }
-                                                else if (!instread)
+                                                else
                                                 {
                                                     instStr = line;
                                                     tgiInstanceTxt.Text = instStr;
                                                     EndFormat_Refresh();
-                                                    instread = true;
+                                                    break;
                                                 }
                                             }
                                         }
@@ -1782,8 +1792,13 @@ namespace loaddatfsh
                             }
 
                             string fn = Path.GetFileNameWithoutExtension(files[0]);
-                            if (fn.StartsWith("0x", StringComparison.OrdinalIgnoreCase) && ValidateHexString(fn))
+                            if (fn.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                             {
+                                if (!ValidateHexString(fn))
+                                {
+                                    throw new FormatException(string.Format(Resources.InvalidInstanceFileNameFormat, fn));
+                                }
+
                                 instStr = fn.Substring(2, 8);
                                 EndFormat_Refresh();
                             }
@@ -1846,6 +1861,14 @@ namespace loaddatfsh
 
                     }
                 }
+            }
+            catch (FileNotFoundException fnfex)
+            {
+                MessageBox.Show(this, fnfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (FormatException fex)
+            {
+                MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
@@ -2530,9 +2553,9 @@ namespace loaddatfsh
                     loadDatWorker.RunWorkerAsync();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw;
             }
         }
 
@@ -2542,8 +2565,15 @@ namespace loaddatfsh
             {
                 if (openDatDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    LoadDat(openDatDialog1.FileName);
-                    AddRecentFile(openDatDialog1.FileName);
+                    try
+                    {
+                        LoadDat(openDatDialog1.FileName);
+                        AddRecentFile(openDatDialog1.FileName);
+                    }
+                    catch (DatHeaderException dhex)
+                    {
+                        MessageBox.Show(this, dhex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -2658,36 +2688,6 @@ namespace loaddatfsh
             }
         }
 
-        /// <summary>
-        /// Saves the new or modified dat
-        /// </summary>
-        /// <param name="fileName">The fileName to save as</param>
-        private void SaveDat(string fileName)
-        {
-            try
-            {
-                toolStripStatusLabel1.Text = Resources.SavingDatText + Path.GetFileName(dat.FileName);
-                Application.DoEvents();
-
-                dat.Save(fileName);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                if (!loadedDat && datListViewItems.Count == 0)
-                {
-                    ClearandReset(true);
-                }
-                else
-                {
-                    LoadDat(dat.FileName); // reload the modified dat
-                }
-            }
-        }
-
         private void saveDatbtn_Click(object sender, EventArgs e)
         {
             if (curImage != null)
@@ -2763,7 +2763,19 @@ namespace loaddatfsh
 
                 if (dat.Indexes.Count > 0)
                 {
-                    SaveDat(fileName);
+                    this.toolStripStatusLabel1.Text = Resources.SavingDatText + Path.GetFileName(fileName);
+                    this.statusStrip1.Refresh();
+
+                    dat.Save(fileName);
+
+                    if (!loadedDat && datListViewItems.Count == 0)
+                    {
+                        ClearandReset(true);
+                    }
+                    else
+                    {
+                        LoadDat(dat.FileName); // reload the modified dat
+                    }
                 }
             }
         }
@@ -3328,6 +3340,18 @@ namespace loaddatfsh
                             }
                         }
                     }
+                }
+                catch (DatHeaderException dhex)
+                {
+                    MessageBox.Show(this, dhex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (FileNotFoundException fnfex)
+                {
+                    MessageBox.Show(this, fnfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (FormatException fex)
+                {
+                    MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 catch (Exception ex)
                 {
