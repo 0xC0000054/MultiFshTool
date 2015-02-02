@@ -34,8 +34,8 @@ namespace loaddatfsh
         private List<Bitmap> origbmplist;
 
         private Random ra;
-        private string lowerInstRange;
-        private string upperInstRange;       
+        private Nullable<long> lowerInstRange;
+        private Nullable<long> upperInstRange;
         
         private string instStr;
         private string groupIDOverride = null;
@@ -1794,7 +1794,7 @@ namespace loaddatfsh
                             }
 
                             string fn = Path.GetFileNameWithoutExtension(files[0]);
-                            if (fn.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                            if (fn.StartsWith("0x", StringComparison.OrdinalIgnoreCase) && ValidateHexString(fn))
                             {
                                 instStr = fn.Substring(2, 8);
                                 EndFormat_Refresh();
@@ -1886,38 +1886,32 @@ namespace loaddatfsh
                 settings = new Settings(Path.Combine(Application.StartupPath, @"Multifshview.xml"));
                 compDatCb.Checked = bool.Parse(settings.GetSetting("compDatcb_checked", bool.TrueString).Trim());
                 genNewInstCb.Checked = bool.Parse(settings.GetSetting("genNewInstcb_checked", bool.FalseString).Trim());
-                ValidateGroupString(settings.GetSetting("GroupidOverride", string.Empty).Trim());
+                string groupOverride = settings.GetSetting("GroupidOverride", string.Empty).Trim();
+
+                if (ValidateHexString(groupOverride))
+                {
+                    this.groupIDOverride = groupOverride;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, Resources.UnableToLoadSettings + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Resources.UnableToLoadSettings + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
-        /// <summary>
-        /// Validate the group id for invalid characters
-        /// </summary>
-        /// <param name="gid">The id to validate</param>
-        private void ValidateGroupString(string gid)
+
+        private static bool ValidateHexString(string str)
         {
-            if (!string.IsNullOrEmpty(gid))
+            if (!string.IsNullOrEmpty(str))
             {
-                if (gid.Length == 10)
+                if (str.Length == 8 || str.Length == 10)
                 {
-                    if (gid.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
-                    {
-                        gid = gid.Substring(2, 8);
-                    }
-                }
-                if (gid.Length == 8)
-                {
-                    Regex rx = new Regex(@"^[A-Fa-f0-9]*$");
-                    if (rx.IsMatch(gid))
-                    {
-                        this.groupIDOverride = gid;
-                    }
+                    Regex r = new Regex(@"^(0x|0X)?[a-fA-F0-9]+$");
+
+                    return r.IsMatch(str);
                 }
             }
+            
+            return false;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
@@ -2050,22 +2044,6 @@ namespace loaddatfsh
         protected override void OnLoad(EventArgs e)
         {
             fshTypeBox.SelectedIndex = 2;
-
-            LoadSettings();
-
-
-            if (tgiGroupTxt.Text.Length <= 0)
-            {
-                ReloadGroupID();
-            }
-
-            ReadRangeTxt(Path.Combine(Application.StartupPath, @"instRange.txt"));
-
-            if (tgiInstanceTxt.Text.Length <= 0)
-            {
-                instStr = RandomHexString(7);
-                EndFormat_Refresh();
-            }
 
             base.OnLoad(e);
         }
@@ -2252,7 +2230,7 @@ namespace loaddatfsh
 
         private void ReadRangeTxt(string path)
         {
-            if (File.Exists(path) && string.IsNullOrEmpty(lowerInstRange) && string.IsNullOrEmpty(upperInstRange))
+            if (File.Exists(path))
             {
                 string[] instArray = null;
                 using (StreamReader sr = new StreamReader(path))
@@ -2266,45 +2244,74 @@ namespace loaddatfsh
                         }
                     }
                 }
-                if ((instArray != null) && instArray.Length == 2)
+                
+                if (instArray != null)
                 {
-                    string inst0 = instArray[0];
-                    string inst1 = instArray[1];
+                    if (instArray.Length != 2)
+                    {
+                        throw new FormatException(Resources.InvalidInstanceRange);
+                    }
+
+                    string inst0 = instArray[0].Trim();
+                    string inst1 = instArray[1].Trim();
+
+                    if (!ValidateHexString(inst0))
+                    {
+                        throw new FormatException(string.Format(Resources.InvalidInstanceIdFormat, inst0));
+                    }
+                    if (!ValidateHexString(inst1))
+                    {
+                        throw new FormatException(string.Format(Resources.InvalidInstanceIdFormat, inst1));
+                    }
+
+                    string lowerRange, upperRange;
                     if (inst0.Length == 10 && inst0.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                     {
-                        lowerInstRange = inst0.Substring(2, 8);
+                        lowerRange = inst0.Substring(2, 8);
                     }
-                    else if (inst0.Length == 8)
+                    else
                     {
-                        lowerInstRange = inst0;
+                        lowerRange = inst0;
                     }
 
                     if (inst1.Length == 10 && inst1.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                     {
-                        upperInstRange = inst1.Substring(2, 8);
+                        upperRange = inst1.Substring(2, 8);
                     }
-                    else if (inst1.Length == 8)
+                    else
                     {
-                        upperInstRange = inst1;
+                        upperRange = inst1;
+                    }
+
+                    long lower, upper;
+
+                    if (long.TryParse(lowerRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out lower) &&
+                        long.TryParse(upperRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out upper))
+                    {
+                        if (lower >= upper)
+                        {
+                            throw new FormatException(Resources.InvalidInstanceRange);
+                        }
+
+                        lowerInstRange = lower;
+                        upperInstRange = upper;
                     }
                 }
-
             }
         }
 
         private string RandomHexString(int length)
         {
-            if (!string.IsNullOrEmpty(lowerInstRange) && !string.IsNullOrEmpty(upperInstRange))
+
+
+            if (!lowerInstRange.HasValue && upperInstRange.HasValue)
             {
-                long lower, upper;
+                long lower = lowerInstRange.Value;
+                long upper = upperInstRange.Value;
 
-                if (long.TryParse(lowerInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out lower) &&
-                    long.TryParse(upperInstRange, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out upper))
-                {
-                    double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
+                double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
 
-                    return Convert.ToInt64(rn).ToString("X").Substring(0, 7);
-                }
+                return Convert.ToInt64(rn).ToString("X").Substring(0, 7);
             }
 
             byte[] buffer = new byte[length / 2];
@@ -2868,6 +2875,7 @@ namespace loaddatfsh
                     if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) || !instance.EndsWith("A", StringComparison.Ordinal))
                     {
                         instStr = instance.Substring(0, 7);
+                        origInst = instStr;
                         if (instance.EndsWith("4", StringComparison.Ordinal))
                         {
                             inst0_4Rdo.Checked = true;
@@ -3222,6 +3230,28 @@ namespace loaddatfsh
             if (manager != null)
             {
                 jumpList = JumpList.CreateJumpList();
+            }
+            
+            LoadSettings();
+
+            if (tgiGroupTxt.Text.Length <= 0)
+            {
+                ReloadGroupID();
+            }
+
+            try
+            {
+                ReadRangeTxt(Path.Combine(Application.StartupPath, @"instRange.txt"));
+            }
+            catch (FormatException fex)
+            {
+                MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            if (tgiInstanceTxt.Text.Length <= 0)
+            {
+                instStr = RandomHexString(7);
+                EndFormat_Refresh();
             }
 
             ProcessCommandLineArguments();
