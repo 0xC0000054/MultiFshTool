@@ -809,7 +809,8 @@ namespace loaddatfsh
         {
 
             int count = curImage.Bitmaps.Count;
-            remBtn.Enabled = (count > 1);
+            repBtn.Enabled = true;
+            remBtn.Enabled = count > 1;
 
             for (int i = 0; i < count; i++)
             {
@@ -2138,14 +2139,14 @@ namespace loaddatfsh
             {
                 DisableManageButtons(tabControl1.SelectedTab);
                 DisableFshWriteCheckBox(tabControl1.SelectedTab);
-                if (mip64Fsh != null && mip64Fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip64tab)
+                if (tabControl1.SelectedTab == mip64tab && mip64Fsh != null && mip64Fsh.Bitmaps.Count > 0)
                 {
                     RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
                     listViewMip64.Items[0].Selected = true;
                     RefreshBmpType();
                     tgiInstanceTxt.Text = string.Concat(instStr, end64);
                 }
-                else if (mip32Fsh != null && mip32Fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip32tab)
+                else if (tabControl1.SelectedTab == mip32tab && mip32Fsh != null && mip32Fsh.Bitmaps.Count > 0)
                 {
                     RefreshMipImageList(mip32Fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
                     bmpEntry = mip32Fsh.Bitmaps[0];
@@ -2153,7 +2154,7 @@ namespace loaddatfsh
                     RefreshBmpType();
                     tgiInstanceTxt.Text = string.Concat(instStr, end32);
                 }
-                else if (mip16Fsh != null && mip16Fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip16tab)
+                else if (tabControl1.SelectedTab == mip16tab && mip16Fsh != null && mip16Fsh.Bitmaps.Count > 0)
                 {
                     RefreshMipImageList(mip16Fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
                     bmpEntry = mip16Fsh.Bitmaps[0];
@@ -2161,7 +2162,7 @@ namespace loaddatfsh
                     RefreshBmpType();
                     tgiInstanceTxt.Text = string.Concat(instStr, end16);
                 }
-                else if (mip8Fsh != null && mip8Fsh.Bitmaps.Count > 0 && tabControl1.SelectedTab == mip8tab)
+                else if (tabControl1.SelectedTab == mip8tab && mip8Fsh != null && mip8Fsh.Bitmaps.Count > 0)
                 {
                     RefreshMipImageList(mip8Fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
                     bmpEntry = mip8Fsh.Bitmaps[0];
@@ -2169,7 +2170,7 @@ namespace loaddatfsh
                     RefreshBmpType();
                     tgiInstanceTxt.Text = string.Concat(instStr, end8);
                 }
-                else if (curImage != null && curImage.Bitmaps.Count > 0 && tabControl1.SelectedTab == Maintab)
+                else if (tabControl1.SelectedTab == Maintab && curImage != null && curImage.Bitmaps.Count > 0)
                 {
                     bitmapList.ResetImageSize();
                     alphaList.ResetImageSize();
@@ -2701,78 +2702,81 @@ namespace loaddatfsh
 
         private void saveDatbtn_Click(object sender, EventArgs e)
         {
-            string fileName = string.Empty;
-            if (!loadedDat && datListViewItems.Count == 0)
+            if (curImage != null)
             {
-                if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
+                string fileName = string.Empty;
+                if (!loadedDat && datListViewItems.Count == 0)
                 {
-                    fileName = saveDatDialog1.FileName;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                fileName = dat.FileName;
-            }
-
-            if (this.dat == null)
-            {
-                this.dat = new DatFile();
-                this.datRebuilt = false;
-            }
-
-            if ((this.datListViewItems.Count > 0 && this.dat.IsDirty) || this.dat.Indexes.Count == 0)
-            {
-                if (!mipsBuilt)
-                {
-                    if ((this.loadedDat && this.datListViewItems.Count > 0) && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
+                    if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
                     {
-                        RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
+                        fileName = saveDatDialog1.FileName;
                     }
                     else
                     {
-                        BuildMipMaps();
+                        return;
+                    }
+                }
+                else
+                {
+                    fileName = dat.FileName;
+                }
+
+                if (this.dat == null)
+                {
+                    this.dat = new DatFile();
+                    this.datRebuilt = false;
+                }
+
+                if ((this.datListViewItems.Count > 0 && this.dat.IsDirty) || this.dat.Indexes.Count == 0)
+                {
+                    if (!mipsBuilt)
+                    {
+                        if ((this.loadedDat && this.datListViewItems.Count > 0) && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
+                        {
+                            RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
+                        }
+                        else
+                        {
+                            BuildMipMaps();
+                            RebuildDat(dat);
+                        }
+                    }
+
+                    if (!this.genNewInstCb.Checked && !this.datRebuilt)
+                    {
+                        if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                        {
+                            if (mip64Fsh != null)
+                            {
+                                mip64Fsh.Dispose();
+                                mip64Fsh = null;
+                            }
+                            if (mip32Fsh != null)
+                            {
+                                mip32Fsh.Dispose();
+                                mip32Fsh = null;
+                            }
+                            if (mip16Fsh != null)
+                            {
+                                mip16Fsh.Dispose();
+                                mip16Fsh = null;
+                            }
+                            if (mip8Fsh != null)
+                            {
+                                mip8Fsh.Dispose();
+                                mip8Fsh = null;
+                            }
+                            this.mipsBuilt = false;
+                        }
+
                         RebuildDat(dat);
                     }
                 }
 
-                if (!this.genNewInstCb.Checked && !this.datRebuilt)
+                if (dat.Indexes.Count > 0)
                 {
-                    if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
-                    {
-                        if (mip64Fsh != null)
-                        {
-                            mip64Fsh.Dispose();
-                            mip64Fsh = null;
-                        }
-                        if (mip32Fsh != null)
-                        {
-                            mip32Fsh.Dispose();
-                            mip32Fsh = null;
-                        }
-                        if (mip16Fsh != null)
-                        {
-                            mip16Fsh.Dispose();
-                            mip16Fsh = null;
-                        }
-                        if (mip8Fsh != null)
-                        {
-                            mip8Fsh.Dispose();
-                            mip8Fsh = null;
-                        }
-                        this.mipsBuilt = false;
-                    }
-
-                    RebuildDat(dat);
+                    SaveDat(fileName);
                 }
-            }
-
-            if (dat.Indexes.Count > 0)
-            {
-                SaveDat(fileName);
             }
         }
 
@@ -3024,6 +3028,7 @@ namespace loaddatfsh
                         origbmplist.Clear();
                     }
                 }
+                repBtn.Enabled = false;
                 remBtn.Enabled = false;
                 hdFshRadio.Enabled = true;
                 hdBaseFshRadio.Enabled = true;

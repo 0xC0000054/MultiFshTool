@@ -365,6 +365,7 @@ namespace loaddatfsh
             // 
             // repBtn
             // 
+            this.repBtn.Enabled = false;
             this.repBtn.Location = new System.Drawing.Point(88, 20);
             this.repBtn.Name = "repBtn";
             this.repBtn.Size = new System.Drawing.Size(75, 23);
@@ -1120,6 +1121,7 @@ namespace loaddatfsh
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
