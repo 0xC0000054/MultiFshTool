@@ -721,6 +721,7 @@ namespace loaddatfsh
                                     {
                                         ReloadCurrentImage();
                                         BuildMipMaps();
+                                        SetSaveButtonsEnabled(true);
                                         listViewMain.Items[0].Selected = true;
                                     }
                                 }
@@ -1843,6 +1844,7 @@ namespace loaddatfsh
                                 {
                                     ReloadCurrentImage();
                                     BuildMipMaps();
+                                    SetSaveButtonsEnabled(true);
                                     listViewMain.Items[0].Selected = true;
                                 }
                             }
@@ -2934,6 +2936,10 @@ namespace loaddatfsh
                                 fshTypeBox.SelectedIndex = 3;
                                 break;
                         }
+                        if (!saveDatBtn.Enabled)
+                        {
+                            SetSaveButtonsEnabled(true);
+                        }
 
                         listViewMain.Items[0].Selected = true;
                     }
@@ -3028,6 +3034,7 @@ namespace loaddatfsh
                         origbmplist.Clear();
                     }
                 }
+                SetSaveButtonsEnabled(false);
                 repBtn.Enabled = false;
                 remBtn.Enabled = false;
                 hdFshRadio.Enabled = true;
@@ -3453,6 +3460,15 @@ namespace loaddatfsh
             {
                 this.Close();
             }
+        }
+
+        private void SetSaveButtonsEnabled(bool enabled)
+        {
+            this.saveAlphaBtn.Enabled = enabled;
+            this.saveBmpBtn.Enabled = enabled;
+            this.saveBmpBlendBtn.Enabled = enabled;
+            this.saveDatBtn.Enabled = enabled;
+            this.saveFshBtn.Enabled = enabled;
         }
     }
 }

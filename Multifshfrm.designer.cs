@@ -378,6 +378,7 @@ namespace loaddatfsh
             // saveFshBtn
             // 
             this.saveFshBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveFshBtn.Enabled = false;
             this.saveFshBtn.Location = new System.Drawing.Point(430, 571);
             this.saveFshBtn.Name = "saveFshBtn";
             this.saveFshBtn.Size = new System.Drawing.Size(75, 23);
@@ -832,6 +833,7 @@ namespace loaddatfsh
             // 
             // saveDatBtn
             // 
+            this.saveDatBtn.Enabled = false;
             this.saveDatBtn.Location = new System.Drawing.Point(174, 42);
             this.saveDatBtn.Name = "saveDatBtn";
             this.saveDatBtn.Size = new System.Drawing.Size(75, 23);
@@ -921,6 +923,7 @@ namespace loaddatfsh
             // 
             // saveAlphaBtn
             // 
+            this.saveAlphaBtn.Enabled = false;
             this.saveAlphaBtn.Location = new System.Drawing.Point(87, 18);
             this.saveAlphaBtn.Name = "saveAlphaBtn";
             this.saveAlphaBtn.Size = new System.Drawing.Size(75, 23);
@@ -931,6 +934,7 @@ namespace loaddatfsh
             // 
             // saveBmpBlendBtn
             // 
+            this.saveBmpBlendBtn.Enabled = false;
             this.saveBmpBlendBtn.Location = new System.Drawing.Point(168, 18);
             this.saveBmpBlendBtn.Name = "saveBmpBlendBtn";
             this.saveBmpBlendBtn.Size = new System.Drawing.Size(106, 23);
@@ -941,6 +945,7 @@ namespace loaddatfsh
             // 
             // saveBmpBtn
             // 
+            this.saveBmpBtn.Enabled = false;
             this.saveBmpBtn.Location = new System.Drawing.Point(6, 18);
             this.saveBmpBtn.Name = "saveBmpBtn";
             this.saveBmpBtn.Size = new System.Drawing.Size(75, 23);
