@@ -61,6 +61,11 @@ namespace loaddatfsh
         private bool datRebuilt;
         private int sortColumn;
 
+        /// <summary>
+        /// Used to disable Fshwrite Compression on processors that do not support SSE.
+        /// </summary>
+        private bool fshWriteCompressionEnabled;
+
         private const string AlphaMapSuffix = "_a";
 
         public Multifshfrm()
@@ -83,6 +88,7 @@ namespace loaddatfsh
             this.useOriginalImage = false;
             this.mipsBuilt = false;
             this.sortColumn = -1;
+            this.fshWriteCompressionEnabled = true;
 
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
@@ -2118,24 +2124,26 @@ namespace loaddatfsh
 
         private void DisableFshWriteCheckBox(TabPage page)
         {
-            if (page != Maintab)
+            if (fshWriteCompressionEnabled)
             {
-                if (fshWriteCompCb.Enabled)
+                if (page != Maintab)
                 {
-                    savedFshWriteCbValue = fshWriteCompCb.Checked;
-                    fshWriteCompCb.Checked = false;
-                    fshWriteCompCb.Enabled = false;
+                    if (fshWriteCompCb.Enabled)
+                    {
+                        savedFshWriteCbValue = fshWriteCompCb.Checked;
+                        fshWriteCompCb.Checked = false;
+                        fshWriteCompCb.Enabled = false;
+                    }
+                }
+                else
+                {
+                    if (!fshWriteCompCb.Enabled)
+                    {
+                        fshWriteCompCb.Checked = savedFshWriteCbValue;
+                        fshWriteCompCb.Enabled = true;
+                    }
                 }
             }
-            else
-            {
-                if (!fshWriteCompCb.Enabled)
-                {
-                    fshWriteCompCb.Checked = savedFshWriteCbValue;
-                    fshWriteCompCb.Enabled = true;
-                }
-            }
-
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -3159,7 +3167,7 @@ namespace loaddatfsh
         {
             if (!loadedDat && datListViewItems.Count == 0)
             {
-                if (!fshWriteCompCb.Enabled)
+                if (fshWriteCompressionEnabled)
                 {
                     fshWriteCompCb.Enabled = true;
                 }
@@ -3251,6 +3259,13 @@ namespace loaddatfsh
             if (manager != null)
             {
                 jumpList = JumpList.CreateJumpList();
+            }
+
+            if (OS.IsMicrosoftWindows && !OS.HaveSSE)
+            {
+                MessageBox.Show(this, Resources.FshWriteSSERequired, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.fshWriteCompressionEnabled = false;
+                this.fshWriteCompCb.Enabled = false;
             }
             
             LoadSettings();
