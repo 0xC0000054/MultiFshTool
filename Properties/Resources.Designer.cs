@@ -196,6 +196,15 @@ namespace loaddatfsh.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A processor that supports SSE is required to use FshWrite compression..
+        /// </summary>
+        internal static string FshWriteSSERequired {
+            get {
+                return ResourceManager.GetString("FshWriteSSERequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generate new instance ids when saving into an existing dat.
         /// </summary>
         internal static string genNewInstCb_ToolTip {

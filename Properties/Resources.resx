@@ -253,4 +253,7 @@ It must only contain numbers 0-9 and letters A-F.</value>
     <value>The instance range in instRange.txt is not valid. 
 It must consist of the lower and upper texture range separated by a comma.</value>
   </data>
+  <data name="FshWriteSSERequired" xml:space="preserve">
+    <value>A processor that supports SSE is required to use FshWrite compression.</value>
+  </data>
 </root>
