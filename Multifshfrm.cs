@@ -61,6 +61,8 @@ namespace loaddatfsh
         private bool datRebuilt;
         private int sortColumn;
 
+        private const string AlphaMapSuffix = "_a";
+
         public Multifshfrm()
         {
             InitializeComponent();
@@ -82,7 +84,7 @@ namespace loaddatfsh
             this.mipsBuilt = false;
             this.sortColumn = -1;
 
-            if (Type.GetType("Mono.Runtime") == null) // skip the Windows 7 code if we are on mono 
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 if (TaskbarManager.IsPlatformSupported)
                 {
@@ -443,7 +445,7 @@ namespace loaddatfsh
             int count = image.Bitmaps.Count;
             for (int i = 0; i < count; i++)
             {
-                ListViewItem alpha = new ListViewItem(Resources.BitmapNumberText + i.ToString(), i);
+                ListViewItem alpha = new ListViewItem(Resources.BitmapNumberText + i.ToString(CultureInfo.CurrentCulture), i);
                 listview.Items.Add(alpha);
             }
         }
@@ -466,7 +468,7 @@ namespace loaddatfsh
             int count = image.Bitmaps.Count;
             for (int i = 0; i < count; i++)
             {
-                ListViewItem alpha = new ListViewItem(Resources.AlphaNumberText + i.ToString(), i);
+                ListViewItem alpha = new ListViewItem(Resources.AlphaNumberText + i.ToString(CultureInfo.CurrentCulture), i);
                 listview.Items.Add(alpha);
             }
         }
@@ -488,7 +490,7 @@ namespace loaddatfsh
             int count = image.Bitmaps.Count;
             for (int i = 0; i < count; i++)
             {
-                ListViewItem blend = new ListViewItem(Resources.BlendNumberText + i.ToString(), i);
+                ListViewItem blend = new ListViewItem(Resources.BlendNumberText + i.ToString(CultureInfo.CurrentCulture), i);
                 listview.Items.Add(blend);
             }
         }
@@ -548,10 +550,8 @@ namespace loaddatfsh
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+            
+            return false;
         }
         
         /// <summary>
@@ -630,7 +630,7 @@ namespace loaddatfsh
                         FileInfo fi = new FileInfo(files[i]);
 
                         BitmapEntry addbmp = new BitmapEntry();
-                        string alphaPath = Path.Combine(fi.DirectoryName, Path.GetFileNameWithoutExtension(fi.FullName) + "_a" + fi.Extension);
+                        string alphaPath = Path.Combine(fi.DirectoryName, Path.GetFileNameWithoutExtension(fi.FullName) + AlphaMapSuffix + fi.Extension);
 
                         if (fi.Exists)
                         {
@@ -926,10 +926,11 @@ namespace loaddatfsh
                         }
                         else if (openBitmapDialog1.ShowDialog() == DialogResult.OK)
                         {
-                            if (!Path.GetFileNameWithoutExtension(openBitmapDialog1.FileName).Contains("_a"))
+                            string fileName = openBitmapDialog1.FileName;
+                            if (!Path.GetFileNameWithoutExtension(fileName).Contains(AlphaMapSuffix, StringComparison.OrdinalIgnoreCase))
                             {
-                                bmp = new Bitmap(openBitmapDialog1.FileName);
-                                alphaMap = Path.Combine(Path.GetDirectoryName(openBitmapDialog1.FileName), Path.GetFileNameWithoutExtension(openBitmapDialog1.FileName) + "_a" + Path.GetExtension(openBitmapDialog1.FileName));
+                                bmp = new Bitmap(fileName);
+                                alphaMap = Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + AlphaMapSuffix + Path.GetExtension(fileName));
                                 if (CheckReplaceBitmapSize(bmp))
                                 {
                                     repBmp.Bitmap = bmp.Clone(PixelFormat.Format24bppRgb);
@@ -1300,23 +1301,23 @@ namespace loaddatfsh
                     fs = null;
 
                     sw.WriteLine("7ab50e44\t\n");
-                    sw.WriteLine(string.Format("{0:X8}", tgiGroupTxt.Text.ToString() + "\n"));
+                    sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:X8}", tgiGroupTxt.Text + "\n"));
                     switch (zoom)
                     {
                         case 0:
-                            sw.WriteLine(string.Format("{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end8));
+                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end8));
                             break;
                         case 1:
-                            sw.WriteLine(string.Format("{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end16));
+                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end16));
                             break;
                         case 2:
-                            sw.WriteLine(string.Format("{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end32));
+                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end32));
                             break;
                         case 3:
-                            sw.WriteLine(string.Format("{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end64));
+                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + end64));
                             break;
                         case 4:
-                            sw.WriteLine(string.Format("{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + endreg));
+                            sw.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0:X8}", tgiInstanceTxt.Text.Substring(0, 7) + endreg));
                             break;
 
                     }
@@ -1555,7 +1556,7 @@ namespace loaddatfsh
             {
                 try
                 {
-                    string bitmapnum = image.Bitmaps.Count > 1 ? "-" + listv.SelectedItems[0].Index.ToString() : string.Empty;
+                    string bitmapnum = image.Bitmaps.Count > 1 ? "-" + listv.SelectedItems[0].Index.ToString(CultureInfo.InvariantCulture) : string.Empty;
 
                     if (!string.IsNullOrEmpty(fshFileName))
                     {
@@ -1615,7 +1616,7 @@ namespace loaddatfsh
                             break;
                     }
 
-                    string message = string.Format(Resources.SaveBitmap_Error_Format, suffix);
+                    string message = string.Format(CultureInfo.CurrentCulture, Resources.SaveBitmap_Error_Format, suffix);
                     MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -1716,7 +1717,7 @@ namespace loaddatfsh
                         {
                             if (bmpBox.Text.Length <= 0)
                             {
-                                alphaMap = Path.Combine(Path.GetDirectoryName(files[0]), Path.GetFileNameWithoutExtension(files[0]) + "_a" + Path.GetExtension(files[0]));
+                                alphaMap = Path.Combine(Path.GetDirectoryName(files[0]), Path.GetFileNameWithoutExtension(files[0]) + AlphaMapSuffix + Path.GetExtension(files[0]));
                             }
                             bmpEntry.Bitmap = bmp.Clone(PixelFormat.Format24bppRgb);
 
@@ -1796,7 +1797,7 @@ namespace loaddatfsh
                             {
                                 if (!ValidateHexString(fn))
                                 {
-                                    throw new FormatException(string.Format(Resources.InvalidInstanceFileNameFormat, fn));
+                                    throw new FormatException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidInstanceFileNameFormat, fn));
                                 }
 
                                 instStr = fn.Substring(2, 8);
@@ -2269,11 +2270,11 @@ namespace loaddatfsh
 
                     if (!ValidateHexString(inst0))
                     {
-                        throw new FormatException(string.Format(Resources.InvalidInstanceIdFormat, inst0));
+                        throw new FormatException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidInstanceIdFormat, inst0));
                     }
                     if (!ValidateHexString(inst1))
                     {
-                        throw new FormatException(string.Format(Resources.InvalidInstanceIdFormat, inst1));
+                        throw new FormatException(string.Format(CultureInfo.CurrentCulture, Resources.InvalidInstanceIdFormat, inst1));
                     }
 
                     string lowerRange, upperRange;
@@ -2323,18 +2324,18 @@ namespace loaddatfsh
 
                 double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
 
-                return Convert.ToInt64(rn).ToString("X").Substring(0, 7);
+                return Convert.ToInt64(rn).ToString("X", CultureInfo.InvariantCulture).Substring(0, 7);
             }
 
             byte[] buffer = new byte[length / 2];
             ra.NextBytes(buffer);
-            string result = String.Concat(buffer.Select(x => x.ToString("X2")).ToArray());
+            string result = String.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
             if (length % 2 == 0)
             {
                 return result;
             }
 
-            return result + ra.Next(16).ToString("X");
+            return result + ra.Next(16).ToString("X", CultureInfo.InvariantCulture);
         }
         private void TgiGrouptxt_KeyDown(object sender, KeyEventArgs e)
         {
@@ -2616,7 +2617,7 @@ namespace loaddatfsh
             }
             else if (curImage != null) // the dat does not contain mipmaps
             {
-                uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber);
+                uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
                 if (this.embeddedMipmapsCb.Checked)
                 {
@@ -3290,7 +3291,7 @@ namespace loaddatfsh
                     link.IconReference = new Microsoft.WindowsAPICodePack.Shell.IconReference("shell32.dll", 0);
                     link.WorkingDirectory = Path.GetDirectoryName(exePath);
 
-                    JumpListHelper.AddToRecent(link, manager.ApplicationId);
+                    JumpListHelper.AddToRecent(link);
                 }
 
                 jumpList.Refresh();
@@ -3462,7 +3463,7 @@ namespace loaddatfsh
                     }
                     else
                     {
-                        string message = string.Format(Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
+                        string message = string.Format(CultureInfo.CurrentCulture, Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
                         MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         ClearandReset(true);
                     }
