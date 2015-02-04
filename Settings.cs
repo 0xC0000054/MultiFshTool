@@ -1,32 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Globalization;
 using System.Xml;
-using System.IO;
-using System.Reflection;
+
 namespace loaddatfsh
 {
     internal class Settings
     {
-        XmlDocument xmlDocument = new XmlDocument();
+        XmlDocument xmlDocument;
                 
-        string documentPath = null;
+        string documentPath;
 
         public Settings(string path)
         {
             try 
             {
                 documentPath = path;
+                xmlDocument = new XmlDocument();
                 xmlDocument.Load(documentPath);
             }
             catch { xmlDocument.LoadXml("<settings></settings>"); }
         }
 
         public int GetSetting(string xPath, int defaultValue)
-        { return Convert.ToInt16(GetSetting(xPath, Convert.ToString(defaultValue))); }
+        { 
+            return Convert.ToInt16(GetSetting(xPath, defaultValue.ToString(CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture);
+        }
 
         public void PutSetting(string xPath, int value)
-        { PutSetting(xPath, Convert.ToString(value)); }
+        { 
+            PutSetting(xPath, value.ToString(CultureInfo.InvariantCulture)); 
+        }
 
         public string GetSetting(string xPath, string defaultValue)
         {
