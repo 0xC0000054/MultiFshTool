@@ -100,6 +100,10 @@ namespace loaddatfsh
             }
         }
 
+        private void ShowErrorMessage(string message)
+        {
+            MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, 0);
+        }
 
         private void loadfsh_Click(object sender, EventArgs e)
         {
@@ -111,15 +115,15 @@ namespace loaddatfsh
                 }
                 catch (FileNotFoundException fnfex)
                 {
-                    MessageBox.Show(this, fnfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(fnfex.Message);
                 }
                 catch (FormatException fex)
                 {
-                    MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(fex.Message);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text);
+                    ShowErrorMessage(ex.Message);
                 }
             }
         }
@@ -552,7 +556,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    MessageBox.Show(this, Resources.CheckReplaceBitmapSizeError, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(Resources.CheckReplaceBitmapSizeError);
                     return false;
                 }
             }
@@ -746,7 +750,7 @@ namespace loaddatfsh
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
         private void addbtn_DragDrop(object sender, DragEventArgs e)
@@ -947,12 +951,11 @@ namespace loaddatfsh
                         }
                         else
                         {
-                            MessageBox.Show(this, Resources.repBmp_NewFileSelect_Error, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            ShowErrorMessage(Resources.repBmp_NewFileSelect_Error);
                         }
 
                         if (bmpLoaded)
                         {
-
                             if (alphaBox.Text.Length > 0 && File.Exists(alphaBox.Text))
                             {
                                 using (Bitmap alpha = new Bitmap(alphaBox.Text))
@@ -1034,7 +1037,7 @@ namespace loaddatfsh
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ShowErrorMessage(ex.Message);
                     }
                     finally
                     {
@@ -1047,7 +1050,7 @@ namespace loaddatfsh
                 }
                 else
                 {
-                    MessageBox.Show(this, Resources.repBmp_NoImageSelected_Error, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(Resources.repBmp_NoImageSelected_Error);
                 }
 
             }
@@ -1289,7 +1292,7 @@ namespace loaddatfsh
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }
@@ -1601,7 +1604,7 @@ namespace loaddatfsh
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(ex.Message);
                 }
             }
             else
@@ -1622,8 +1625,7 @@ namespace loaddatfsh
                             break;
                     }
 
-                    string message = string.Format(CultureInfo.CurrentCulture, Resources.SaveBitmap_Error_Format, suffix);
-                    MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(string.Format(CultureInfo.CurrentCulture, Resources.SaveBitmap_Error_Format, suffix));
                 }
             }
         }
@@ -1871,15 +1873,15 @@ namespace loaddatfsh
             }
             catch (FileNotFoundException fnfex)
             {
-                MessageBox.Show(this, fnfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(fnfex.Message);
             }
             catch (FormatException fex)
             {
-                MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(fex.Message);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(ex.Message + Environment.NewLine + ex.StackTrace);
             }
         }
 
@@ -2581,7 +2583,7 @@ namespace loaddatfsh
                     }
                     catch (DatHeaderException dhex)
                     {
-                        MessageBox.Show(this, dhex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        ShowErrorMessage(dhex.Message);
                     }
                 }
             }
@@ -2954,11 +2956,11 @@ namespace loaddatfsh
                 }
                 catch (DatFileException dfex)
                 {
-                    MessageBox.Show(this, dfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(dfex.Message);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message + Environment.NewLine + ex.StackTrace, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }
@@ -3157,7 +3159,7 @@ namespace loaddatfsh
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(ex.Message);
             }
         }
         /// <summary>
@@ -3263,7 +3265,7 @@ namespace loaddatfsh
 
             if (OS.IsMicrosoftWindows && !OS.HaveSSE)
             {
-                MessageBox.Show(this, Resources.FshWriteSSERequired, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(Resources.FshWriteSSERequired);
                 this.fshWriteCompressionEnabled = false;
                 this.fshWriteCompCb.Enabled = false;
             }
@@ -3281,7 +3283,7 @@ namespace loaddatfsh
             }
             catch (FormatException fex)
             {
-                MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(fex.Message);
             }
 
             if (tgiInstanceTxt.Text.Length <= 0)
@@ -3359,19 +3361,19 @@ namespace loaddatfsh
                 }
                 catch (DatHeaderException dhex)
                 {
-                    MessageBox.Show(this, dhex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(dhex.Message);
                 }
                 catch (FileNotFoundException fnfex)
                 {
-                    MessageBox.Show(this, fnfex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(fnfex.Message);
                 }
                 catch (FormatException fex)
                 {
-                    MessageBox.Show(this, fex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(fex.Message);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(ex.Message);
                 }
             }
         }
@@ -3461,7 +3463,7 @@ namespace loaddatfsh
             {
                 if (e.Error != null)
                 {
-                    MessageBox.Show(this, e.Error.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ShowErrorMessage(e.Error.Message);
                     ClearandReset(true);
                 }
                 else
@@ -3479,7 +3481,7 @@ namespace loaddatfsh
                     else
                     {
                         string message = string.Format(CultureInfo.CurrentCulture, Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
-                        MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, 0);
                         ClearandReset(true);
                     }
                 }
