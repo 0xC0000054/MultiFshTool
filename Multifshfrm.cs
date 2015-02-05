@@ -1,18 +1,18 @@
-﻿using System;
+﻿using FshDatIO;
+using loaddatfsh.Properties;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
-using System.Text;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using FshDatIO;
-using loaddatfsh.Properties;
-using Microsoft.WindowsAPICodePack.Taskbar;
-using System.Threading;
-using System.Linq;
 
 namespace loaddatfsh
 {
@@ -121,7 +121,19 @@ namespace loaddatfsh
                 {
                     ShowErrorMessage(fex.Message);
                 }
-                catch (Exception ex)
+                catch (IOException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (NotSupportedException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (SecurityException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (UnauthorizedAccessException ex)
                 {
                     ShowErrorMessage(ex.Message);
                 }
@@ -748,7 +760,23 @@ namespace loaddatfsh
 
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (ExternalException eex)
+            {
+                ShowErrorMessage(eex.Message);
+            }
+            catch (IOException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (SecurityException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
             {
                 ShowErrorMessage(ex.Message);
             }
@@ -900,9 +928,13 @@ namespace loaddatfsh
                         BuildMipMaps();
                         listViewMain.Items[0].Selected = true;
                     }
-                    catch (Exception ex)
+                    catch (ArgumentException ex)
                     {
-                        MessageBox.Show(this, ex.Message, this.Text);
+                        ShowErrorMessage(ex.Message);
+                    }
+                    catch (ExternalException ex)
+                    {
+                        ShowErrorMessage(ex.Message);
                     }
                 }
             }
@@ -1035,7 +1067,27 @@ namespace loaddatfsh
                             BuildMipMaps();
                         }
                     }
-                    catch (Exception ex)
+                    catch (ArgumentException ex)
+                    {
+                        ShowErrorMessage(ex.Message);
+                    }
+                    catch (DirectoryNotFoundException ex)
+                    {
+                        ShowErrorMessage(ex.Message);
+                    }
+                    catch (ExternalException eex)
+                    {
+                        ShowErrorMessage(eex.Message);
+                    }
+                    catch (IOException ex)
+                    {
+                        ShowErrorMessage(ex.Message);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        ShowErrorMessage(ex.Message);
+                    }
+                    catch (UnauthorizedAccessException ex)
                     {
                         ShowErrorMessage(ex.Message);
                     }
@@ -1275,25 +1327,18 @@ namespace loaddatfsh
         {
             if ((curImage != null) && curImage.Bitmaps.Count >= 1)
             {
-                try
+                mip64Fsh = null;
+                mip32Fsh = null;
+                mip16Fsh = null;
+                mip8Fsh = null;
+                foreach (BitmapEntry entry in curImage.Bitmaps)
                 {
-                    mip64Fsh = null;
-                    mip32Fsh = null;
-                    mip16Fsh = null;
-                    mip8Fsh = null;
-                    foreach (BitmapEntry entry in curImage.Bitmaps)
-                    {
-                        GenerateMips(entry);
-                    }
-                    RefreshMips();
+                    GenerateMips(entry);
+                }
+                RefreshMips();
 
-                    RefreshDirectory(curImage);
-                    mipsBuilt = true;
-                }
-                catch (Exception ex)
-                {
-                    ShowErrorMessage(ex.Message + Environment.NewLine + ex.StackTrace);
-                }
+                RefreshDirectory(curImage);
+                mipsBuilt = true;
             }
         }
         /// <summary>
@@ -1388,143 +1433,162 @@ namespace loaddatfsh
 
         private void saveFshBtn_Click(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedTab == Maintab)
+            try
             {
-                if (curImage != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
+                if (tabControl1.SelectedTab == Maintab)
                 {
-                    if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                    if (curImage != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        curImage.IsCompressed = true;
-                    }
-                    else
-                    {
-                        curImage.IsCompressed = false;
-                    }
-
-                    if (!loadedDat && datListViewItems.Count == 0 && !embeddedMipmapsCb.Checked)
-                    {
-                        if (!mipsBuilt)
+                        if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
                         {
-                            BuildMipMaps();
+                            curImage.IsCompressed = true;
                         }
-                        if (mipsBuilt && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null)
+                        else
                         {
-                            string filepath = Path.Combine(Path.GetDirectoryName(saveFshDialog1.FileName), Path.GetFileName(saveFshDialog1.FileName));
-                            if (curImage.IsCompressed)
-                            {
-                                mip64Fsh.IsCompressed = true;
-                                mip32Fsh.IsCompressed = true;
-                                mip16Fsh.IsCompressed = true;
-                                mip8Fsh.IsCompressed = true;
-                            }
-                            string ext = Path.GetExtension(saveFshDialog1.FileName);
-                            using (FileStream m64 = CreateMipStream(filepath, "_s3" + ext))
-                            {
-                                SaveFsh(m64, mip64Fsh);
-                            }
-                            WriteTgi(filepath + "_s3" + ext, 3);
-
-                            using (FileStream m32 = CreateMipStream(filepath, "_s2" + ext))
-                            {
-                                SaveFsh(m32, mip32Fsh);
-                            }
-                            WriteTgi(filepath + "_s2" + ext, 2);
-
-                            using (FileStream m16 = CreateMipStream(filepath, "_s1" + ext))
-                            {
-                                SaveFsh(m16, mip16Fsh);
-                            }
-                            WriteTgi(filepath + "_s1" + ext, 1);
-
-                            using (FileStream m8 = CreateMipStream(filepath, "_s0" + ext))
-                            {
-                                SaveFsh(m8, mip8Fsh);
-                            }
-                            WriteTgi(filepath + "_s0" + ext, 0);
+                            curImage.IsCompressed = false;
                         }
-                        WriteTgi(saveFshDialog1.FileName, 4);
+
+                        if (!loadedDat && datListViewItems.Count == 0 && !embeddedMipmapsCb.Checked)
+                        {
+                            if (!mipsBuilt)
+                            {
+                                BuildMipMaps();
+                            }
+                            if (mipsBuilt && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null)
+                            {
+                                string filepath = Path.Combine(Path.GetDirectoryName(saveFshDialog1.FileName), Path.GetFileName(saveFshDialog1.FileName));
+                                if (curImage.IsCompressed)
+                                {
+                                    mip64Fsh.IsCompressed = true;
+                                    mip32Fsh.IsCompressed = true;
+                                    mip16Fsh.IsCompressed = true;
+                                    mip8Fsh.IsCompressed = true;
+                                }
+                                string ext = Path.GetExtension(saveFshDialog1.FileName);
+                                using (FileStream m64 = CreateMipStream(filepath, "_s3" + ext))
+                                {
+                                    SaveFsh(m64, mip64Fsh);
+                                }
+                                WriteTgi(filepath + "_s3" + ext, 3);
+
+                                using (FileStream m32 = CreateMipStream(filepath, "_s2" + ext))
+                                {
+                                    SaveFsh(m32, mip32Fsh);
+                                }
+                                WriteTgi(filepath + "_s2" + ext, 2);
+
+                                using (FileStream m16 = CreateMipStream(filepath, "_s1" + ext))
+                                {
+                                    SaveFsh(m16, mip16Fsh);
+                                }
+                                WriteTgi(filepath + "_s1" + ext, 1);
+
+                                using (FileStream m8 = CreateMipStream(filepath, "_s0" + ext))
+                                {
+                                    SaveFsh(m8, mip8Fsh);
+                                }
+                                WriteTgi(filepath + "_s0" + ext, 0);
+                            }
+                            WriteTgi(saveFshDialog1.FileName, 4);
+                        }
+                        using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                        {
+                            SaveFsh(fs, curImage);
+                        }
                     }
-                    using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                }
+                else if (tabControl1.SelectedTab == mip64tab)
+                {
+                    if (mip64Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        SaveFsh(fs, curImage);
+                        if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                        {
+                            mip64Fsh.IsCompressed = true;
+                        }
+                        else
+                        {
+                            mip64Fsh.IsCompressed = false;
+                        }
+                        WriteTgi(saveFshDialog1.FileName, 3);
+                        using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                        {
+                            SaveFsh(fs, mip64Fsh);
+                        }
+                    }
+                }
+                else if (tabControl1.SelectedTab == mip32tab)
+                {
+                    if (mip32Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                        {
+                            mip32Fsh.IsCompressed = true;
+                        }
+                        else
+                        {
+                            mip32Fsh.IsCompressed = false;
+                        }
+                        WriteTgi(saveFshDialog1.FileName, 2);
+                        using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                        {
+                            SaveFsh(fs, mip32Fsh);
+                        }
+                    }
+                }
+                else if (tabControl1.SelectedTab == mip16tab)
+                {
+                    if (mip16Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                        {
+                            mip16Fsh.IsCompressed = true;
+                        }
+                        else
+                        {
+                            mip16Fsh.IsCompressed = false;
+                        }
+                        WriteTgi(saveFshDialog1.FileName, 1);
+                        using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                        {
+                            SaveFsh(fs, mip16Fsh);
+                        }
+                    }
+                }
+                else if (tabControl1.SelectedTab == mip8tab)
+                {
+                    if (mip8Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
+                    {
+                        if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
+                        {
+                            mip8Fsh.IsCompressed = true;
+                        }
+                        else
+                        {
+                            mip8Fsh.IsCompressed = false;
+                        }
+                        WriteTgi(saveFshDialog1.FileName, 0);
+                        using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
+                        {
+                            SaveFsh(fs, mip8Fsh);
+                        }
                     }
                 }
             }
-            else if (tabControl1.SelectedTab == mip64tab)
+            catch (DirectoryNotFoundException ex)
             {
-                if (mip64Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
-                    {
-                        mip64Fsh.IsCompressed = true;
-                    }
-                    else
-                    {
-                        mip64Fsh.IsCompressed = false;
-                    }
-                    WriteTgi(saveFshDialog1.FileName, 3);
-                    using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        SaveFsh(fs, mip64Fsh);
-                    }
-                }
+                ShowErrorMessage(ex.Message);
             }
-            else if (tabControl1.SelectedTab == mip32tab)
+            catch (IOException ex)
             {
-                if (mip32Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
-                    {
-                        mip32Fsh.IsCompressed = true;
-                    }
-                    else
-                    {
-                        mip32Fsh.IsCompressed = false;
-                    }
-                    WriteTgi(saveFshDialog1.FileName, 2);
-                    using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        SaveFsh(fs, mip32Fsh);
-                    }
-                }
+                ShowErrorMessage(ex.Message);
             }
-            else if (tabControl1.SelectedTab == mip16tab)
+            catch (SecurityException ex)
             {
-                if (mip16Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
-                    {
-                        mip16Fsh.IsCompressed = true;
-                    }
-                    else
-                    {
-                        mip16Fsh.IsCompressed = false;
-                    }
-                    WriteTgi(saveFshDialog1.FileName, 1);
-                    using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        SaveFsh(fs, mip16Fsh);
-                    }
-                }
+                ShowErrorMessage(ex.Message);
             }
-            else if (tabControl1.SelectedTab == mip8tab)
+            catch (UnauthorizedAccessException ex)
             {
-                if (mip8Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    if (Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase))
-                    {
-                        mip8Fsh.IsCompressed = true;
-                    }
-                    else
-                    {
-                        mip8Fsh.IsCompressed = false;
-                    }
-                    WriteTgi(saveFshDialog1.FileName, 0);
-                    using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
-                    {
-                        SaveFsh(fs, mip8Fsh);
-                    }
-                }
+                ShowErrorMessage(ex.Message);
             }
         }
         /// <summary>
@@ -1602,7 +1666,23 @@ namespace loaddatfsh
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (ArgumentException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (ExternalException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (IOException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (SecurityException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (UnauthorizedAccessException ex)
                 {
                     ShowErrorMessage(ex.Message);
                 }
@@ -1871,6 +1951,14 @@ namespace loaddatfsh
                     }
                 }
             }
+            catch (ArgumentException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (ExternalException eex)
+            {
+                ShowErrorMessage(eex.Message);
+            }
             catch (FileNotFoundException fnfex)
             {
                 ShowErrorMessage(fnfex.Message);
@@ -1879,9 +1967,17 @@ namespace loaddatfsh
             {
                 ShowErrorMessage(fex.Message);
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                ShowErrorMessage(ex.Message + Environment.NewLine + ex.StackTrace);
+                ShowErrorMessage(ex.Message);
+            }
+            catch (SecurityException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
 
@@ -1905,8 +2001,18 @@ namespace loaddatfsh
             try
             {
                 settings = new Settings(Path.Combine(Application.StartupPath, @"Multifshview.xml"));
-                compDatCb.Checked = bool.Parse(settings.GetSetting("compDatcb_checked", bool.TrueString).Trim());
-                genNewInstCb.Checked = bool.Parse(settings.GetSetting("genNewInstcb_checked", bool.FalseString).Trim());
+
+                bool value;
+                if (bool.TryParse(settings.GetSetting("compDatcb_checked", bool.TrueString).Trim(), out value))
+                {
+                    compDatCb.Checked = value;
+                }
+
+                if (bool.TryParse(settings.GetSetting("genNewInstcb_checked", bool.FalseString).Trim(), out value))
+                {
+                    genNewInstCb.Checked = value;
+                }
+
                 string groupOverride = settings.GetSetting("GroupidOverride", string.Empty).Trim();
 
                 if (ValidateHexString(groupOverride))
@@ -1914,9 +2020,25 @@ namespace loaddatfsh
                     this.groupIDOverride = groupOverride;
                 }
             }
-            catch (Exception ex)
+            catch (FileNotFoundException fnfex)
             {
-                MessageBox.Show(Resources.UnableToLoadSettings + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessage(fnfex.Message);
+            }
+            catch (IOException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (NotSupportedException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (SecurityException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
 
@@ -2701,93 +2823,112 @@ namespace loaddatfsh
 
         private void saveDatbtn_Click(object sender, EventArgs e)
         {
-            if (curImage != null)
+            try
             {
-                string fileName = string.Empty;
-                if (!loadedDat && datListViewItems.Count == 0)
+                if (curImage != null)
                 {
-                    if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
+                    string fileName = string.Empty;
+                    if (!loadedDat && datListViewItems.Count == 0)
                     {
-                        fileName = saveDatDialog1.FileName;
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    fileName = dat.FileName;
-                }
-
-                if (this.dat == null)
-                {
-                    this.dat = new DatFile();
-                    this.datRebuilt = false;
-                }
-
-                if ((this.datListViewItems.Count > 0 && this.dat.IsDirty) || this.dat.Indexes.Count == 0)
-                {
-                    if (!mipsBuilt)
-                    {
-                        if ((this.loadedDat && this.datListViewItems.Count > 0) && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
+                        if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
                         {
-                            RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
+                            fileName = saveDatDialog1.FileName;
                         }
                         else
                         {
-                            BuildMipMaps();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        fileName = dat.FileName;
+                    }
+
+                    if (this.dat == null)
+                    {
+                        this.dat = new DatFile();
+                        this.datRebuilt = false;
+                    }
+
+                    if ((this.datListViewItems.Count > 0 && this.dat.IsDirty) || this.dat.Indexes.Count == 0)
+                    {
+                        if (!mipsBuilt)
+                        {
+                            if ((this.loadedDat && this.datListViewItems.Count > 0) && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
+                            {
+                                RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
+                            }
+                            else
+                            {
+                                BuildMipMaps();
+                                RebuildDat(dat);
+                            }
+                        }
+
+                        if (!this.genNewInstCb.Checked && !this.datRebuilt)
+                        {
+                            if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                            {
+                                if (mip64Fsh != null)
+                                {
+                                    mip64Fsh.Dispose();
+                                    mip64Fsh = null;
+                                }
+                                if (mip32Fsh != null)
+                                {
+                                    mip32Fsh.Dispose();
+                                    mip32Fsh = null;
+                                }
+                                if (mip16Fsh != null)
+                                {
+                                    mip16Fsh.Dispose();
+                                    mip16Fsh = null;
+                                }
+                                if (mip8Fsh != null)
+                                {
+                                    mip8Fsh.Dispose();
+                                    mip8Fsh = null;
+                                }
+                                this.mipsBuilt = false;
+                            }
+
                             RebuildDat(dat);
                         }
                     }
 
-                    if (!this.genNewInstCb.Checked && !this.datRebuilt)
+                    if (dat.Indexes.Count > 0)
                     {
-                        if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                        this.toolStripStatusLabel1.Text = Resources.SavingDatText + Path.GetFileName(fileName);
+                        this.statusStrip1.Refresh();
+
+                        dat.Save(fileName);
+
+                        if (!loadedDat && datListViewItems.Count == 0)
                         {
-                            if (mip64Fsh != null)
-                            {
-                                mip64Fsh.Dispose();
-                                mip64Fsh = null;
-                            }
-                            if (mip32Fsh != null)
-                            {
-                                mip32Fsh.Dispose();
-                                mip32Fsh = null;
-                            }
-                            if (mip16Fsh != null)
-                            {
-                                mip16Fsh.Dispose();
-                                mip16Fsh = null;
-                            }
-                            if (mip8Fsh != null)
-                            {
-                                mip8Fsh.Dispose();
-                                mip8Fsh = null;
-                            }
-                            this.mipsBuilt = false;
+                            ClearandReset(true);
                         }
-
-                        RebuildDat(dat);
+                        else
+                        {
+                            LoadDat(dat.FileName); // reload the modified dat
+                        }
                     }
                 }
-
-                if (dat.Indexes.Count > 0)
-                {
-                    this.toolStripStatusLabel1.Text = Resources.SavingDatText + Path.GetFileName(fileName);
-                    this.statusStrip1.Refresh();
-
-                    dat.Save(fileName);
-
-                    if (!loadedDat && datListViewItems.Count == 0)
-                    {
-                        ClearandReset(true);
-                    }
-                    else
-                    {
-                        LoadDat(dat.FileName); // reload the modified dat
-                    }
-                }
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (IOException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (SecurityException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
 
@@ -2958,9 +3099,21 @@ namespace loaddatfsh
                 {
                     ShowErrorMessage(dfex.Message);
                 }
-                catch (Exception ex)
+                catch (DirectoryNotFoundException ex)
                 {
-                    ShowErrorMessage(ex.Message + Environment.NewLine + ex.StackTrace);
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (IOException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (SecurityException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    ShowErrorMessage(ex.Message);
                 }
             }
         }
@@ -3157,7 +3310,11 @@ namespace loaddatfsh
 
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            catch (ExternalException ex)
             {
                 ShowErrorMessage(ex.Message);
             }
@@ -3371,7 +3528,15 @@ namespace loaddatfsh
                 {
                     ShowErrorMessage(fex.Message);
                 }
-                catch (Exception ex)
+                catch (IOException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (SecurityException ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
+                catch (UnauthorizedAccessException ex)
                 {
                     ShowErrorMessage(ex.Message);
                 }
