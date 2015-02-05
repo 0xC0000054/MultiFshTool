@@ -12,6 +12,7 @@ namespace loaddatfsh
         private int col;
         private SortOrder order;
         private bool numsort = false;
+        
         public ListViewItemComparer()
         {
             col = 0;
@@ -26,6 +27,16 @@ namespace loaddatfsh
 
         public int Compare(ListViewItem x, ListViewItem y)
         {
+            if (x == null)
+            {
+                throw new ArgumentNullException("x");
+            }
+
+            if (y == null)
+            {
+                throw new ArgumentNullException("y");
+            }
+
             int returnVal = -1;
             if (numsort)
             {
