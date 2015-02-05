@@ -688,7 +688,7 @@ namespace loaddatfsh
             this.tgiGroupTxt.Size = new System.Drawing.Size(82, 20);
             this.tgiGroupTxt.TabIndex = 71;
             this.toolTip1.SetToolTip(this.tgiGroupTxt, global::loaddatfsh.Properties.Resources.tgiGroupTxt_ToolTip);
-            this.tgiGroupTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
+            this.tgiGroupTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tgiGrouptxt_KeyDown);
             // 
             // tgiInstanceTxt
             // 
@@ -699,7 +699,7 @@ namespace loaddatfsh
             this.tgiInstanceTxt.Size = new System.Drawing.Size(82, 20);
             this.tgiInstanceTxt.TabIndex = 72;
             this.toolTip1.SetToolTip(this.tgiInstanceTxt, global::loaddatfsh.Properties.Resources.tgiInstanceTxt_ToolTip);
-            this.tgiInstanceTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TgiGrouptxt_KeyDown);
+            this.tgiInstanceTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tgiInstancetxt_KeyDown);
             // 
             // tgiGroupLbl
             // 
