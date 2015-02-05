@@ -2434,6 +2434,12 @@ namespace loaddatfsh
             return result + ra.Next(16).ToString("X", CultureInfo.InvariantCulture);
         }
 
+        /// <summary>
+        /// Determines whether the specified key is a hexadecimal character.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="shiftPressed">Set to <c>true</c> when the shift key is pressed.</param>
+        /// <returns><c>true</c> if the specified key is a valid hexadecimal character; otherwise <c>false</c></returns>
         private static bool IsHexadecimalChar(Keys key, bool shiftPressed)
         {
             bool result = false;
@@ -2451,10 +2457,6 @@ namespace loaddatfsh
                     case Keys.D:
                     case Keys.E:
                     case Keys.F:
-                    case Keys.Delete:
-                    case Keys.Back:
-                    case Keys.Left:
-                    case Keys.Right:
                         result = true;
                         break;
                 }
@@ -2465,7 +2467,7 @@ namespace loaddatfsh
         
         private void tgiGrouptxt_KeyDown(object sender, KeyEventArgs e)
         {
-            if (IsHexadecimalChar(e.KeyCode, e.Shift))
+            if (IsHexadecimalChar(e.KeyCode, e.Shift) || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
             {
                 e.Handled = true;
                 e.SuppressKeyPress = false;
@@ -2479,7 +2481,7 @@ namespace loaddatfsh
 
         private void tgiInstancetxt_KeyDown(object sender, KeyEventArgs e)
         {
-            if (IsHexadecimalChar(e.KeyCode, e.Shift))
+            if (IsHexadecimalChar(e.KeyCode, e.Shift) || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
             {
                 e.Handled = true;
                 e.SuppressKeyPress = false;
