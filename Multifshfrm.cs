@@ -55,7 +55,6 @@ namespace loaddatfsh
 
         private DatFile dat;
         private string origInst;
-        private bool loadedDat;
         private List<ListViewItem> datListViewItems;
         private bool mipsBuilt;
         private bool datRebuilt;
@@ -1447,7 +1446,7 @@ namespace loaddatfsh
                             curImage.IsCompressed = false;
                         }
 
-                        if (!loadedDat && datListViewItems.Count == 0 && !embeddedMipmapsCb.Checked)
+                        if (datListViewItems.Count == 0 && !embeddedMipmapsCb.Checked)
                         {
                             if (!mipsBuilt)
                             {
@@ -2830,7 +2829,11 @@ namespace loaddatfsh
                 if (curImage != null)
                 {
                     string fileName = string.Empty;
-                    if (!loadedDat && datListViewItems.Count == 0)
+                    if (this.datListViewItems.Count > 0)
+                    {
+                        fileName = dat.FileName;
+                    }
+                    else
                     {
                         if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
                         {
@@ -2840,10 +2843,6 @@ namespace loaddatfsh
                         {
                             return;
                         }
-                    }
-                    else
-                    {
-                        fileName = dat.FileName;
                     }
 
                     if (this.dat == null)
@@ -2856,7 +2855,7 @@ namespace loaddatfsh
                     {
                         if (!mipsBuilt)
                         {
-                            if ((this.loadedDat && this.datListViewItems.Count > 0) && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
+                            if (this.datListViewItems.Count > 0 && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
                             {
                                 RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
                             }
@@ -2869,7 +2868,7 @@ namespace loaddatfsh
 
                         if (!this.genNewInstCb.Checked && !this.datRebuilt)
                         {
-                            if ((loadedDat && datListViewItems.Count > 0) && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
+                            if (datListViewItems.Count > 0 && !DatContainsNormalMipMaps(tgiGroupTxt.Text, tgiInstanceTxt.Text))
                             {
                                 if (mip64Fsh != null)
                                 {
@@ -2905,7 +2904,7 @@ namespace loaddatfsh
 
                         dat.Save(fileName);
 
-                        if (!loadedDat && datListViewItems.Count == 0)
+                        if (datListViewItems.Count == 0)
                         {
                             ClearandReset(true);
                         }
@@ -2936,7 +2935,7 @@ namespace loaddatfsh
 
         private void genNewInstcb_CheckedChanged(object sender, EventArgs e)
         {
-            if (dat != null && loadedDat)
+            if (dat != null && datListViewItems.Count > 0)
             {
                 settings.PutSetting("genNewInstcb_checked", genNewInstCb.Checked.ToString());
                 if (genNewInstCb.Checked)
@@ -3003,7 +3002,7 @@ namespace loaddatfsh
 
         private void newDatbtn_Click(object sender, EventArgs e)
         {
-            if (loadedDat && datListViewItems.Count > 0)
+            if (datListViewItems.Count > 0)
             {
                 ClearandReset(true);
             }
@@ -3142,7 +3141,6 @@ namespace loaddatfsh
                 datListView.SelectedIndices.Clear();
                 datListView.VirtualListSize = 0;
                 datListViewItems.Clear();
-                loadedDat = false;
                 SetLoadedDatEnables();
             }
             if (clearLoadedFshFiles)
@@ -3297,7 +3295,7 @@ namespace loaddatfsh
         {
             try
             {
-                if (curImage != null && curImage.Bitmaps.Count > 0 && origbmplist != null && !loadedDat && datListViewItems.Count == 0)
+                if (this.curImage != null && this.curImage.Bitmaps.Count > 0 && this.origbmplist != null && this.datListViewItems.Count == 0)
                 {
                     this.useOriginalImage = true;
 
@@ -3305,7 +3303,7 @@ namespace loaddatfsh
 
                     this.useOriginalImage = false;
 
-                    if (fshWriteCbGenMips && !embeddedMipmapsCb.Checked)
+                    if (this.fshWriteCbGenMips && !this.embeddedMipmapsCb.Checked)
                     {
                         BuildMipMaps();
                     }
@@ -3326,7 +3324,7 @@ namespace loaddatfsh
         /// </summary>
         private void SetLoadedDatEnables()
         {
-            if (!loadedDat && datListViewItems.Count == 0)
+            if (datListViewItems.Count == 0)
             {
                 if (fshWriteCompressionEnabled)
                 {
@@ -3364,24 +3362,24 @@ namespace loaddatfsh
 
         private void closeDatbtn_Click(object sender, EventArgs e)
         {
-            if (dat != null && loadedDat)
+            if (this.dat != null && this.datListViewItems.Count > 0)
             {
-                if (dat.IsDirty)
+                if (this.dat.IsDirty)
                 {
                     switch (MessageBox.Show(this, Resources.SaveDatChangesText, this.Text, MessageBoxButtons.YesNo))
                     {
                         case DialogResult.Yes:
-                            dat.Save();
-                            dat.Close();
+                            this.dat.Save();
+                            this.dat.Close();
                             break;
                         case DialogResult.No:
-                            dat.Close();
+                            this.dat.Close();
                             break;
                     }
                 }
                 else
                 {
-                    dat.Close();
+                    this.dat.Close();
                 }
                 ClearandReset(true);
             }
@@ -3395,7 +3393,7 @@ namespace loaddatfsh
         private void listViewMain_DragDrop(object sender, DragEventArgs e)
         {
             List<string> files = new List<string>((string[])e.Data.GetData(DataFormats.FileDrop));
-            if (loadedDat && datListViewItems.Count > 0)
+            if (datListViewItems.Count > 0)
             {
                 AddFilesToImage(files, false);
             }
@@ -3639,7 +3637,6 @@ namespace loaddatfsh
                     {
                         this.datListView.VirtualListSize = this.datListViewItems.Count;
 
-                        loadedDat = true;
                         datRebuilt = false;
                         SetLoadedDatEnables();
                         datListView.SelectedIndices.Add(0);
