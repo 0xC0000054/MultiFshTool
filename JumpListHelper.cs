@@ -10,6 +10,9 @@ namespace loaddatfsh
      */
     class JumpListHelper
     {
+        private JumpListHelper()
+        { 
+        }
 
         private static class NativeMethods
         {
@@ -18,21 +21,11 @@ namespace loaddatfsh
                 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
             internal interface IShellLinkW { }
 
-            internal struct SHARDAPPIDINFOLINK
-            {
-                public IShellLinkW isl;
-                [MarshalAs(UnmanagedType.LPWStr)]
-                public string pszAppID;
-            }
-
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Portability", "CA1901:PInvokeDeclarationsShouldBePortable", MessageId = "1"), DllImport("shell32.dll")]
-            internal static extern void SHAddToRecentDocs(
-                ShellAddToRecentDocs flags,
-                SHARDAPPIDINFOLINK link);
-
+            [DllImport("shell32.dll", ExactSpelling = true)]
+            internal static extern void SHAddToRecentDocs(ShellAddToRecentDocs flags, [MarshalAs(UnmanagedType.Interface)] IShellLinkW link);
         }
 
-        internal enum ShellAddToRecentDocs
+        internal enum ShellAddToRecentDocs : uint
         {
             Pidl = 0x1,
             PathA = 0x2,
@@ -44,14 +37,12 @@ namespace loaddatfsh
         }
 
         private static MethodInfo nativeShellLinkGetMethod;
-        public static void AddToRecent(JumpListLink link, string appID)
+        public static void AddToRecent(JumpListLink link)
         {
             if (nativeShellLinkGetMethod == null)
             {
                 //find the NativeShellLink property on the JumpListLink
-                Type jumpListLinkType = typeof(JumpListLink);
-                PropertyInfo nativeShellLinkProperty = jumpListLinkType.GetProperty("NativeShellLink",
-                        System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                PropertyInfo nativeShellLinkProperty = typeof(JumpListLink).GetProperty("NativeShellLink", BindingFlags.Instance | BindingFlags.NonPublic);
 
                 if (nativeShellLinkProperty == null)
                     throw new InvalidOperationException();
@@ -64,13 +55,8 @@ namespace loaddatfsh
             //Cast this to our own implementation of IShellLinkW because it is using COM interop.
             NativeMethods.IShellLinkW nativeShellLink = (NativeMethods.IShellLinkW)nativeShellLinkGetMethod.Invoke(link, null);
 
-            NativeMethods.SHARDAPPIDINFOLINK appInfo = new NativeMethods.SHARDAPPIDINFOLINK();
-            appInfo.isl = nativeShellLink;
-            appInfo.pszAppID = appID;
-
             // Now make the call to Win32 to add the link to the recent items
-            NativeMethods.SHAddToRecentDocs(ShellAddToRecentDocs.AppIdInfoLink, appInfo);
-
+            NativeMethods.SHAddToRecentDocs(ShellAddToRecentDocs.Link, nativeShellLink);
         }
         
     }
