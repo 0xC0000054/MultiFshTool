@@ -1049,7 +1049,8 @@ namespace loaddatfsh
                                     fshTypeBox.SelectedIndex = 2;
                                 }
                             }
-                            if ((dirTxt.Text.Length > 0) && dirTxt.Text.Length == 4)
+                            
+                            if (dirTxt.Text.Length == 4)
                             {
                                 repBmp.DirName = dirTxt.Text;
                             }
@@ -1254,16 +1255,16 @@ namespace loaddatfsh
                     mip64Fsh = new FSHImageWrapper();
                 }
 
-                FshImageFormat bmpType;
+                FshImageFormat format;
                 if (item.BmpType == FshImageFormat.DXT3 || item.BmpType == FshImageFormat.ThirtyTwoBit)
                 {
-                    bmpType = FshImageFormat.DXT3;
+                    format = FshImageFormat.DXT3;
                 }
                 else
                 {
-                    bmpType = FshImageFormat.DXT1;
+                    format = FshImageFormat.DXT1;
                 }
-                string dirName = !string.IsNullOrEmpty(item.DirName) ? item.DirName : "FiSH";
+                string name = !string.IsNullOrEmpty(item.DirName) ? item.DirName : "FiSH";
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -1272,16 +1273,16 @@ namespace loaddatfsh
                         switch (i)
                         {
                             case 0:
-                                mip8Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
+                                mip8Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], format, name));
                                 break;
                             case 1:
-                                mip16Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
+                                mip16Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], format, name));
                                 break;
                             case 2:
-                                mip32Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
+                                mip32Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], format, name));
                                 break;
                             case 3:
-                                mip64Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], bmpType, dirName));
+                                mip64Fsh.Bitmaps.Add(new BitmapEntry(bmps[i], alphas[i], format, name));
                                 break;
                         }
                     }
