@@ -3089,12 +3089,11 @@ namespace loaddatfsh
                                 fshTypeBox.SelectedIndex = 3;
                                 break;
                         }
+
                         if (!saveDatBtn.Enabled)
                         {
                             SetSaveButtonsEnabled(true);
                         }
-
-                        listViewMain.Items[0].Selected = true;
                     }
 
                 }
