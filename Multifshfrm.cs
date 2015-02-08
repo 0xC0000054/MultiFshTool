@@ -31,7 +31,7 @@ namespace loaddatfsh
         private TaskbarManager manager;
         private JumpList jumpList;
         private bool loadIsMip;
-        private List<Bitmap> origbmplist;
+        private BitmapCollection origbmplist;
 
         private Random ra;
         private Nullable<long> lowerInstRange;
@@ -208,85 +208,73 @@ namespace loaddatfsh
                             ClearandReset(true);
                             if (origbmplist == null)
                             {
-                                origbmplist = new List<Bitmap>();
+                                origbmplist = new BitmapCollection();
                             }
-                            else
-                            {
-                                foreach (var item in origbmplist)
-                                {
-                                    item.Dispose();
-                                }
-                                origbmplist.Clear();
-                            }
+                            
                             this.fshWriteCbGenMips = false;
 
-                            foreach (var item in tempimg.Bitmaps)
-                            {
-                                origbmplist.Add(item.Bitmap.Clone<Bitmap>());
-                            }
+                            int width = tempitem.Bitmap.Width;
+                            int height = tempitem.Bitmap.Height;
 
-                            if (tempitem.Bitmap.Width >= 128 || tempitem.Bitmap.Height >= 128)
+                            if (width >= 128 || height >= 128)
                             {
                                 curImage = tempimg.Clone();
                                 RefreshImageLists();
                                 success = true;
                                 tabControl1.SelectedTab = Maintab;
                             }
-                            else if (tempitem.Bitmap.Width == 64 && tempitem.Bitmap.Height == 64)
+                            else if (width == 64 || height == 64)
                             {
                                 mip64Fsh = tempimg.Clone();
                                 RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
-                                ListViewItem item = listViewMip64.Items[0];
-                                item.Selected = true;
                                 loadIsMip = true;
                                 success = true;
                                 tabControl1.SelectedTab = mip64tab;
                             }
-                            else if (tempitem.Bitmap.Width == 32 && tempitem.Bitmap.Height == 32)
+                            else if (width == 32 || height == 32)
                             {
                                 mip32Fsh = tempimg.Clone();
                                 RefreshMipImageList(mip32Fsh, bmp32Mip, alpha32Mip, blend32Mip, listViewMip32);
-                                ListViewItem item = listViewMip32.Items[0];
-                                item.Selected = true;
                                 loadIsMip = true;
                                 success = true;
                                 tabControl1.SelectedTab = mip32tab;
                             }
-                            else if (tempitem.Bitmap.Width == 16 && tempitem.Bitmap.Height == 16)
+                            else if (width == 16 || height == 16)
                             {
                                 mip16Fsh = tempimg.Clone();
                                 RefreshMipImageList(mip16Fsh, bmp16Mip, alpha16Mip, blend16Mip, listViewMip16);
-                                ListViewItem item = listViewMip16.Items[0];
-                                item.Selected = true;
                                 loadIsMip = true;
                                 success = true;
                                 tabControl1.SelectedTab = mip16tab;
                             }
-                            else if (tempitem.Bitmap.Width == 8 && tempitem.Bitmap.Height == 8)
+                            else if (width == 8 || height == 8)
                             {
                                 mip8Fsh = tempimg.Clone();
                                 RefreshMipImageList(mip8Fsh, bmp8Mip, alpha8Mip, blend8Mip, listViewMip8);
-                                ListViewItem item = listViewMip8.Items[0];
-                                item.Selected = true;
                                 loadIsMip = true;
                                 success = true;
                                 tabControl1.SelectedTab = mip8tab;
                             }
-                        }
 
-                        if (success)
-                        {
-                            RefreshBmpType();
-
-                            // Check for a TGI file from Ilive's Reader
-                            string tgiPath = fileName + ".TGI";
-                            if (File.Exists(tgiPath))
+                            if (success)
                             {
-                                ReadTgi(tgiPath);
-                            }
-                            SetSaveButtonsEnabled(true);
-                        }
+                                origbmplist.SetCapacity(tempimg.Bitmaps.Count);
+                                foreach (var item in tempimg.Bitmaps)
+                                {
+                                    origbmplist.Add(item.Bitmap.Clone<Bitmap>());
+                                }
+                                RefreshBmpType();
 
+                                // Check for a TGI file from Ilive's Reader
+                                string tgiPath = fileName + ".TGI";
+                                if (File.Exists(tgiPath))
+                                {
+                                    ReadTgi(tgiPath);
+                                }
+                                SetSaveButtonsEnabled(true);
+                            }
+
+                        }
                     }
                     catch (Exception)
                     {
@@ -686,7 +674,7 @@ namespace loaddatfsh
 
                 if (origbmplist == null)
                 {
-                    origbmplist = new List<Bitmap>();
+                    origbmplist = new BitmapCollection();
                 }
 
                 int lastFile = files.Count - 1;
@@ -830,6 +818,13 @@ namespace loaddatfsh
             blendlist.ResetImageSize();
 
             int count = image.Bitmaps.Count;
+
+            // Enable the remove button for standalone files with more than 1 image.
+            if (loadIsMip)
+            {
+                this.remBtn.Enabled = count > 1;
+            }
+
             for (int i = 0; i < count; i++)
             {
                 bmpEntry = image.Bitmaps[i];
@@ -1778,15 +1773,7 @@ namespace loaddatfsh
 
                         if (origbmplist == null)
                         {
-                            origbmplist = new List<Bitmap>();
-                        }
-                        else if (origbmplist.Count > 0)
-                        {
-                            foreach (var item in origbmplist)
-                            {
-                                item.Dispose();
-                            }
-                            origbmplist.Clear();
+                            origbmplist = new BitmapCollection(files.Count);
                         }
 
                         this.fshWriteCbGenMips = true;
@@ -2052,19 +2039,23 @@ namespace loaddatfsh
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if (mip64Fsh == null && e.TabPage == mip64tab)
+            if (e.TabPage == mip64tab && mip64Fsh == null)
             {
                 e.Cancel = true;
             }
-            else if (mip32Fsh == null && e.TabPage == mip32tab)
+            else if (e.TabPage == mip32tab && mip32Fsh == null)
             {
                 e.Cancel = true;
             }
-            else if (mip16Fsh == null && e.TabPage == mip16tab)
+            else if (e.TabPage == mip16tab && mip16Fsh == null)
             {
                 e.Cancel = true;
             }
-            else if (mip8Fsh == null && e.TabPage == mip8tab)
+            else if (e.TabPage == mip8tab && mip8Fsh == null)
+            {
+                e.Cancel = true;
+            }
+            else if (loadIsMip && e.TabPage == Maintab)
             {
                 e.Cancel = true;
             }
@@ -2091,7 +2082,7 @@ namespace loaddatfsh
 
         private void DisableManageButtons(TabPage page)
         {
-            if (page != Maintab)
+            if (page != Maintab && !loadIsMip)
             {
                 addBtn.Enabled = false;
                 remBtn.Enabled = false;
@@ -3048,6 +3039,7 @@ namespace loaddatfsh
                 listViewMip16.Refresh();
                 listViewMip8.Refresh();
                 mipsBuilt = false;
+                this.loadIsMip = false;
                 if (curImage != null)
                 {
                     curImage.Dispose();
@@ -3085,11 +3077,8 @@ namespace loaddatfsh
                     tgiInstanceTxt.Text = string.Empty;
                     if (origbmplist != null)
                     {
-                        foreach (var item in origbmplist)
-                        {
-                            item.Dispose();
-                        }
-                        origbmplist.Clear();
+                        origbmplist.Dispose();
+                        origbmplist = null;
                     }
                 }
                 SetSaveButtonsEnabled(false);

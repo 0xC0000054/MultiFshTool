@@ -62,6 +62,11 @@ namespace loaddatfsh
                     bmpEntry = null;
                 }
 
+                if (origbmplist != null)
+                {
+                    origbmplist.Dispose();
+                    origbmplist = null;
+                }
             }
 
             base.Dispose(disposing);
