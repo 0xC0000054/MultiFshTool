@@ -3074,6 +3074,7 @@ namespace loaddatfsh
                     ReloadGroupID();
                     instStr = string.Empty;
                     tgiInstanceTxt.Text = string.Empty;
+                    EndFormat_Refresh();
                     if (origbmplist != null)
                     {
                         origbmplist.Dispose();
@@ -3083,8 +3084,6 @@ namespace loaddatfsh
                 SetSaveButtonsEnabled(false);
                 repBtn.Enabled = false;
                 remBtn.Enabled = false;
-                hdFshRadio.Enabled = true;
-                hdBaseFshRadio.Enabled = true;
             }
         }
 
