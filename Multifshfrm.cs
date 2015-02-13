@@ -3461,40 +3461,43 @@ namespace loaddatfsh
 
                 if (index.Type == fshTypeID)
                 {
-                    string iStr = index.Instance.ToString("X8", CultureInfo.InvariantCulture);
-                    if (iStr.EndsWith("4", StringComparison.Ordinal) || iStr.EndsWith("9", StringComparison.Ordinal)
-                        || iStr.EndsWith("E", StringComparison.Ordinal) || iStr.EndsWith("0", StringComparison.Ordinal) ||
-                        iStr.EndsWith("5", StringComparison.Ordinal) || iStr.EndsWith("A", StringComparison.Ordinal))
+                    uint endDiget = index.Instance & 0xff;
+
+                    switch (endDiget)
                     {
-                        try
-                        {
-                            if (dat.CheckImageSize(index))
+                        case 4:
+                        case 9:
+                        case 0xE:
+                        case 0:
+                        case 5:
+                        case 0xA:
+                            try
                             {
-                                fshNum++;
-                                ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshNum.ToString(CultureInfo.CurrentCulture));
+                                if (dat.CheckImageSize(index))
+                                {
+                                    fshNum++;
+                                    ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshNum.ToString(CultureInfo.CurrentCulture));
 
-                                item1.SubItems.Add(index.Group.ToString("X8", CultureInfo.InvariantCulture));
-                                item1.SubItems.Add(iStr);
+                                    item1.SubItems.Add(index.Group.ToString("X8", CultureInfo.InvariantCulture));
+                                    item1.SubItems.Add(index.Instance.ToString("X8", CultureInfo.InvariantCulture));
 
-                                datListViewItems.Add(item1);
+                                    datListViewItems.Add(item1);
+                                }
                             }
-                            else
-                            {
-                                continue; // skip the images that are 64x64 or smaller
-                            }
-                        }
-                        catch (FormatException)
-                        {
+                            catch (FormatException)
+                            {                               
+                                // Invalid or unsupported file.
 #if DEBUG
-                            System.Diagnostics.Debug.WriteLine("0x" + index.Instance.ToString("X8"));
+                                System.Diagnostics.Debug.WriteLine("0x" + index.Instance.ToString("X8"));
 #endif
-                            // Invalid or unsupported file, skip it
-                            continue;
-                        }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
+                
                 loadDatWorker.ReportProgress(i, count);
-
             }
         }
 

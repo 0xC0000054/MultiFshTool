@@ -1065,6 +1065,7 @@ namespace loaddatfsh
             // 
             // embeddedMipmapsCb
             // 
+            this.embeddedMipmapsCb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.embeddedMipmapsCb.Location = new System.Drawing.Point(3, 575);
             this.embeddedMipmapsCb.Name = "embeddedMipmapsCb";
             this.embeddedMipmapsCb.Size = new System.Drawing.Size(125, 17);
