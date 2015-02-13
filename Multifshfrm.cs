@@ -1890,13 +1890,11 @@ namespace loaddatfsh
 
         private static bool ValidateHexString(string str)
         {
-            if (!string.IsNullOrEmpty(str))
+            if (str != null)
             {
                 if (str.Length == 8 || str.Length == 10)
                 {
-                    Regex r = new Regex(@"^(0x|0X)?[a-fA-F0-9]+$");
-
-                    return r.IsMatch(str);
+                    return Regex.IsMatch(str, "^(0x|0X)?[a-fA-F0-9]+$", RegexOptions.None);
                 }
             }
 
