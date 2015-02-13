@@ -66,6 +66,7 @@ namespace loaddatfsh
         private bool fshWriteCompressionEnabled;
 
         private const string AlphaMapSuffix = "_a";
+        private static Regex hexadecimalRegex;
 
         public Multifshfrm()
         {
@@ -1894,14 +1895,18 @@ namespace loaddatfsh
             {
                 if (str.Length == 8 || str.Length == 10)
                 {
-                    return Regex.IsMatch(str, "^(0x|0X)?[a-fA-F0-9]+$", RegexOptions.None);
+                    if (hexadecimalRegex == null)
+                    {
+                        hexadecimalRegex = new Regex("^(0x|0X)?[a-fA-F0-9]+$", RegexOptions.CultureInvariant);
+                    }
+
+                    return hexadecimalRegex.IsMatch(str);
                 }
             }
 
             return false;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
         private void ReloadGroupID()
         {
             string g = string.Empty;
@@ -2554,7 +2559,6 @@ namespace loaddatfsh
             blendList.ResetImageSize();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Fsh")]
         private void LoadDat(string fileName)
         {
             try
