@@ -83,7 +83,7 @@ namespace loaddatfsh
         {
             this.components = new System.ComponentModel.Container();
             this.bitmapList = new System.Windows.Forms.ImageList(this.components);
-            this.listViewMain = new System.Windows.Forms.ListView();
+            this.listViewMain = new loaddatfsh.DelayIndexChangedListView();
             this.loadFshBtn = new System.Windows.Forms.Button();
             this.blendRadio = new System.Windows.Forms.RadioButton();
             this.alphaRadio = new System.Windows.Forms.RadioButton();
@@ -112,14 +112,14 @@ namespace loaddatfsh
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Maintab = new System.Windows.Forms.TabPage();
             this.mip64tab = new System.Windows.Forms.TabPage();
-            this.listViewMip64 = new System.Windows.Forms.ListView();
+            this.listViewMip64 = new loaddatfsh.DelayIndexChangedListView();
             this.mip32tab = new System.Windows.Forms.TabPage();
-            this.listViewMip32 = new System.Windows.Forms.ListView();
+            this.listViewMip32 = new loaddatfsh.DelayIndexChangedListView();
             this.mip16tab = new System.Windows.Forms.TabPage();
-            this.listViewMip16 = new System.Windows.Forms.ListView();
+            this.listViewMip16 = new loaddatfsh.DelayIndexChangedListView();
             this.bmp16Mip = new System.Windows.Forms.ImageList(this.components);
             this.mip8tab = new System.Windows.Forms.TabPage();
-            this.listViewMip8 = new System.Windows.Forms.ListView();
+            this.listViewMip8 = new loaddatfsh.DelayIndexChangedListView();
             this.bmp8Mip = new System.Windows.Forms.ImageList(this.components);
             this.bmp64Mip = new System.Windows.Forms.ImageList(this.components);
             this.alpha64Mip = new System.Windows.Forms.ImageList(this.components);
@@ -269,6 +269,7 @@ namespace loaddatfsh
             // 
             this.fshTypeBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.fshTypeBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fshTypeBox.Enabled = false;
             this.fshTypeBox.FormattingEnabled = true;
             this.fshTypeBox.Items.AddRange(new object[] {
             "24 Bit RGB (0:8:8:8)",
@@ -277,7 +278,7 @@ namespace loaddatfsh
             "DXT3 Compressed, with Alpha"});
             this.fshTypeBox.Location = new System.Drawing.Point(12, 294);
             this.fshTypeBox.Name = "fshTypeBox";
-            this.fshTypeBox.Size = new System.Drawing.Size(164, 21);
+            this.fshTypeBox.Size = new System.Drawing.Size(179, 21);
             this.fshTypeBox.TabIndex = 46;
             this.toolTip1.SetToolTip(this.fshTypeBox, global::loaddatfsh.Properties.Resources.fshTypeBox_ToolTip);
             this.fshTypeBox.SelectedIndexChanged += new System.EventHandler(this.FshtypeBox_SelectedIndexChanged);
@@ -360,6 +361,7 @@ namespace loaddatfsh
             // dirTxt
             // 
             this.dirTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.dirTxt.Enabled = false;
             this.dirTxt.Location = new System.Drawing.Point(182, 343);
             this.dirTxt.MaxLength = 4;
             this.dirTxt.Name = "dirTxt";
@@ -442,12 +444,11 @@ namespace loaddatfsh
             // regFshRadio
             // 
             this.regFshRadio.AutoSize = true;
-            this.regFshRadio.Checked = true;
+            this.regFshRadio.Enabled = false;
             this.regFshRadio.Location = new System.Drawing.Point(7, 20);
             this.regFshRadio.Name = "regFshRadio";
             this.regFshRadio.Size = new System.Drawing.Size(79, 17);
             this.regFshRadio.TabIndex = 39;
-            this.regFshRadio.TabStop = true;
             this.regFshRadio.Text = "Regular fsh";
             this.regFshRadio.UseVisualStyleBackColor = true;
             this.regFshRadio.CheckedChanged += new System.EventHandler(this.hdFshRadio_CheckedChanged);
@@ -455,6 +456,7 @@ namespace loaddatfsh
             // hdBaseFshRadio
             // 
             this.hdBaseFshRadio.AutoSize = true;
+            this.hdBaseFshRadio.Enabled = false;
             this.hdBaseFshRadio.Location = new System.Drawing.Point(6, 66);
             this.hdBaseFshRadio.Name = "hdBaseFshRadio";
             this.hdBaseFshRadio.Size = new System.Drawing.Size(103, 17);
@@ -466,6 +468,7 @@ namespace loaddatfsh
             // hdFshRadio
             // 
             this.hdFshRadio.AutoSize = true;
+            this.hdFshRadio.Enabled = false;
             this.hdFshRadio.Location = new System.Drawing.Point(6, 42);
             this.hdFshRadio.Name = "hdFshRadio";
             this.hdFshRadio.Size = new System.Drawing.Size(111, 17);
@@ -1138,7 +1141,7 @@ namespace loaddatfsh
         #endregion
 
         private System.Windows.Forms.ImageList bitmapList;
-        private System.Windows.Forms.ListView listViewMain;
+        private DelayIndexChangedListView listViewMain;
         private System.Windows.Forms.Button loadFshBtn;
         private System.Windows.Forms.RadioButton blendRadio;
         private System.Windows.Forms.RadioButton alphaRadio;
@@ -1167,13 +1170,13 @@ namespace loaddatfsh
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage Maintab;
         private System.Windows.Forms.TabPage mip64tab;
-        private System.Windows.Forms.ListView listViewMip64;
+        private DelayIndexChangedListView listViewMip64;
         private System.Windows.Forms.TabPage mip32tab;
         private System.Windows.Forms.TabPage mip16tab;
         private System.Windows.Forms.TabPage mip8tab;
-        private System.Windows.Forms.ListView listViewMip32;
-        private System.Windows.Forms.ListView listViewMip16;
-        private System.Windows.Forms.ListView listViewMip8;
+        private DelayIndexChangedListView listViewMip32;
+        private DelayIndexChangedListView listViewMip16;
+        private DelayIndexChangedListView listViewMip8;
         private System.Windows.Forms.ImageList bmp64Mip;
         private System.Windows.Forms.ImageList alpha64Mip;
         private System.Windows.Forms.ImageList blend64Mip;

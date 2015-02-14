@@ -60,6 +60,7 @@ namespace loaddatfsh
         private bool datRebuilt;
         private int sortColumn;
         private int ignoreIndexChangedEvents;
+        private bool listControlsEnabled;
 
         /// <summary>
         /// Used to disable Fshwrite Compression on processors that do not support SSE.
@@ -91,6 +92,7 @@ namespace loaddatfsh
             this.sortColumn = -1;
             this.fshWriteCompressionEnabled = true;
             this.ignoreIndexChangedEvents = 0;
+            this.listControlsEnabled = false;
 
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
@@ -548,6 +550,11 @@ namespace loaddatfsh
         {
             if (listViewMain.SelectedItems.Count > 0)
             {
+                if (!listControlsEnabled)
+                {
+                    EnableBitmapListControls();
+                }
+
                 int index = listViewMain.SelectedItems[0].Index;
                 this.bmpEntry = curImage.Bitmaps[index];
                 RefreshBmpType();
@@ -570,6 +577,13 @@ namespace loaddatfsh
 
                 this.sizeLbl.Text = this.fshSize[index];
                 this.dirTxt.Text = this.dirName[index];
+            }
+            else
+            {
+                if (listControlsEnabled)
+                {
+                    DisableBitmapEntryListControls();
+                }
             }
         }
 
@@ -833,7 +847,6 @@ namespace loaddatfsh
                 blendlist.Images.Add(AlphaBlend(bmpEntry, blendlist.ImageSize));
             }
 
-
             RefreshDirectory(image);
 
             list.BeginUpdate();
@@ -850,7 +863,6 @@ namespace loaddatfsh
                 RefreshBlendList(image, list, blendlist);
             }
             list.EndUpdate();
-
         }
 
         /// <summary>
@@ -2073,19 +2085,28 @@ namespace loaddatfsh
             }
         }
 
-        private void DisableManageButtons(TabPage page)
+        private void DisableControlsForGeneratedMipmaps(TabPage page)
         {
             if (page != Maintab && !loadIsMip)
             {
-                addBtn.Enabled = false;
-                remBtn.Enabled = false;
-                repBtn.Enabled = false;
+                this.addBtn.Enabled = false;
+                this.remBtn.Enabled = false;
+                this.repBtn.Enabled = false;
+                this.fshTypeBox.Enabled = false;
+                this.regFshRadio.Enabled = false;
+                this.hdFshRadio.Enabled = false;
+                this.hdBaseFshRadio.Enabled = false;
             }
             else
             {
-                addBtn.Enabled = true;
-                remBtn.Enabled = true;
-                repBtn.Enabled = true;
+                this.addBtn.Enabled = true;
+                this.remBtn.Enabled = true;
+                this.repBtn.Enabled = true;
+                this.fshTypeBox.Enabled = true;
+                this.regFshRadio.Enabled = true;
+                this.hdFshRadio.Enabled = true;
+                this.hdBaseFshRadio.Enabled = true;
+
             }
         }
 
@@ -2124,8 +2145,10 @@ namespace loaddatfsh
             }
             else
             {
-                DisableManageButtons(tabControl1.SelectedTab);
+                DisableControlsForGeneratedMipmaps(tabControl1.SelectedTab);
                 DisableFshWriteCheckBox(tabControl1.SelectedTab);
+
+
                 if (tabControl1.SelectedTab == mip64tab && mip64Fsh != null && mip64Fsh.Bitmaps.Count > 0)
                 {
                     RefreshMipImageList(mip64Fsh, bmp64Mip, alpha64Mip, blend64Mip, listViewMip64);
@@ -2176,10 +2199,22 @@ namespace loaddatfsh
         {
             if (listViewMip64.SelectedItems.Count > 0)
             {
+                if (!listControlsEnabled)
+                {
+                    EnableBitmapListControls();
+                }
+
                 bmpEntry = mip64Fsh.Bitmaps[listViewMip64.SelectedItems[0].Index];
                 RefreshBmpType();
                 sizeLbl.Text = fshSize[listViewMip64.SelectedItems[0].Index];
                 dirTxt.Text = dirName[listViewMip64.SelectedItems[0].Index];
+            }
+            else
+            {
+                if (listControlsEnabled)
+                {
+                    DisableBitmapEntryListControls();
+                }
             }
         }
 
@@ -2187,10 +2222,22 @@ namespace loaddatfsh
         {
             if (listViewMip32.SelectedItems.Count > 0)
             {
+                if (!listControlsEnabled)
+                {
+                    EnableBitmapListControls();
+                }
+
                 bmpEntry = mip32Fsh.Bitmaps[listViewMip32.SelectedItems[0].Index];
                 RefreshBmpType();
                 sizeLbl.Text = fshSize[listViewMip32.SelectedItems[0].Index];
                 dirTxt.Text = dirName[listViewMip32.SelectedItems[0].Index];
+            }
+            else
+            {
+                if (listControlsEnabled)
+                {
+                    DisableBitmapEntryListControls();
+                }
             }
         }
 
@@ -2198,10 +2245,22 @@ namespace loaddatfsh
         {
             if (listViewMip16.SelectedItems.Count > 0)
             {
+                if (!listControlsEnabled)
+                {
+                    EnableBitmapListControls();
+                }
+
                 bmpEntry = mip16Fsh.Bitmaps[listViewMip16.SelectedItems[0].Index];
                 RefreshBmpType();
                 sizeLbl.Text = fshSize[listViewMip16.SelectedItems[0].Index];
                 dirTxt.Text = dirName[listViewMip16.SelectedItems[0].Index];
+            }
+            else
+            {
+                if (listControlsEnabled)
+                {
+                    DisableBitmapEntryListControls();
+                }
             }
         }
 
@@ -2209,10 +2268,22 @@ namespace loaddatfsh
         {
             if (listViewMip8.SelectedItems.Count > 0)
             {
+                if (!listControlsEnabled)
+                {
+                    EnableBitmapListControls();
+                }
+
                 bmpEntry = mip8Fsh.Bitmaps[listViewMip8.SelectedItems[0].Index];
                 RefreshBmpType();
                 sizeLbl.Text = fshSize[listViewMip8.SelectedItems[0].Index];
                 dirTxt.Text = dirName[listViewMip8.SelectedItems[0].Index];
+            }
+            else
+            {
+                if (listControlsEnabled)
+                {
+                    DisableBitmapEntryListControls();
+                }
             }
         }
 
@@ -3527,9 +3598,6 @@ namespace loaddatfsh
 
         private void SetSaveButtonsEnabled(bool enabled)
         {
-            this.saveAlphaBtn.Enabled = enabled;
-            this.saveBmpBtn.Enabled = enabled;
-            this.saveBmpBlendBtn.Enabled = enabled;
             if (this.tabControl1.SelectedTab == Maintab)
             {
                 this.saveDatBtn.Enabled = enabled; 
@@ -3605,6 +3673,50 @@ namespace loaddatfsh
         private void PopIgnoreIndexChangedEvents()
         {
             this.ignoreIndexChangedEvents--;
+        }
+
+        private void EnableBitmapListControls()
+        {
+            this.saveAlphaBtn.Enabled = true;
+            this.saveBmpBtn.Enabled = true;
+            this.saveBmpBlendBtn.Enabled = true;
+
+            // Disable changing the directory name and bitmap type unless the mipmap image is standalone.
+            if (this.tabControl1.SelectedTab == Maintab || this.loadIsMip)
+            {
+                this.fshTypeBox.Enabled = true;
+                this.dirTxt.Enabled = true;
+                this.regFshRadio.Enabled = true;
+                this.hdFshRadio.Enabled = true;
+                this.hdBaseFshRadio.Enabled = true;
+            }
+
+            this.listControlsEnabled = true;
+        }
+
+        private void DisableBitmapEntryListControls()
+        {
+            PushIgnoreIndexChangedEvents();
+            
+            this.fshTypeBox.SelectedIndex = -1;
+            this.sizeLbl.Text = string.Empty;
+            this.dirTxt.Text = string.Empty;
+            this.regFshRadio.Checked = false;
+            this.hdFshRadio.Checked = false;
+            this.hdBaseFshRadio.Checked = false;
+            
+            PopIgnoreIndexChangedEvents();
+
+            this.saveAlphaBtn.Enabled = false;
+            this.saveBmpBtn.Enabled = false;
+            this.saveBmpBlendBtn.Enabled = false;
+            this.fshTypeBox.Enabled = false;
+            this.dirTxt.Enabled = false;
+            this.regFshRadio.Enabled = false;
+            this.hdFshRadio.Enabled = false;
+            this.hdBaseFshRadio.Enabled = false;
+
+            this.listControlsEnabled = false;
         }
     }
 }
