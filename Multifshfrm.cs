@@ -390,19 +390,19 @@ namespace loaddatfsh
                     switch (tabControl1.SelectedIndex)
                     {
                         case 0:
-                            RefreshBitmapList(curImage, listViewMain, bitmapList);
+                            RefreshImageList(curImage, listViewMain, bitmapList, Resources.BitmapNumberText);
                             break;
                         case 1:
-                            RefreshBitmapList(mip64Fsh, listViewMip64, bmp64Mip);
+                            RefreshImageList(mip64Fsh, listViewMip64, bmp64Mip, Resources.BitmapNumberText);
                             break;
                         case 2:
-                            RefreshBitmapList(mip32Fsh, listViewMip32, bmp32Mip);
+                            RefreshImageList(mip32Fsh, listViewMip32, bmp32Mip, Resources.BitmapNumberText);
                             break;
                         case 3:
-                            RefreshBitmapList(mip16Fsh, listViewMip16, bmp16Mip);
+                            RefreshImageList(mip16Fsh, listViewMip16, bmp16Mip, Resources.BitmapNumberText);
                             break;
                         case 4:
-                            RefreshBitmapList(mip8Fsh, listViewMip8, bmp8Mip);
+                            RefreshImageList(mip8Fsh, listViewMip8, bmp8Mip, Resources.BitmapNumberText);
                             break;
                     }
                 }
@@ -411,19 +411,19 @@ namespace loaddatfsh
                     switch (tabControl1.SelectedIndex)
                     {
                         case 0:
-                            RefreshBitmapList(curImage, listViewMain, alphaList);
+                            RefreshImageList(curImage, listViewMain, alphaList, Resources.AlphaNumberText);
                             break;
                         case 1:
-                            RefreshBitmapList(mip64Fsh, listViewMip64, alpha64Mip);
+                            RefreshImageList(mip64Fsh, listViewMip64, alpha64Mip, Resources.AlphaNumberText);
                             break;
                         case 2:
-                            RefreshBitmapList(mip32Fsh, listViewMip32, alpha32Mip);
+                            RefreshImageList(mip32Fsh, listViewMip32, alpha32Mip, Resources.AlphaNumberText);
                             break;
                         case 3:
-                            RefreshBitmapList(mip16Fsh, listViewMip16, alpha16Mip);
+                            RefreshImageList(mip16Fsh, listViewMip16, alpha16Mip, Resources.AlphaNumberText);
                             break;
                         case 4:
-                            RefreshBitmapList(mip8Fsh, listViewMip8, alpha8Mip);
+                            RefreshImageList(mip8Fsh, listViewMip8, alpha8Mip, Resources.AlphaNumberText);
                             break;
                     }
                 }
@@ -432,19 +432,19 @@ namespace loaddatfsh
                     switch (tabControl1.SelectedIndex)
                     {
                         case 0:
-                            RefreshBitmapList(curImage, listViewMain, blendList);
+                            RefreshImageList(curImage, listViewMain, blendList, Resources.BlendNumberText);
                             break;
                         case 1:
-                            RefreshBitmapList(mip64Fsh, listViewMip64, blend64Mip);
+                            RefreshImageList(mip64Fsh, listViewMip64, blend64Mip, Resources.BlendNumberText);
                             break;
                         case 2:
-                            RefreshBitmapList(mip32Fsh, listViewMip32, blend32Mip);
+                            RefreshImageList(mip32Fsh, listViewMip32, blend32Mip, Resources.BlendNumberText);
                             break;
                         case 3:
-                            RefreshBitmapList(mip16Fsh, listViewMip16, blend16Mip);
+                            RefreshImageList(mip16Fsh, listViewMip16, blend16Mip, Resources.BlendNumberText);
                             break;
                         case 4:
-                            RefreshBitmapList(mip8Fsh, listViewMip8, blend8Mip);
+                            RefreshImageList(mip8Fsh, listViewMip8, blend8Mip, Resources.BlendNumberText);
                             break;
                     }
                 }
@@ -464,64 +464,25 @@ namespace loaddatfsh
         /// <param name="image">The image to refresh the list from</param>
         /// <param name="listview">The listview to add the images to</param>
         /// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
-        private static void RefreshBitmapList(FSHImageWrapper image, ListView listview, ImageList imglist)
+        private void RefreshImageList(FSHImageWrapper image, ListView listview, ImageList imglist, string name)
         {
+            if (listview.SelectedIndices.Count > 0)
+            {
+                listview.SelectedIndices.Clear();
+                DisableBitmapEntryListControls();
+            }
+
             if (listview.Items.Count > 0)
             {
                 listview.Items.Clear();
             }
+
             listview.LargeImageList = imglist;
             listview.SmallImageList = imglist;
             int count = image.Bitmaps.Count;
             for (int i = 0; i < count; i++)
             {
-                ListViewItem alpha = new ListViewItem(Resources.BitmapNumberText + i.ToString(CultureInfo.CurrentCulture), i);
-                listview.Items.Add(alpha);
-            }
-        }
-
-        /// <summary>
-        /// Refreshes the list of alpha bitmaps
-        /// </summary>
-        /// <param name="image">The image to refresh the list from</param>
-        /// <param name="listview">The listview to add the images to</param>
-        /// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
-        private static void RefreshAlphaList(FSHImageWrapper image, ListView listview, ImageList imglist)
-        {
-            if (listview.Items.Count > 0)
-            {
-                listview.Items.Clear();
-            }
-            listview.LargeImageList = imglist;
-            listview.SmallImageList = imglist;
-
-            int count = image.Bitmaps.Count;
-            for (int i = 0; i < count; i++)
-            {
-                ListViewItem alpha = new ListViewItem(Resources.AlphaNumberText + i.ToString(CultureInfo.CurrentCulture), i);
-                listview.Items.Add(alpha);
-            }
-        }
-        /// <summary>
-        /// Refreshes the list of blended bitmaps
-        /// </summary>
-        /// <param name="image">The image to refresh the list from</param>
-        /// <param name="listview">The listview to add the images to</param>
-        /// <param name="imglist">The ImageList containing the blended bitmaps to use</param>
-        private static void RefreshBlendList(FSHImageWrapper image, ListView listview, ImageList imglist)
-        {
-            if (listview.Items.Count > 0)
-            {
-                listview.Items.Clear();
-            }
-            listview.LargeImageList = imglist;
-            listview.SmallImageList = imglist;
-
-            int count = image.Bitmaps.Count;
-            for (int i = 0; i < count; i++)
-            {
-                ListViewItem blend = new ListViewItem(Resources.BlendNumberText + i.ToString(CultureInfo.CurrentCulture), i);
-                listview.Items.Add(blend);
+                listview.Items.Add(new ListViewItem(name + i.ToString(CultureInfo.CurrentCulture), i));
             }
         }
 
@@ -852,15 +813,15 @@ namespace loaddatfsh
             list.BeginUpdate();
             if (colorRadio.Checked)
             {
-                RefreshBitmapList(image, list, bmplist);
+                RefreshImageList(image, list, bmplist, Resources.BitmapNumberText);
             }
             else if (alphaRadio.Checked)
             {
-                RefreshAlphaList(image, list, alphalist);
+                RefreshImageList(image, list, alphalist, Resources.AlphaNumberText);
             }
             else if (blendRadio.Checked)
             {
-                RefreshBlendList(image, list, blendlist);
+                RefreshImageList(image, list, blendlist, Resources.BlendNumberText);
             }
             list.EndUpdate();
         }
@@ -891,15 +852,15 @@ namespace loaddatfsh
             listViewMain.BeginUpdate();
             if (colorRadio.Checked)
             {
-                RefreshBitmapList(curImage, listViewMain, bitmapList);
+                RefreshImageList(curImage, listViewMain, bitmapList, Resources.BitmapNumberText);
             }
             else if (alphaRadio.Checked)
             {
-                RefreshAlphaList(curImage, listViewMain, alphaList);
+                RefreshImageList(curImage, listViewMain, alphaList, Resources.AlphaNumberText);
             }
             else if (blendRadio.Checked)
             {
-                RefreshBlendList(curImage, listViewMain, blendList);
+                RefreshImageList(curImage, listViewMain, blendList, Resources.BlendNumberText);
             }
             listViewMain.EndUpdate();
         }
@@ -2106,7 +2067,6 @@ namespace loaddatfsh
                 this.regFshRadio.Enabled = true;
                 this.hdFshRadio.Enabled = true;
                 this.hdBaseFshRadio.Enabled = true;
-
             }
         }
 
