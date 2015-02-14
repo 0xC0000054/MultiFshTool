@@ -83,7 +83,6 @@ namespace loaddatfsh
         {
             this.components = new System.ComponentModel.Container();
             this.bitmapList = new System.Windows.Forms.ImageList(this.components);
-            this.listViewMain = new loaddatfsh.DelayIndexChangedListView();
             this.loadFshBtn = new System.Windows.Forms.Button();
             this.blendRadio = new System.Windows.Forms.RadioButton();
             this.alphaRadio = new System.Windows.Forms.RadioButton();
@@ -112,14 +111,10 @@ namespace loaddatfsh
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.Maintab = new System.Windows.Forms.TabPage();
             this.mip64tab = new System.Windows.Forms.TabPage();
-            this.listViewMip64 = new loaddatfsh.DelayIndexChangedListView();
             this.mip32tab = new System.Windows.Forms.TabPage();
-            this.listViewMip32 = new loaddatfsh.DelayIndexChangedListView();
             this.mip16tab = new System.Windows.Forms.TabPage();
-            this.listViewMip16 = new loaddatfsh.DelayIndexChangedListView();
             this.bmp16Mip = new System.Windows.Forms.ImageList(this.components);
             this.mip8tab = new System.Windows.Forms.TabPage();
-            this.listViewMip8 = new loaddatfsh.DelayIndexChangedListView();
             this.bmp8Mip = new System.Windows.Forms.ImageList(this.components);
             this.bmp64Mip = new System.Windows.Forms.ImageList(this.components);
             this.alpha64Mip = new System.Windows.Forms.ImageList(this.components);
@@ -169,6 +164,11 @@ namespace loaddatfsh
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.embeddedMipmapsCb = new System.Windows.Forms.CheckBox();
+            this.listViewMain = new loaddatfsh.DelayIndexChangedListView();
+            this.listViewMip64 = new loaddatfsh.DelayIndexChangedListView();
+            this.listViewMip32 = new loaddatfsh.DelayIndexChangedListView();
+            this.listViewMip16 = new loaddatfsh.DelayIndexChangedListView();
+            this.listViewMip8 = new loaddatfsh.DelayIndexChangedListView();
             this.bmpmanBox1.SuspendLayout();
             this.fshDefbox.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -188,26 +188,6 @@ namespace loaddatfsh
             this.bitmapList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
             this.bitmapList.ImageSize = new System.Drawing.Size(96, 96);
             this.bitmapList.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // listViewMain
-            // 
-            this.listViewMain.AllowDrop = true;
-            this.listViewMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewMain.BackgroundImageTiled = true;
-            this.listViewMain.HideSelection = false;
-            this.listViewMain.LargeImageList = this.bitmapList;
-            this.listViewMain.Location = new System.Drawing.Point(-7, -8);
-            this.listViewMain.MultiSelect = false;
-            this.listViewMain.Name = "listViewMain";
-            this.listViewMain.Size = new System.Drawing.Size(523, 150);
-            this.listViewMain.SmallImageList = this.bitmapList;
-            this.listViewMain.TabIndex = 0;
-            this.listViewMain.TileSize = new System.Drawing.Size(184, 34);
-            this.listViewMain.UseCompatibleStateImageBehavior = false;
-            this.listViewMain.SelectedIndexChanged += new System.EventHandler(this.listViewmain_SelectedIndexChanged);
-            this.listViewMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewMain_DragDrop);
-            this.listViewMain.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewMain_DragEnter);
             // 
             // loadFshBtn
             // 
@@ -517,23 +497,6 @@ namespace loaddatfsh
             this.mip64tab.Text = "64x64";
             this.mip64tab.UseVisualStyleBackColor = true;
             // 
-            // listViewMip64
-            // 
-            this.listViewMip64.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewMip64.BackgroundImageTiled = true;
-            this.listViewMip64.HideSelection = false;
-            this.listViewMip64.LargeImageList = this.bitmapList;
-            this.listViewMip64.Location = new System.Drawing.Point(-7, -2);
-            this.listViewMip64.MultiSelect = false;
-            this.listViewMip64.Name = "listViewMip64";
-            this.listViewMip64.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip64.SmallImageList = this.bitmapList;
-            this.listViewMip64.TabIndex = 1;
-            this.listViewMip64.TileSize = new System.Drawing.Size(184, 34);
-            this.listViewMip64.UseCompatibleStateImageBehavior = false;
-            this.listViewMip64.SelectedIndexChanged += new System.EventHandler(this.listViewMip64_SelectedIndexChanged);
-            // 
             // mip32tab
             // 
             this.mip32tab.Controls.Add(this.listViewMip32);
@@ -544,23 +507,6 @@ namespace loaddatfsh
             this.mip32tab.Text = "32x32";
             this.mip32tab.UseVisualStyleBackColor = true;
             // 
-            // listViewMip32
-            // 
-            this.listViewMip32.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewMip32.BackgroundImageTiled = true;
-            this.listViewMip32.HideSelection = false;
-            this.listViewMip32.LargeImageList = this.bitmapList;
-            this.listViewMip32.Location = new System.Drawing.Point(-4, -2);
-            this.listViewMip32.MultiSelect = false;
-            this.listViewMip32.Name = "listViewMip32";
-            this.listViewMip32.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip32.SmallImageList = this.bitmapList;
-            this.listViewMip32.TabIndex = 2;
-            this.listViewMip32.TileSize = new System.Drawing.Size(184, 34);
-            this.listViewMip32.UseCompatibleStateImageBehavior = false;
-            this.listViewMip32.SelectedIndexChanged += new System.EventHandler(this.listViewMip32_SelectedIndexChanged);
-            // 
             // mip16tab
             // 
             this.mip16tab.Controls.Add(this.listViewMip16);
@@ -570,23 +516,6 @@ namespace loaddatfsh
             this.mip16tab.TabIndex = 3;
             this.mip16tab.Text = "16x16";
             this.mip16tab.UseVisualStyleBackColor = true;
-            // 
-            // listViewMip16
-            // 
-            this.listViewMip16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewMip16.BackgroundImageTiled = true;
-            this.listViewMip16.HideSelection = false;
-            this.listViewMip16.LargeImageList = this.bmp16Mip;
-            this.listViewMip16.Location = new System.Drawing.Point(-4, -2);
-            this.listViewMip16.MultiSelect = false;
-            this.listViewMip16.Name = "listViewMip16";
-            this.listViewMip16.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip16.SmallImageList = this.bmp16Mip;
-            this.listViewMip16.TabIndex = 2;
-            this.listViewMip16.TileSize = new System.Drawing.Size(184, 34);
-            this.listViewMip16.UseCompatibleStateImageBehavior = false;
-            this.listViewMip16.SelectedIndexChanged += new System.EventHandler(this.listViewMip16_SelectedIndexChanged);
             // 
             // bmp16Mip
             // 
@@ -603,23 +532,6 @@ namespace loaddatfsh
             this.mip8tab.TabIndex = 4;
             this.mip8tab.Text = "8x8";
             this.mip8tab.UseVisualStyleBackColor = true;
-            // 
-            // listViewMip8
-            // 
-            this.listViewMip8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listViewMip8.BackgroundImageTiled = true;
-            this.listViewMip8.HideSelection = false;
-            this.listViewMip8.LargeImageList = this.bmp8Mip;
-            this.listViewMip8.Location = new System.Drawing.Point(-4, -2);
-            this.listViewMip8.MultiSelect = false;
-            this.listViewMip8.Name = "listViewMip8";
-            this.listViewMip8.Size = new System.Drawing.Size(523, 143);
-            this.listViewMip8.SmallImageList = this.bitmapList;
-            this.listViewMip8.TabIndex = 2;
-            this.listViewMip8.TileSize = new System.Drawing.Size(184, 34);
-            this.listViewMip8.UseCompatibleStateImageBehavior = false;
-            this.listViewMip8.SelectedIndexChanged += new System.EventHandler(this.listViewMip8_SelectedIndexChanged);
             // 
             // bmp8Mip
             // 
@@ -1075,6 +987,95 @@ namespace loaddatfsh
             this.embeddedMipmapsCb.TabIndex = 0;
             this.embeddedMipmapsCb.Text = "Embedded Mipmaps";
             this.embeddedMipmapsCb.UseVisualStyleBackColor = true;
+            // 
+            // listViewMain
+            // 
+            this.listViewMain.AllowDrop = true;
+            this.listViewMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMain.BackgroundImageTiled = true;
+            this.listViewMain.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.listViewMain.HideSelection = false;
+            this.listViewMain.LargeImageList = this.bitmapList;
+            this.listViewMain.Location = new System.Drawing.Point(-7, -8);
+            this.listViewMain.MultiSelect = false;
+            this.listViewMain.Name = "listViewMain";
+            this.listViewMain.Size = new System.Drawing.Size(523, 150);
+            this.listViewMain.SmallImageList = this.bitmapList;
+            this.listViewMain.TabIndex = 0;
+            this.listViewMain.TileSize = new System.Drawing.Size(184, 34);
+            this.listViewMain.UseCompatibleStateImageBehavior = false;
+            this.listViewMain.SelectedIndexChanged += new System.EventHandler(this.listViewmain_SelectedIndexChanged);
+            this.listViewMain.DragDrop += new System.Windows.Forms.DragEventHandler(this.listViewMain_DragDrop);
+            this.listViewMain.DragEnter += new System.Windows.Forms.DragEventHandler(this.listViewMain_DragEnter);
+            // 
+            // listViewMip64
+            // 
+            this.listViewMip64.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip64.BackgroundImageTiled = true;
+            this.listViewMip64.HideSelection = false;
+            this.listViewMip64.LargeImageList = this.bitmapList;
+            this.listViewMip64.Location = new System.Drawing.Point(-7, -2);
+            this.listViewMip64.MultiSelect = false;
+            this.listViewMip64.Name = "listViewMip64";
+            this.listViewMip64.Size = new System.Drawing.Size(523, 143);
+            this.listViewMip64.SmallImageList = this.bitmapList;
+            this.listViewMip64.TabIndex = 1;
+            this.listViewMip64.TileSize = new System.Drawing.Size(184, 34);
+            this.listViewMip64.UseCompatibleStateImageBehavior = false;
+            this.listViewMip64.SelectedIndexChanged += new System.EventHandler(this.listViewMip64_SelectedIndexChanged);
+            // 
+            // listViewMip32
+            // 
+            this.listViewMip32.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip32.BackgroundImageTiled = true;
+            this.listViewMip32.HideSelection = false;
+            this.listViewMip32.LargeImageList = this.bitmapList;
+            this.listViewMip32.Location = new System.Drawing.Point(-4, -2);
+            this.listViewMip32.MultiSelect = false;
+            this.listViewMip32.Name = "listViewMip32";
+            this.listViewMip32.Size = new System.Drawing.Size(523, 143);
+            this.listViewMip32.SmallImageList = this.bitmapList;
+            this.listViewMip32.TabIndex = 2;
+            this.listViewMip32.TileSize = new System.Drawing.Size(184, 34);
+            this.listViewMip32.UseCompatibleStateImageBehavior = false;
+            this.listViewMip32.SelectedIndexChanged += new System.EventHandler(this.listViewMip32_SelectedIndexChanged);
+            // 
+            // listViewMip16
+            // 
+            this.listViewMip16.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip16.BackgroundImageTiled = true;
+            this.listViewMip16.HideSelection = false;
+            this.listViewMip16.LargeImageList = this.bmp16Mip;
+            this.listViewMip16.Location = new System.Drawing.Point(-4, -2);
+            this.listViewMip16.MultiSelect = false;
+            this.listViewMip16.Name = "listViewMip16";
+            this.listViewMip16.Size = new System.Drawing.Size(523, 143);
+            this.listViewMip16.SmallImageList = this.bmp16Mip;
+            this.listViewMip16.TabIndex = 2;
+            this.listViewMip16.TileSize = new System.Drawing.Size(184, 34);
+            this.listViewMip16.UseCompatibleStateImageBehavior = false;
+            this.listViewMip16.SelectedIndexChanged += new System.EventHandler(this.listViewMip16_SelectedIndexChanged);
+            // 
+            // listViewMip8
+            // 
+            this.listViewMip8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewMip8.BackgroundImageTiled = true;
+            this.listViewMip8.HideSelection = false;
+            this.listViewMip8.LargeImageList = this.bmp8Mip;
+            this.listViewMip8.Location = new System.Drawing.Point(-4, -2);
+            this.listViewMip8.MultiSelect = false;
+            this.listViewMip8.Name = "listViewMip8";
+            this.listViewMip8.Size = new System.Drawing.Size(523, 143);
+            this.listViewMip8.SmallImageList = this.bitmapList;
+            this.listViewMip8.TabIndex = 2;
+            this.listViewMip8.TileSize = new System.Drawing.Size(184, 34);
+            this.listViewMip8.UseCompatibleStateImageBehavior = false;
+            this.listViewMip8.SelectedIndexChanged += new System.EventHandler(this.listViewMip8_SelectedIndexChanged);
             // 
             // Multifshfrm
             // 

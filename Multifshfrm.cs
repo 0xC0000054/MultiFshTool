@@ -70,6 +70,14 @@ namespace loaddatfsh
         private const string AlphaMapSuffix = "_a";
         private static Regex hexadecimalRegex;
 
+        private static class SettingNames
+        {
+            internal const string GenerateNewInstancesChecked = "genNewInstcb_checked";
+            internal const string CompressDatChecked = "compDatcb_checked";
+            internal const string DatFileDialogDirectory = "FileDialogDirectories/Dat";
+            internal const string FshFileDialogDirectory = "FileDialogDirectories/Fsh";
+        }
+
         public Multifshfrm()
         {
             InitializeComponent();
@@ -111,6 +119,7 @@ namespace loaddatfsh
 
         private void loadfsh_Click(object sender, EventArgs e)
         {
+            this.openFshDialog1.InitialDirectory = GetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory);
             if (openFshDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -466,23 +475,25 @@ namespace loaddatfsh
         /// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
         private void RefreshImageList(FSHImageWrapper image, ListView listview, ImageList imglist, string name)
         {
-            if (listview.SelectedIndices.Count > 0)
-            {
-                listview.SelectedIndices.Clear();
-                DisableBitmapEntryListControls();
-            }
-
             if (listview.Items.Count > 0)
             {
-                listview.Items.Clear();
+                listview.LargeImageList = imglist;
+                listview.SmallImageList = imglist;
+                int count = image.Bitmaps.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    listview.Items[i].Text = name + i.ToString(CultureInfo.CurrentCulture);
+                }
             }
-
-            listview.LargeImageList = imglist;
-            listview.SmallImageList = imglist;
-            int count = image.Bitmaps.Count;
-            for (int i = 0; i < count; i++)
+            else
             {
-                listview.Items.Add(new ListViewItem(name + i.ToString(CultureInfo.CurrentCulture), i));
+                listview.LargeImageList = imglist;
+                listview.SmallImageList = imglist;
+                int count = image.Bitmaps.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    listview.Items.Add(name + i.ToString(CultureInfo.CurrentCulture), i);
+                }
             }
         }
 
@@ -1367,11 +1378,12 @@ namespace loaddatfsh
         {
             try
             {
+                this.saveFshDialog1.InitialDirectory = GetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory);
+
                 if (tabControl1.SelectedTab == Maintab)
                 {
                     if (curImage != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
                     {
-
                         curImage.IsCompressed = Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase);
 
                         if (datListViewItems.Count == 0 && !embeddedMipmapsCb.Checked)
@@ -1421,20 +1433,23 @@ namespace loaddatfsh
                         {
                             SaveFsh(fs, curImage);
                         }
+                        
+                        SetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory, Path.GetDirectoryName(saveFshDialog1.FileName));
                     }
                 }
                 else if (tabControl1.SelectedTab == mip64tab)
                 {
                     if (mip64Fsh != null && saveFshDialog1.ShowDialog() == DialogResult.OK)
                     {
-                        
                         mip64Fsh.IsCompressed = Path.GetExtension(saveFshDialog1.FileName).Equals(".qfs", StringComparison.OrdinalIgnoreCase);
                         
                         WriteTgi(saveFshDialog1.FileName, 3);
                         using (FileStream fs = new FileStream(saveFshDialog1.FileName, FileMode.OpenOrCreate, FileAccess.Write))
                         {
                             SaveFsh(fs, mip64Fsh);
-                        }
+                        }                        
+                        
+                        SetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory, Path.GetDirectoryName(saveFshDialog1.FileName));
                     }
                 }
                 else if (tabControl1.SelectedTab == mip32tab)
@@ -1448,6 +1463,8 @@ namespace loaddatfsh
                         {
                             SaveFsh(fs, mip32Fsh);
                         }
+
+                        SetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory, Path.GetDirectoryName(saveFshDialog1.FileName));
                     }
                 }
                 else if (tabControl1.SelectedTab == mip16tab)
@@ -1462,6 +1479,8 @@ namespace loaddatfsh
                         {
                             SaveFsh(fs, mip16Fsh);
                         }
+                        
+                        SetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory, Path.GetDirectoryName(saveFshDialog1.FileName));
                     }
                 }
                 else if (tabControl1.SelectedTab == mip8tab)
@@ -1476,6 +1495,8 @@ namespace loaddatfsh
                         {
                             SaveFsh(fs, mip8Fsh);
                         }
+                        
+                        SetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory, Path.GetDirectoryName(saveFshDialog1.FileName));
                     }
                 }
             }
@@ -1820,21 +1841,14 @@ namespace loaddatfsh
                 settings = new Settings(Path.Combine(Application.StartupPath, @"Multifshview.xml"));
 
                 bool value;
-                if (bool.TryParse(settings.GetSetting("compDatcb_checked", bool.TrueString).Trim(), out value))
+                if (bool.TryParse(settings.GetSetting(SettingNames.CompressDatChecked, bool.TrueString).Trim(), out value))
                 {
                     compDatCb.Checked = value;
                 }
 
-                if (bool.TryParse(settings.GetSetting("genNewInstcb_checked", bool.FalseString).Trim(), out value))
+                if (bool.TryParse(settings.GetSetting(SettingNames.GenerateNewInstancesChecked, bool.FalseString).Trim(), out value))
                 {
                     genNewInstCb.Checked = value;
-                }
-
-                string groupOverride = settings.GetSetting("GroupidOverride", string.Empty).Trim();
-
-                if (ValidateHexString(groupOverride))
-                {
-                    this.groupIDOverride = groupOverride;
                 }
             }
             catch (FileNotFoundException fnfex)
@@ -2608,15 +2622,21 @@ namespace loaddatfsh
         {
             if (tabControl1.SelectedTab == Maintab)
             {
+                this.openDatDialog1.InitialDirectory = GetFileDialogStartingDirectory(SettingNames.DatFileDialogDirectory);
                 if (openDatDialog1.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
                         LoadDat(openDatDialog1.FileName);
+                        SetFileDialogStartingDirectory(SettingNames.DatFileDialogDirectory, Path.GetDirectoryName(openDatDialog1.FileName));
                     }
                     catch (DatHeaderException dhex)
                     {
                         ShowErrorMessage(dhex.Message);
+                    }
+                    catch (DatFileException dfex)
+                    { 
+                        ShowErrorMessage(dfex.Message);
                     }
                 }
             }
@@ -2745,9 +2765,11 @@ namespace loaddatfsh
                     }
                     else
                     {
+                        this.saveDatDialog1.InitialDirectory = GetFileDialogStartingDirectory(SettingNames.DatFileDialogDirectory);
                         if (saveDatDialog1.ShowDialog(this) == DialogResult.OK)
                         {
                             fileName = saveDatDialog1.FileName;
+                            SetFileDialogStartingDirectory(SettingNames.DatFileDialogDirectory, Path.GetDirectoryName(saveDatDialog1.FileName));
                         }
                         else
                         {
@@ -2847,7 +2869,7 @@ namespace loaddatfsh
         {
             if (dat != null && datListViewItems.Count > 0)
             {
-                settings.PutSetting("genNewInstcb_checked", genNewInstCb.Checked.ToString());
+                settings.PutSetting(SettingNames.GenerateNewInstancesChecked, genNewInstCb.Checked.ToString());
                 if (genNewInstCb.Checked)
                 {
                     var indices = dat.Indexes;
@@ -3012,7 +3034,7 @@ namespace loaddatfsh
 
         private void compDatcb_CheckedChanged(object sender, EventArgs e)
         {
-            settings.PutSetting("compDatcb_checked", compDatCb.Checked.ToString());
+            settings.PutSetting(SettingNames.CompressDatChecked, compDatCb.Checked.ToString());
         }
 
         /// <summary>
@@ -3073,9 +3095,7 @@ namespace loaddatfsh
                 {
                     bmpEntry.Dispose();
                     bmpEntry = null;
-                    fshTypeBox.SelectedIndex = 2;
-                    sizeLbl.Text = string.Empty;
-                    dirTxt.Text = string.Empty;
+                    DisableBitmapEntryListControls();
                     ReloadGroupID();
                     instStr = string.Empty;
                     tgiInstanceTxt.Text = string.Empty;
@@ -3677,6 +3697,29 @@ namespace loaddatfsh
             this.hdBaseFshRadio.Enabled = false;
 
             this.listControlsEnabled = false;
+        }
+
+        private string GetFileDialogStartingDirectory(string settingPath)
+        {
+            if (settings != null)
+            {
+                string dir = this.settings.GetSetting(settingPath, string.Empty).Trim();
+
+                if (dir.Length > 0 && Directory.Exists(dir))
+                {
+                    return dir;
+                } 
+            }
+
+            return string.Empty;
+        }
+
+        private void SetFileDialogStartingDirectory(string settingPath, string directory)
+        {
+            if (settings != null)
+            {
+                this.settings.PutSetting(settingPath, directory);
+            }
         }
     }
 }
