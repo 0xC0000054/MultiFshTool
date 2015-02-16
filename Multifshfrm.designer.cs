@@ -425,7 +425,7 @@ namespace loaddatfsh
             // 
             this.regFshRadio.AutoSize = true;
             this.regFshRadio.Enabled = false;
-            this.regFshRadio.Location = new System.Drawing.Point(7, 20);
+            this.regFshRadio.Location = new System.Drawing.Point(6, 19);
             this.regFshRadio.Name = "regFshRadio";
             this.regFshRadio.Size = new System.Drawing.Size(79, 17);
             this.regFshRadio.TabIndex = 39;
