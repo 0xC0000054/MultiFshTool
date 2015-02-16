@@ -125,6 +125,7 @@ namespace loaddatfsh
                 try
                 {
                     LoadFsh(openFshDialog1.FileName);
+                    SetFileDialogStartingDirectory(SettingNames.FshFileDialogDirectory, Path.GetDirectoryName(this.openFshDialog1.FileName));
                 }
                 catch (FileNotFoundException fnfex)
                 {
