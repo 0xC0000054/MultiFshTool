@@ -2782,13 +2782,10 @@ namespace loaddatfsh
             var indices = checkdat.Indexes;
             for (int i = 0; i < indices.Count; i++)
             {
-                DatIndex chkindex = indices[i];
-                if (chkindex.Type == fshTypeID && chkindex.Group == group && chkindex.IndexState != DatIndexState.New)
+                DatIndex index = indices[i];
+                if (index.Type == fshTypeID && index.Group == group && index.Instance == instance && index.IndexState == DatIndexState.None)
                 {
-                    if (chkindex.Instance == instance)
-                    {
-                        checkdat.Remove(group, instance);
-                    }
+                    checkdat.Remove(group, instance);
                 }
             }
         }
