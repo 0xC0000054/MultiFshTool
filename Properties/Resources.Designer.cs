@@ -405,7 +405,7 @@ namespace loaddatfsh.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save changes to Dat?.
+        ///   Looks up a localized string similar to Save changes to the current Dat?.
         /// </summary>
         internal static string SaveDatChangesText {
             get {
@@ -419,6 +419,15 @@ namespace loaddatfsh.Properties {
         internal static string saveFshBtn_ToolTip {
             get {
                 return ResourceManager.GetString("saveFshBtn_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save changes to the current image?.
+        /// </summary>
+        internal static string SaveImageChangesText {
+            get {
+                return ResourceManager.GetString("SaveImageChangesText", resourceCulture);
             }
         }
         

@@ -213,7 +213,7 @@
     <value>Save a new or modified dat</value>
   </data>
   <data name="SaveDatChangesText" xml:space="preserve">
-    <value>Save changes to Dat?</value>
+    <value>Save changes to the current Dat?</value>
   </data>
   <data name="saveFshBtn_ToolTip" xml:space="preserve">
     <value>Save the current fsh</value>
@@ -255,5 +255,8 @@ It must consist of the lower and upper texture range separated by a comma.</valu
   </data>
   <data name="FshWriteSSERequired" xml:space="preserve">
     <value>A processor that supports SSE is required to use FshWrite compression.</value>
+  </data>
+  <data name="SaveImageChangesText" xml:space="preserve">
+    <value>Save changes to the current image?</value>
   </data>
 </root>
