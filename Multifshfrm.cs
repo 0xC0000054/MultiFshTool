@@ -3607,19 +3607,19 @@ namespace loaddatfsh
 								if (dat.CheckImageSize(index))
 								{
 									fshNum++;
-									ListViewItem item1 = new ListViewItem(Resources.FshNumberText + fshNum.ToString(CultureInfo.CurrentCulture));
+									ListViewItem item = new ListViewItem(Resources.FshNumberText + fshNum.ToString(CultureInfo.CurrentCulture));
 
-									item1.SubItems.Add(index.Group.ToString("X8", CultureInfo.InvariantCulture));
-									item1.SubItems.Add(index.Instance.ToString("X8", CultureInfo.InvariantCulture));
+									item.SubItems.Add(index.Group.ToString("X8", CultureInfo.InvariantCulture));
+									item.SubItems.Add(index.Instance.ToString("X8", CultureInfo.InvariantCulture));
 
-									datListViewItems.Add(item1);
+									datListViewItems.Add(item);
 								}
 							}
 							catch (FormatException)
 							{
 								// Invalid or unsupported file.
 #if DEBUG
-								System.Diagnostics.Debug.WriteLine("0x" + index.Instance.ToString("X8"));
+								System.Diagnostics.Debug.WriteLine("Unsupported format: 0x" + index.Instance.ToString("X8"));
 #endif
 							}
 							break;
