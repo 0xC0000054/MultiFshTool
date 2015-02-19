@@ -3394,7 +3394,7 @@ namespace loaddatfsh
 
 			if (OS.IsMicrosoftWindows && !OS.HaveSSE)
 			{
-				ShowErrorMessage(Resources.FshWriteSSERequired);
+				MessageBox.Show(this, Resources.FshWriteSSERequired, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, 0);
 				this.fshWriteCompressionEnabled = false;
 				this.fshWriteCompCb.Enabled = false;
 			}
