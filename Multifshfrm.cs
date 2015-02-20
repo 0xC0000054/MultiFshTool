@@ -17,7 +17,7 @@ using System.Windows.Forms;
 namespace loaddatfsh
 {
 	internal partial class Multifshfrm : Form
-	{
+	{		
 		private string[] dirName;
 		private string[] fshSize;
 		private string fshFileName;
@@ -27,7 +27,6 @@ namespace loaddatfsh
 		private FSHImageWrapper mip16Fsh;
 		private FSHImageWrapper mip8Fsh;
 		private BitmapEntry bmpEntry;
-		private const uint fshTypeID = 0x7ab50e44U;
 		private TaskbarManager manager;
 		private JumpList jumpList;
 		private bool loadIsMip;
@@ -68,6 +67,8 @@ namespace loaddatfsh
 		private bool fshWriteCompressionEnabled;
 
 		private const string AlphaMapSuffix = "_a";
+		private const uint FshTypeId = 0x7ab50e44U;
+
 		private static Regex hexadecimalRegex;
 
 		private static class SettingNames
@@ -2692,8 +2693,7 @@ namespace loaddatfsh
 		/// <summary>
 		/// Rebuild the dat with the new items
 		/// </summary>
-		/// <param name="inputdat">The dat file to build</param>
-		private void RebuildDat(DatFile inputdat)
+		private void RebuildDat()
 		{
 			uint group = uint.Parse(tgiGroupTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 
@@ -2710,18 +2710,24 @@ namespace loaddatfsh
 				instanceIds[2] = uint.Parse(subString + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 				instanceIds[3] = uint.Parse(subString + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
 				instanceIds[4] = uint.Parse(subString + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				if (inputdat == null)
+				if (this.dat == null)
 				{
-					dat = new DatFile();
+					this.dat = new DatFile();
 				}
 
 				bool compress = this.compDatCb.Checked;
 				bool useFshWrite = this.fshWriteCompCb.Checked;
+				bool haveExistingFiles = this.datListViewItems.Count > 0;
+				bool generateNewInstances = this.genNewInstCb.Checked;
+
 				for (int i = 4; i >= 0; i--)
 				{
-					CheckInstance(inputdat, group, instanceIds[i]);
+					if (haveExistingFiles && !generateNewInstances)
+					{
+						this.dat.RemoveExistingFile(group, instanceIds[i]); 
+					}
 
-					inputdat.Add(new FshFileItem(fshimg[i], useFshWrite), group, instanceIds[i], compress);
+					this.dat.Add(new FshFileItem(fshimg[i], useFshWrite), group, instanceIds[i], compress);
 				}
 				datRebuilt = true;
 			}
@@ -2738,9 +2744,12 @@ namespace loaddatfsh
 				}
 
 
-				CheckInstance(inputdat, group, instance);
+				if (this.datListViewItems.Count > 0 && !this.genNewInstCb.Checked)
+				{
+					this.dat.RemoveExistingFile(group, instance);
+				}
 
-				inputdat.Add(new FshFileItem(curImage), group, instance, this.compDatCb.Checked);
+				this.dat.Add(new FshFileItem(curImage), group, instance, this.compDatCb.Checked);
 				datRebuilt = true;
 			}
 		}
@@ -2775,25 +2784,6 @@ namespace loaddatfsh
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		/// Checks the dat for files with the same TGI id
-		/// </summary>
-		/// <param name="checkdat">The Dat to check</param>
-		/// <param name="group">The group id to check</param>
-		/// <param name="instance">The instance id to check</param>
-		private static void CheckInstance(DatFile checkdat, uint group, uint instance)
-		{
-			var indices = checkdat.Indexes;
-			for (int i = 0; i < indices.Count; i++)
-			{
-				DatIndex index = indices[i];
-				if (index.Type == fshTypeID && index.Group == group && index.Instance == instance && index.IndexState == DatIndexState.None)
-				{
-					checkdat.Remove(group, instance);
-				}
-			}
 		}
 
 		private void saveDatbtn_Click(object sender, EventArgs e)
@@ -2833,12 +2823,12 @@ namespace loaddatfsh
 						{
 							if (this.datListViewItems.Count > 0 && !DatContainsNormalMipMaps(this.tgiGroupTxt.Text, this.tgiInstanceTxt.Text))
 							{
-								RebuildDat(dat); // the dat does not contain mipmaps for the selected file so just rebuild it
+								RebuildDat(); // the dat does not contain mipmaps for the selected file so just rebuild it
 							}
 							else
 							{
 								BuildMipMaps();
-								RebuildDat(dat);
+								RebuildDat();
 							}
 						}
 
@@ -2869,7 +2859,7 @@ namespace loaddatfsh
 								this.mipsBuilt = false;
 							}
 
-							RebuildDat(dat);
+							RebuildDat();
 						}
 					}
 
@@ -2921,7 +2911,7 @@ namespace loaddatfsh
 					for (int i = 0; i < indices.Count; i++)
 					{
 						DatIndex index = indices[i];
-						if (index.Type == fshTypeID)
+						if (index.Type == FshTypeId)
 						{
 							string newInstance = null;
 
@@ -2960,7 +2950,7 @@ namespace loaddatfsh
 						}
 
 					}
-					RebuildDat(dat);
+					RebuildDat();
 				}
 				else
 				{
@@ -3590,7 +3580,7 @@ namespace loaddatfsh
 					return;
 				}
 
-				if (index.Type == fshTypeID)
+				if (index.Type == FshTypeId)
 				{
 					uint endDiget = index.Instance & 0x0f;
 
