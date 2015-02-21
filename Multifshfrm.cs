@@ -115,7 +115,7 @@ namespace loaddatfsh
 
 		private void ShowErrorMessage(string message)
 		{
-			MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, 0);
+			UIUtil.ShowErrorMessage(this, message, this.Text);
 		}
 
 		private void loadfsh_Click(object sender, EventArgs e)
@@ -2678,13 +2678,25 @@ namespace loaddatfsh
 						LoadDat(openDatDialog1.FileName);
 						SetFileDialogStartingDirectory(SettingNames.DatFileDialogDirectory, Path.GetDirectoryName(openDatDialog1.FileName));
 					}
-					catch (DatHeaderException dhex)
-					{
-						ShowErrorMessage(dhex.Message);
-					}
 					catch (DatFileException dfex)
 					{
 						ShowErrorMessage(dfex.Message);
+					}
+					catch (DirectoryNotFoundException ex)
+					{
+						ShowErrorMessage(ex.Message);
+					}
+					catch (IOException ex)
+					{
+						ShowErrorMessage(ex.Message);
+					}
+					catch (SecurityException ex)
+					{
+						ShowErrorMessage(ex.Message);
+					}
+					catch (UnauthorizedAccessException ex)
+					{
+						ShowErrorMessage(ex.Message);
 					}
 				}
 			}
@@ -2881,6 +2893,10 @@ namespace loaddatfsh
 					}
 				}
 			}
+			catch (DatFileException dfex)
+			{
+				ShowErrorMessage(dfex.Message);
+			}
 			catch (DirectoryNotFoundException ex)
 			{
 				ShowErrorMessage(ex.Message);
@@ -2990,9 +3006,7 @@ namespace loaddatfsh
 				{
 					if (this.dat.IsDirty)
 					{		
-						System.Windows.Forms.DialogResult result = MessageBox.Show(this, Resources.SaveImageChangesText, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0);
-
-						switch (result)
+						switch (UIUtil.ShowSaveChangesDialog(this, Resources.SaveImageChangesText, this.Text, MessageBoxButtons.YesNo))
 						{ 
 							case System.Windows.Forms.DialogResult.Yes:
 								this.dat.Save();
@@ -3177,7 +3191,7 @@ namespace loaddatfsh
 			{
 				if (this.dat.IsDirty)
 				{
-					switch (MessageBox.Show(this, Resources.SaveDatChangesText, this.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0))
+					switch (UIUtil.ShowSaveChangesDialog(this, Resources.SaveDatChangesText, this.Text, MessageBoxButtons.YesNoCancel))
 					{
 						case DialogResult.Yes:
 							this.dat.Save();
@@ -3328,7 +3342,7 @@ namespace loaddatfsh
 			{
 				if (this.dat.IsDirty)
 				{
-					switch (MessageBox.Show(this, Resources.SaveDatChangesText, this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, 0))
+					switch (UIUtil.ShowSaveChangesDialog(this, Resources.SaveDatChangesText, this.Text, MessageBoxButtons.YesNo))
 					{
 						case DialogResult.Yes:
 							this.dat.Save();
@@ -3384,7 +3398,7 @@ namespace loaddatfsh
 
 			if (OS.IsMicrosoftWindows && !OS.HaveSSE)
 			{
-				MessageBox.Show(this, Resources.FshWriteSSERequired, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, 0);
+				UIUtil.ShowWarningMessage(this, Resources.FshWriteSSERequired, this.Text);
 				this.fshWriteCompressionEnabled = false;
 				this.fshWriteCompCb.Enabled = false;
 			}
@@ -3655,7 +3669,7 @@ namespace loaddatfsh
 					else
 					{
 						string message = string.Format(CultureInfo.CurrentCulture, Resources.NoImagesInDatFileError_Format, Path.GetFileName(dat.FileName));
-						MessageBox.Show(this, message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1, 0);
+						UIUtil.ShowWarningMessage(this, message, this.Text);
 						ClearandReset(true);
 					}
 				}
