@@ -259,4 +259,13 @@ It must consist of the lower and upper texture range separated by a comma.</valu
   <data name="SaveImageChangesText" xml:space="preserve">
     <value>Save changes to the current image?</value>
   </data>
+  <data name="CancelButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DontSaveButtonText" xml:space="preserve">
+    <value>Don't Save</value>
+  </data>
+  <data name="SaveButtonText" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>

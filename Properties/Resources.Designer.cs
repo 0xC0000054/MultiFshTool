@@ -97,6 +97,15 @@ namespace loaddatfsh.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string CancelButtonText {
+            get {
+                return ResourceManager.GetString("CancelButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The bitmap must be at least 128 x 128.
         /// </summary>
         internal static string CheckReplaceBitmapSizeError {
@@ -156,6 +165,15 @@ namespace loaddatfsh.Properties {
         internal static string dirTxt_ToolTip {
             get {
                 return ResourceManager.GetString("dirTxt_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t Save.
+        /// </summary>
+        internal static string DontSaveButtonText {
+            get {
+                return ResourceManager.GetString("DontSaveButtonText", resourceCulture);
             }
         }
         
@@ -392,6 +410,15 @@ namespace loaddatfsh.Properties {
         internal static string SaveBitmap_Error_Format {
             get {
                 return ResourceManager.GetString("SaveBitmap_Error_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        internal static string SaveButtonText {
+            get {
+                return ResourceManager.GetString("SaveButtonText", resourceCulture);
             }
         }
         
