@@ -3028,11 +3028,11 @@ namespace loaddatfsh
 					ClearFshlists();
 					tgiGroupTxt.Text = group;
 					tgiInstanceTxt.Text = instance;
+					instStr = instance.Substring(0, 7);
+					origInst = instStr;
 
 					if (!instance.EndsWith("0", StringComparison.Ordinal) || !instance.EndsWith("5", StringComparison.Ordinal) || !instance.EndsWith("A", StringComparison.Ordinal))
 					{
-						instStr = instance.Substring(0, 7);
-						origInst = instStr;
 						if (instance.EndsWith("4", StringComparison.Ordinal))
 						{
 							inst0_4Rdo.Checked = true;
