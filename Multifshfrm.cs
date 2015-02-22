@@ -2707,7 +2707,7 @@ namespace loaddatfsh
 		/// </summary>
 		private void RebuildDat()
 		{
-			uint group = uint.Parse(tgiGroupTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+			uint group = uint.Parse(tgiGroupTxt.Text, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
 
 			if (mipsBuilt && mip64Fsh != null && mip32Fsh != null && mip16Fsh != null && mip8Fsh != null && curImage != null && !embeddedMipmapsCb.Checked)
 			{
@@ -2717,11 +2717,11 @@ namespace loaddatfsh
 				fshimg[3] = mip64Fsh; fshimg[4] = curImage;
 
 				string subString = tgiInstanceTxt.Text.Substring(0, 7);
-				instanceIds[0] = uint.Parse(subString + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceIds[1] = uint.Parse(subString + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceIds[2] = uint.Parse(subString + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceIds[3] = uint.Parse(subString + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-				instanceIds[4] = uint.Parse(subString + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				instanceIds[0] = uint.Parse(subString + end8, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
+				instanceIds[1] = uint.Parse(subString + end16, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
+				instanceIds[2] = uint.Parse(subString + end32, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
+				instanceIds[3] = uint.Parse(subString + end64, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
+				instanceIds[4] = uint.Parse(subString + endreg, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
 				if (this.dat == null)
 				{
 					this.dat = new DatFile();
@@ -2745,7 +2745,7 @@ namespace loaddatfsh
 			}
 			else if (curImage != null) // the dat does not contain mipmaps
 			{
-				uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+				uint instance = uint.Parse(tgiInstanceTxt.Text, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
 
 				if (this.embeddedMipmapsCb.Checked)
 				{
@@ -2784,8 +2784,8 @@ namespace loaddatfsh
 				return false; // if the instance ends with 0, 5 or A there should not be mipmaps
 			}
 
-			uint groupID = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-			uint instanceID = uint.Parse(instance.Substring(0, 7) + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+			uint groupID = uint.Parse(group, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
+			uint instanceID = uint.Parse(instance.Substring(0, 7) + end64, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
 
 			try
 			{
@@ -2933,31 +2933,31 @@ namespace loaddatfsh
 
 							string oldInstance = tgiInstanceTxt.Text.Substring(0, 7);
 
-							if (index.Instance == uint.Parse(oldInstance + end8, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							if (index.Instance == uint.Parse(oldInstance + end8, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo))
 							{
 								newInstance = RandomHexString(7);
 								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (index.Instance == uint.Parse(oldInstance + end16, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + end16, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo))
 							{
 								newInstance = RandomHexString(7);
 								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (index.Instance == uint.Parse(oldInstance + end32, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + end32, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo))
 							{
 								newInstance = RandomHexString(7);
 								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (index.Instance == uint.Parse(oldInstance + end64, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + end64, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo))
 							{
 								newInstance = RandomHexString(7);
 								instStr = newInstance.Substring(0, 7);
 								EndFormat_Refresh();
 							}
-							else if (index.Instance == uint.Parse(oldInstance + endreg, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+							else if (index.Instance == uint.Parse(oldInstance + endreg, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo))
 							{
 								newInstance = RandomHexString(7);
 								instStr = newInstance.Substring(0, 7);
@@ -3049,8 +3049,8 @@ namespace loaddatfsh
 
 					if (listItem.Tag == null)
 					{
-						uint grp = uint.Parse(group, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
-						uint inst = uint.Parse(instance, NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+						uint grp = uint.Parse(group, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
+						uint inst = uint.Parse(instance, NumberStyles.HexNumber, NumberFormatInfo.InvariantInfo);
 						FshFileItem item = dat.LoadFile(grp, inst);
 						listItem.Tag = item;
 					}
