@@ -481,7 +481,7 @@ namespace loaddatfsh
 		/// <param name="image">The image to refresh the list from</param>
 		/// <param name="listview">The listview to add the images to</param>
 		/// <param name="imglist">The ImageList containing the alpha bitmaps to use</param>
-		private void RefreshImageList(FSHImageWrapper image, ListView listview, ImageList imglist, string name)
+		private static void RefreshImageList(FSHImageWrapper image, ListView listview, ImageList imglist, string name)
 		{
 			if (listview.Items.Count > 0)
 			{
@@ -507,20 +507,29 @@ namespace loaddatfsh
 
 		private static Bitmap AlphaBlend(BitmapEntry item, Size displaySize)
 		{
-			Bitmap image = new Bitmap(displaySize.Width, displaySize.Height);
-			using (Graphics g = Graphics.FromImage(image))
+			int width = displaySize.Width;
+			int height = displaySize.Height;
+
+			Bitmap image = null;
+
+			using (Bitmap temp = new Bitmap(width, height, PixelFormat.Format32bppArgb))
 			{
-				Rectangle rect = new Rectangle(0, 0, image.Width, image.Height);
-				using (HatchBrush brush = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.White, Color.FromArgb(192, 192, 192)))
+				using (Graphics g = Graphics.FromImage(temp))
 				{
-					g.FillRectangle(brush, rect);
+					Rectangle rect = new Rectangle(0, 0, width, height);
+					using (HatchBrush brush = new HatchBrush(HatchStyle.LargeCheckerBoard, Color.White, Color.FromArgb(192, 192, 192)))
+					{
+						g.FillRectangle(brush, rect);
+					}
+					g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+					g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+					using (Bitmap blended = BlendBitmap.BlendBmp(item))
+					{
+						g.DrawImage(blended, rect);
+					}
 				}
-				g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-				g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-				using (Bitmap blended = BlendBitmap.BlendBmp(item))
-				{
-					g.DrawImage(blended, rect);
-				}
+
+				image = temp.Clone<Bitmap>();
 			}
 
 			return image;
@@ -722,7 +731,7 @@ namespace loaddatfsh
 							}
 							else
 							{
-								addbmp.Alpha = GenerateAlpha(bmp);
+								addbmp.Alpha = GenerateAlpha(bmp.Size);
 								if (fileName.StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									addbmp.BmpType = FshImageFormat.TwentyFourBit;
@@ -990,7 +999,7 @@ namespace loaddatfsh
 
 							if (!LoadAlphaMap(bmpFileName, replaceBitmap, ref repEntry))
 							{
-								repEntry.Alpha = GenerateAlpha(replaceBitmap);
+								repEntry.Alpha = GenerateAlpha(replaceBitmap.Size);
 								if (Path.GetFileName(bmpFileName).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 								{
 									repEntry.BmpType = FshImageFormat.TwentyFourBit;
@@ -1747,7 +1756,7 @@ namespace loaddatfsh
 							{
 								if (bmp != null)
 								{
-									entry.Alpha = GenerateAlpha(bmp);
+									entry.Alpha = GenerateAlpha(bmp.Size);
 									if (Path.GetFileName(file).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
 									{
 										entry.BmpType = FshImageFormat.TwentyFourBit;
@@ -1945,32 +1954,37 @@ namespace loaddatfsh
 		/// </summary>
 		/// <param name="temp">The source bitmap to get the size from</param>
 		/// <returns>The generated alpha map</returns>
-		private unsafe static Bitmap GenerateAlpha(Bitmap temp)
+		private unsafe static Bitmap GenerateAlpha(Size size)
 		{
-			int height = temp.Height;
-			int width = temp.Width;
+			int height = size.Height;
+			int width = size.Width;
 
-			Bitmap alpha = new Bitmap(width, height, PixelFormat.Format24bppRgb);
-			BitmapData data = alpha.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-
-			try
+			Bitmap alpha = null;
+			
+			using (Bitmap temp = new Bitmap(width, height, PixelFormat.Format24bppRgb))
 			{
-				void* scan0 = data.Scan0.ToPointer();
-				int stride = data.Stride;
+				BitmapData data = temp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
 
-				for (int y = 0; y < height; y++)
+				try
 				{
-					byte* p = (byte*)scan0 + (y * stride);
-					for (int x = 0; x < width; x++)
+					void* scan0 = data.Scan0.ToPointer();
+					int stride = data.Stride;
+
+					for (int y = 0; y < height; y++)
 					{
-						p[0] = p[1] = p[2] = 255;
-						p += 3;
+						byte* p = (byte*)scan0 + (y * stride);
+						for (int x = 0; x < width; x++)
+						{
+							p[0] = p[1] = p[2] = 255;
+							p += 3;
+						}
 					}
 				}
-			}
-			finally
-			{
-				alpha.UnlockBits(data);
+				finally
+				{
+					temp.UnlockBits(data);
+				}
+				alpha = temp.Clone<Bitmap>();
 			}
 
 			return alpha;
