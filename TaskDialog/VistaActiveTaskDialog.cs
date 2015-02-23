@@ -19,7 +19,7 @@ namespace PSTaskDialog
     /// You should not use this object after the TaskDialog Destroy notification callback. Doing so
     /// will result in undefined behavior and likely crash.
     /// </summary>
-    public class VistaActiveTaskDialog : IWin32Window
+    internal class VistaActiveTaskDialog : IWin32Window
     {
         /// <summary>
         /// The Task Dialog's window handle.

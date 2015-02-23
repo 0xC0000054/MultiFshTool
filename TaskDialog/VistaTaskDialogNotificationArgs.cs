@@ -16,7 +16,7 @@ namespace PSTaskDialog
     /// <summary>
     /// Arguments passed to the TaskDialog callback.
     /// </summary>
-    public class VistaTaskDialogNotificationArgs
+    internal class VistaTaskDialogNotificationArgs
     {
         /// <summary>
         /// What the TaskDialog callback is a notification of.
