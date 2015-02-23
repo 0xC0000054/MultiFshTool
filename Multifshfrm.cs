@@ -3406,10 +3406,10 @@ namespace loaddatfsh
 				}
 
 				this.listViewMain.EnableBorderSelect();
-                this.listViewMip64.EnableBorderSelect();
-                this.listViewMip32.EnableBorderSelect();
-                this.listViewMip16.EnableBorderSelect();
-                this.listViewMip8.EnableBorderSelect();
+				this.listViewMip64.EnableBorderSelect();
+				this.listViewMip32.EnableBorderSelect();
+				this.listViewMip16.EnableBorderSelect();
+				this.listViewMip8.EnableBorderSelect();
 			}
 
 			LoadSettings();
