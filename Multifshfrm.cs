@@ -3396,11 +3396,20 @@ namespace loaddatfsh
 				jumpList = JumpList.CreateJumpList();
 			}
 
-			if (OS.IsMicrosoftWindows && !OS.HaveSSE)
+			if (OS.IsMicrosoftWindows)
 			{
-				UIUtil.ShowWarningMessage(this, Resources.FshWriteSSERequired, this.Text);
-				this.fshWriteCompressionEnabled = false;
-				this.fshWriteCompCb.Enabled = false;
+				if (!OS.HaveSSE)
+				{
+					UIUtil.ShowWarningMessage(this, Resources.FshWriteSSERequired, this.Text);
+					this.fshWriteCompressionEnabled = false;
+					this.fshWriteCompCb.Enabled = false; 
+				}
+
+				this.listViewMain.EnableBorderSelect();
+                this.listViewMip64.EnableBorderSelect();
+                this.listViewMip32.EnableBorderSelect();
+                this.listViewMip16.EnableBorderSelect();
+                this.listViewMip8.EnableBorderSelect();
 			}
 
 			LoadSettings();
