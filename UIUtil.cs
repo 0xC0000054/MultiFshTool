@@ -103,22 +103,9 @@ namespace loaddatfsh
             errorDialog.MainInstruction = message;
             errorDialog.PositionRelativeToWindow = true;
 
-            int res = errorDialog.Show(owner);
+            errorDialog.Show(owner);
 
-            DialogResult result = DialogResult.None;
-            switch ((VistaTaskDialogCommonButtons)res)
-            {
-                case VistaTaskDialogCommonButtons.Ok:
-                    result = DialogResult.OK;
-                    break;
-                case VistaTaskDialogCommonButtons.Cancel:
-                case VistaTaskDialogCommonButtons.Close:               
-                default:
-                    result = DialogResult.Cancel;
-                    break;
-            }
-
-            return result;
+            return DialogResult.OK;
         }
 
         public static DialogResult ShowErrorMessage(IWin32Window owner, string message, string caption)
