@@ -32,7 +32,7 @@ namespace loaddatfsh
 		private bool loadIsMip;
 		private BitmapCollection origbmplist;
 
-		private Random ra;
+		private Random random;
 		private Nullable<long> lowerInstRange;
 		private Nullable<long> upperInstRange;
 
@@ -95,7 +95,7 @@ namespace loaddatfsh
 			this.loadIsMip = false;
 			this.datListViewItems = new List<ListViewItem>();
 			this.origbmplist = null;
-			this.ra = new Random();
+			this.random = new Random();
 			this.useOriginalImage = false;
 			this.mipsBuilt = false;
 			this.sortColumn = -1;
@@ -2395,27 +2395,25 @@ namespace loaddatfsh
 
 		private string RandomHexString(int length)
 		{
-
-
 			if (!lowerInstRange.HasValue && upperInstRange.HasValue)
 			{
 				long lower = lowerInstRange.Value;
 				long upper = upperInstRange.Value;
 
-				double rn = (upper * 1.0 - lower * 1.0) * ra.NextDouble() + lower * 1.0;
+				double rn = (upper - lower + 1L) * random.NextDouble() + lower;
 
 				return Convert.ToInt64(rn).ToString("X", CultureInfo.InvariantCulture).Substring(0, 7);
 			}
 
 			byte[] buffer = new byte[length / 2];
-			ra.NextBytes(buffer);
+			random.NextBytes(buffer);
 			string result = String.Concat(buffer.Select(x => x.ToString("X2", CultureInfo.InvariantCulture)).ToArray());
 			if (length % 2 == 0)
 			{
 				return result;
 			}
 
-			return result + ra.Next(16).ToString("X", CultureInfo.InvariantCulture);
+			return result + random.Next(16).ToString("X", CultureInfo.InvariantCulture);
 		}
 
 		/// <summary>
