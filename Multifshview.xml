@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <settings>
-  <genNewInstcb_checked>False</genNewInstcb_checked>
-  <compDatcb_checked>True</compDatcb_checked>
+  <GenerateNewInstances>False</GenerateNewInstances>
+  <CompressDat>True</CompressDat>
   <FileDialogDirectories>
     <Dat></Dat>
     <Fsh></Fsh>

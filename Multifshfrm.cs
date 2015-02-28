@@ -73,8 +73,8 @@ namespace loaddatfsh
 
 		private static class SettingNames
 		{
-			internal const string GenerateNewInstancesChecked = "genNewInstcb_checked";
-			internal const string CompressDatChecked = "compDatcb_checked";
+			internal const string GenerateNewInstancesChecked = "GenerateNewInstances";
+			internal const string CompressDatChecked = "CompressDat";
 			internal const string DatFileDialogDirectory = "FileDialogDirectories/Dat";
 			internal const string FshFileDialogDirectory = "FileDialogDirectories/Fsh";
 		}
