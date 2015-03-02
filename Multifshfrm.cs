@@ -334,9 +334,11 @@ namespace loaddatfsh
 					}
 				}
 
-				if (image.IsDXTFsh() && fshWriteCompression && useOriginalImage)
+				// If we are switching between DXT compression methods we use a copy of the original bitmap 
+				// to prevent the degradation caused by compressing the same image multiple times.
+				if (useOriginalImage)
 				{
-					using (FSHImageWrapper fsh = new FSHImageWrapper())
+					using (FSHImageWrapper temp = new FSHImageWrapper())
 					{
 						BitmapEntryCollection entries = image.Bitmaps;
 
@@ -345,10 +347,10 @@ namespace loaddatfsh
 							BitmapEntry entry = entries[i].Clone();
 							entry.Bitmap = origbmplist[i].Clone(PixelFormat.Format24bppRgb);
 
-							fsh.Bitmaps.Add(entry);
+							temp.Bitmaps.Add(entry);
 						}
 
-						fsh.Save(fs, true);
+						temp.Save(fs, fshWriteCompression);
 					}
 				}
 				else
@@ -3303,7 +3305,6 @@ namespace loaddatfsh
 					{
 						BuildMipMaps();
 					}
-
 				}
 			}
 			catch (ArgumentException ex)
