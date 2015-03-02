@@ -58,6 +58,7 @@ namespace loaddatfsh
 		private bool mipsBuilt;
 		private bool datRebuilt;
 		private int sortColumn;
+		private SortOrder sortOrder;
 		private int ignoreIndexChangedEvents;
 		private bool listControlsEnabled;
 
@@ -99,6 +100,7 @@ namespace loaddatfsh
 			this.useOriginalImage = false;
 			this.mipsBuilt = false;
 			this.sortColumn = -1;
+			this.sortOrder = SortOrder.None;
 			this.fshWriteCompressionEnabled = true;
 			this.ignoreIndexChangedEvents = 0;
 			this.listControlsEnabled = false;
@@ -3253,29 +3255,35 @@ namespace loaddatfsh
 
 		private void datListView_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
-			if (e.Column != sortColumn)
+			if (e.Column != this.sortColumn)
 			{
 				// Set the sort column to the new column.
-				sortColumn = e.Column;
+				this.sortColumn = e.Column;
 				// Set the sort order to ascending by default.
-				datListView.Sorting = SortOrder.Ascending;
+				this.sortOrder = SortOrder.Ascending;
 			}
 			else
 			{
 				// Determine what the last sort order was and change it.
-				if (datListView.Sorting == SortOrder.Ascending)
+				if (this.sortOrder == SortOrder.Ascending)
 				{
-					datListView.Sorting = SortOrder.Descending;
+					this.sortOrder = SortOrder.Descending;
 				}
 				else
 				{
-					datListView.Sorting = SortOrder.Ascending;
+					this.sortOrder = SortOrder.Ascending;
 				}
 			}
 
-			// Set the ListViewItemSorter property to a new ListViewItemComparer
-			// object.
-			datListViewItems.Sort(new ListViewItemComparer(sortColumn, datListView.Sorting));
+			// Set the ListViewItemSorter property to a new ListViewItemComparer object.
+			this.datListViewItems.Sort(new ListViewItemComparer(this.sortColumn, this.sortOrder));
+
+			if (this.datListView.SelectedIndices.Count > 0)
+			{
+				this.datListView.SelectedIndices.Clear();
+				this.datListView.SelectedIndices.Add(0);
+			}
+
 			this.datListView.Refresh();
 		}
 
