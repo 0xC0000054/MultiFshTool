@@ -16,7 +16,7 @@ namespace loaddatfsh
             this.order = order;
         }
 
-        public int Compare(ListViewItem x, ListViewItem y)
+        public override int Compare(ListViewItem x, ListViewItem y)
         {
             if (Object.ReferenceEquals(x, y))
             {
