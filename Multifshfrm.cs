@@ -633,6 +633,41 @@ namespace loaddatfsh
             return list;
         }
 
+        private unsafe static bool ImageHasTransparency(Bitmap image)
+        {
+            if (Image.IsAlphaPixelFormat(image.PixelFormat))
+            {
+                int width = image.Width;
+                int height = image.Height;
+                BitmapData data = image.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+                try
+                {
+                    byte* scan0 = (byte*)data.Scan0;
+                    int stride = data.Stride;
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        byte* ptr = scan0 + (y * stride);
+                        for (int x = 0; x < width; x++)
+                        {
+                            if (ptr[3] < 255)
+                            {
+                                return true;
+                            }
+                            ptr += 4;
+                        }
+                    }
+                }
+                finally
+                {
+                    image.UnlockBits(data);
+                }
+            }
+
+            return false;
+        }
+
         private void addbtn_Click(object sender, EventArgs e)
         {
             openBitmapDialog1.Multiselect = true;
@@ -720,7 +755,7 @@ namespace loaddatfsh
                                 }
 
                             }
-                            else if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) && bmp.PixelFormat == PixelFormat.Format32bppArgb)
+                            else if (ext.Equals(".png", StringComparison.OrdinalIgnoreCase) && ImageHasTransparency(bmp))
                             {
                                 Bitmap testbmp = GetAlphafromPng(bmp);
                                 addbmp.Alpha = testbmp;
@@ -3791,7 +3826,7 @@ namespace loaddatfsh
                 }
                 result = true;
             }
-            else if (Path.GetExtension(file).Equals(".png", StringComparison.OrdinalIgnoreCase) && bmp.PixelFormat == PixelFormat.Format32bppArgb)
+            else if (Path.GetExtension(file).Equals(".png", StringComparison.OrdinalIgnoreCase) && ImageHasTransparency(bmp))
             {
                 entry.Alpha = GetAlphafromPng(bmp);
                 if (Path.GetFileName(file).StartsWith("hd", StringComparison.OrdinalIgnoreCase))
