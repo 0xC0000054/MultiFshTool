@@ -8,7 +8,6 @@ namespace loaddatfsh
     internal static class UIUtil
     {
         private static readonly bool TaskDialogSupported = CheckTaskDialogSupported();
-        private static VistaTaskDialog errorDialog;
 
         private static bool CheckTaskDialogSupported()
         {
@@ -91,17 +90,16 @@ namespace loaddatfsh
 
         private static DialogResult ErrorTaskDialog(IWin32Window owner, string message, string caption, VistaTaskDialogIcon icon)
         {
-            if (errorDialog == null)
+
+            VistaTaskDialog errorDialog = new VistaTaskDialog()
             {
-                errorDialog = new VistaTaskDialog();
-                errorDialog.CommonButtons = VistaTaskDialogCommonButtons.Ok;
-                errorDialog.AllowDialogCancellation = true;
-            }
-                
-            errorDialog.MainIcon = icon;
-            errorDialog.WindowTitle = caption;
-            errorDialog.MainInstruction = message;
-            errorDialog.PositionRelativeToWindow = true;
+                AllowDialogCancellation = true,
+                CommonButtons = VistaTaskDialogCommonButtons.Ok,
+                MainIcon = icon,
+                MainInstruction = message,
+                PositionRelativeToWindow = true,
+                WindowTitle = caption
+            };
 
             errorDialog.Show(owner);
 
