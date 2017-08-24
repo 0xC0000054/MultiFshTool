@@ -95,7 +95,6 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ICloneableExtensions.cs" />
-    <Compile Include="ImageListExtensions.cs" />
     <Compile Include="JumpListHelper.cs" />
     <Compile Include="ListViewItemComparer.cs" />
     <Compile Include="Multifshfrm.cs">
