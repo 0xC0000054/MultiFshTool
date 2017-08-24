@@ -529,7 +529,10 @@ namespace loaddatfsh
                     g.PixelOffsetMode = PixelOffsetMode.HighQuality;
                     using (Bitmap blended = BlendBitmap.BlendBmp(item))
                     {
-                        g.DrawImage(blended, rect);
+                        Rectangle destRect = blended.GetThumbnailDisplayRectangle(displaySize);
+                        Rectangle srcRect = new Rectangle(0, 0, blended.Width, blended.Height);
+
+                        g.DrawImage(blended, destRect, srcRect, GraphicsUnit.Pixel);
                     }
                 }
 
@@ -854,10 +857,6 @@ namespace loaddatfsh
             alphalist.Images.Clear();
             blendlist.Images.Clear();
 
-            bmplist.ResetImageSize();
-            alphalist.ResetImageSize();
-            blendlist.ResetImageSize();
-
             int count = image.Bitmaps.Count;
 
             // Enable the remove button for standalone files with more than 1 image.
@@ -869,11 +868,8 @@ namespace loaddatfsh
             for (int i = 0; i < count; i++)
             {
                 bmpEntry = image.Bitmaps[i];
-                bmplist.ScaleListSize(bmpEntry.Bitmap);
-                bmplist.Images.Add(bmpEntry.Bitmap);
-                alphalist.ScaleListSize(bmpEntry.Alpha);
-                alphalist.Images.Add(bmpEntry.Alpha);
-                blendlist.ScaleListSize(bmpEntry.Bitmap);
+                bmplist.Images.Add(bmpEntry.Bitmap.GetImageListThumbnail(bmplist.ImageSize));
+                alphalist.Images.Add(bmpEntry.Alpha.GetImageListThumbnail(alphalist.ImageSize));
                 blendlist.Images.Add(AlphaBlend(bmpEntry, blendlist.ImageSize));
             }
 
@@ -906,11 +902,8 @@ namespace loaddatfsh
             {
                 bmpEntry = curImage.Bitmaps[i];
 
-                bitmapList.ScaleListSize(bmpEntry.Bitmap);
-                bitmapList.Images.Add(bmpEntry.Bitmap);
-                alphaList.ScaleListSize(bmpEntry.Alpha);
-                alphaList.Images.Add(bmpEntry.Alpha);
-                blendList.ScaleListSize(bmpEntry.Bitmap);
+                bitmapList.Images.Add(bmpEntry.Bitmap.GetImageListThumbnail(bitmapList.ImageSize));
+                alphaList.Images.Add(bmpEntry.Alpha.GetImageListThumbnail(alphaList.ImageSize));
                 blendList.Images.Add(AlphaBlend(bmpEntry, blendList.ImageSize));
             }
 
@@ -2257,9 +2250,6 @@ namespace loaddatfsh
                 }
                 else if (tabControl1.SelectedTab == Maintab && curImage != null && curImage.Bitmaps.Count > 0)
                 {
-                    bitmapList.ResetImageSize();
-                    alphaList.ResetImageSize();
-                    blendList.ResetImageSize();
                     RefreshImageLists();
                     bmpEntry = curImage.Bitmaps[0];
                     listViewMain.Items[0].Selected = true;
@@ -2702,9 +2692,6 @@ namespace loaddatfsh
             blend32Mip.Images.Clear();
             blend16Mip.Images.Clear();
             blend8Mip.Images.Clear();
-            bitmapList.ResetImageSize();
-            alphaList.ResetImageSize();
-            blendList.ResetImageSize();
 
             DisableBitmapEntryListControls();
         }
