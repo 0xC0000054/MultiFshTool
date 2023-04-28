@@ -1,6 +1,6 @@
-﻿using PSTaskDialog;
+﻿using loaddatfsh.TaskDialog;
 using System;
-using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace loaddatfsh
@@ -16,61 +16,70 @@ namespace loaddatfsh
             return (os.Platform == PlatformID.Win32NT && os.Version.Major >= 6);
         }
 
-        private static DialogResult SaveChangesTaskDialog(IWin32Window owner, string message, string caption, MessageBoxButtons buttons)
+        private static unsafe DialogResult SaveChangesTaskDialog(IWin32Window owner, string message, string caption, MessageBoxButtons buttons)
         {
             if (buttons != MessageBoxButtons.YesNo && buttons != MessageBoxButtons.YesNoCancel)
             {
                 throw new ArgumentOutOfRangeException("buttons");
             }
 
-            VistaTaskDialog saveChangesDialog = new VistaTaskDialog();
+            DialogResult result = DialogResult.Cancel;
 
-            List<VistaTaskDialogButton> buttonList = new List<VistaTaskDialogButton>();
-            const int SaveButtonId = 101;
-            const int DontSaveButtonId = 102;
-            const int CancelButtonId = 103;
-
-            VistaTaskDialogButton saveBtn = new VistaTaskDialogButton();
-            saveBtn.ButtonId = SaveButtonId;           
-            saveBtn.ButtonText = Properties.Resources.SaveButtonText;
-            buttonList.Add(saveBtn);
-
-            VistaTaskDialogButton dontSaveBtn = new VistaTaskDialogButton();
-            dontSaveBtn.ButtonId = DontSaveButtonId;
-            dontSaveBtn.ButtonText = Properties.Resources.DontSaveButtonText;
-            buttonList.Add(dontSaveBtn);
-            
-            if (buttons == MessageBoxButtons.YesNoCancel)
+            if (!string.IsNullOrEmpty(message) && !string.IsNullOrEmpty(caption))
             {
-                VistaTaskDialogButton cancelButton = new VistaTaskDialogButton();
-                cancelButton.ButtonId = CancelButtonId;
-                cancelButton.ButtonText = Properties.Resources.CancelButtonText;
-                buttonList.Add(cancelButton);
-                
-                saveChangesDialog.AllowDialogCancellation = true;
-            }
-            saveChangesDialog.Buttons = buttonList.ToArray();
-            saveChangesDialog.DefaultButton = SaveButtonId;
-            saveChangesDialog.WindowTitle = caption;
-            saveChangesDialog.MainInstruction = message;
-            saveChangesDialog.PositionRelativeToWindow = true;
- 
-            int res = saveChangesDialog.Show(owner);
+                fixed (char* pMessage = message)
+                fixed (char* pCaption = caption)
+                fixed (char* pSaveMessage = Properties.Resources.SaveButtonText)
+                fixed (char* pDontSaveMessage = Properties.Resources.DontSaveButtonText)
+                {
+                    const int SaveButtonId = 101;
+                    const int DontSaveButtonId = 102;
 
-            DialogResult result = DialogResult.None;
+                    const int CustomButtonCount = 2;
 
-            switch (res)
-            {
-                case SaveButtonId:
-                    result = DialogResult.Yes;
-                    break;
-                case DontSaveButtonId:
-                    result = DialogResult.No;
-                    break;
-                case CancelButtonId:
-                default:
-                    result = DialogResult.Cancel;
-                    break;
+                    TaskDialogButton* customButtons = stackalloc TaskDialogButton[CustomButtonCount];
+
+                    customButtons[0].nButtonID = SaveButtonId;
+                    customButtons[0].pszButtonText = (ushort*)pSaveMessage;
+                    customButtons[1].nButtonID = DontSaveButtonId;
+                    customButtons[1].pszButtonText = (ushort*)pDontSaveMessage;
+
+                    TaskDialogConfiguration config = new TaskDialogConfiguration()
+                    {
+                        cbSize = (uint)Marshal.SizeOf(typeof(TaskDialogConfiguration)),
+                        pszWindowTitle = (ushort*)pCaption,
+                        pszMainInstruction = (ushort*)pMessage,
+                        cButtons = CustomButtonCount,
+                        pButtons = customButtons
+                    };
+
+                    if (owner != null)
+                    {
+                        config.hwndParent = owner.Handle;
+                        config.dwFlags |= TaskDialogOptions.PositionRelativeToWindow;
+                    }
+
+                    if (buttons == MessageBoxButtons.YesNoCancel)
+                    {
+                        config.dwFlags |= TaskDialogOptions.AllowCancel;
+                        config.dwCommonButtons = TaskDialogCommonButtons.Cancel;
+                    }
+
+                    int hr = UnsafeNativeMethods.TaskDialogIndirect(&config, out int selectedButton, out int _, out int _);
+
+                    if (UnsafeNativeMethods.SUCCEEDED(hr))
+                    {
+                        switch (selectedButton)
+                        {
+                            case SaveButtonId:
+                                result = DialogResult.Yes;
+                                break;
+                            case DontSaveButtonId:
+                                result = DialogResult.No;
+                                break;
+                        }
+                    }
+                }
             }
 
             return result;
@@ -88,20 +97,34 @@ namespace loaddatfsh
             }
         }
 
-        private static DialogResult ErrorTaskDialog(IWin32Window owner, string message, string caption, VistaTaskDialogIcon icon)
+        private static unsafe DialogResult ErrorTaskDialog(IWin32Window owner, string message, string caption, TaskDialogIcon icon)
         {
-
-            VistaTaskDialog errorDialog = new VistaTaskDialog()
+            if (!string.IsNullOrEmpty(message))
             {
-                AllowDialogCancellation = true,
-                CommonButtons = VistaTaskDialogCommonButtons.Ok,
-                MainIcon = icon,
-                MainInstruction = message,
-                PositionRelativeToWindow = true,
-                WindowTitle = caption
-            };
+                string dialogCaption = !string.IsNullOrEmpty(caption) ? caption : "Error";
 
-            errorDialog.Show(owner);
+                fixed (char* pMessage = message)
+                fixed (char* pCaption = dialogCaption)
+                {
+                    TaskDialogConfiguration config = new TaskDialogConfiguration()
+                    {
+                        cbSize = (uint)Marshal.SizeOf(typeof(TaskDialogConfiguration)),
+                        dwFlags = TaskDialogOptions.AllowCancel,
+                        dwCommonButtons = TaskDialogCommonButtons.Ok,
+                        pszWindowTitle = (ushort*)pCaption,
+                        pszMainIcon = UnsafeNativeMethods.MAKEINTRESOURCE((ushort)icon),
+                        pszMainInstruction = (ushort*)pMessage
+                    };
+
+                    if (owner != null)
+                    {
+                        config.hwndParent = owner.Handle;
+                        config.dwFlags |= TaskDialogOptions.PositionRelativeToWindow;
+                    }
+
+                    _ = UnsafeNativeMethods.TaskDialogIndirect(&config, out int _, out int _, out int _);
+                }
+            }
 
             return DialogResult.OK;
         }
@@ -110,7 +133,7 @@ namespace loaddatfsh
         {
             if (TaskDialogSupported)
             {
-                return ErrorTaskDialog(owner, message, caption, VistaTaskDialogIcon.Error);
+                return ErrorTaskDialog(owner, message, caption, TaskDialogIcon.Error);
             }
             else
             {
@@ -122,7 +145,7 @@ namespace loaddatfsh
         {
             if (TaskDialogSupported)
             {
-                return ErrorTaskDialog(owner, message, caption, VistaTaskDialogIcon.Warning);
+                return ErrorTaskDialog(owner, message, caption, TaskDialogIcon.Warning);
             }
             else
             {
